@@ -13,8 +13,7 @@ interface UIState {
   setNotificationPanelOpen: (isOpen: boolean) => void;
 }
 
-const getPreferredTheme = (): Theme =>
-  window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+const getPreferredTheme = (): Theme => "light";
 
 const applyTheme = (theme: Theme) => {
   document.documentElement.classList.toggle("dark", theme === "dark");

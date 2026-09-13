@@ -16,14 +16,12 @@ COPY prisma.config.ts ./
 # Install all dependencies (including devDependencies needed for build)
 RUN npm ci
 
-# Generate Prisma Client
-RUN npx prisma generate
-
 # Copy source files and configuration
 COPY src ./src/
 COPY tsconfig.json ./
 
-# Compile TypeScript to dist/
+# Generate Prisma Client after copying source so stale generated files cannot overwrite it,
+# then compile TypeScript to dist/
 RUN npm run build
 
 # Prune devDependencies to keep image lightweight
