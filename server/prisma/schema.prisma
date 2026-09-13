@@ -1,0 +1,283 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  OWNER
+  MANAGER
+  MECHANIC
+}
+
+enum JobStatus {
+  RECEIVED
+  IN_PROGRESS
+  WAITING_FOR_PARTS
+  COMPLETED
+  READY_FOR_PICKUP
+  DELIVERED
+}
+
+enum JobPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum InventoryTransactionType {
+  PURCHASE
+  JOB_USAGE
+  ADJUSTMENT
+  RETURN
+  DAMAGE
+}
+
+enum InvoiceItemType {
+  PART
+  LABOUR
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  PARTIALLY_PAID
+  PAID
+  VOID
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  BANK_TRANSFER
+  OTHER
+}
+
+enum NotificationType {
+  JOB_ASSIGNED
+  JOB_COMPLETED
+  LOW_STOCK
+  PAYMENT_RECEIVED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(MECHANIC)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  refreshTokens RefreshToken[]
+  assignedJobs  RepairJob[]    @relation("MechanicJobs")
+  notifications Notification[]
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  phone     String
+  email     String?
+  address   String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  vehicles Vehicle[]
+  jobs     RepairJob[]
+  invoices Invoice[]
+
+  @@index([phone])
+  @@index([lastName])
+}
+
+model Vehicle {
+  id                 String   @id @default(uuid())
+  customerId         String
+  registrationNumber String   @unique
+  make               String
+  model              String
+  year               Int?
+  mileage            Int?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  customer Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  jobs     RepairJob[]
+  invoices Invoice[]
+
+  @@index([customerId])
+}
+
+model RepairJob {
+  id         String      @id @default(uuid())
+  jobNumber  String      @unique
+  customerId String
+  vehicleId  String
+  mechanicId String?
+  complaint  String
+  diagnosis  String?
+  status     JobStatus   @default(RECEIVED)
+  priority   JobPriority @default(NORMAL)
+  mileageIn  Int?
+  mileageOut Int?
+  notes      String?
+  completedAt DateTime?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id])
+  vehicle  Vehicle  @relation(fields: [vehicleId], references: [id])
+  mechanic User?    @relation("MechanicJobs", fields: [mechanicId], references: [id])
+
+  parts   JobPart[]
+  invoice Invoice?
+
+  @@index([customerId])
+  @@index([vehicleId])
+  @@index([mechanicId])
+  @@index([status])
+  @@index([completedAt])
+  @@index([createdAt])
+}
+
+model Part {
+  id           String   @id @default(uuid())
+  sku          String   @unique
+  name         String
+  description  String?
+  quantity     Int      @default(0)
+  minimumStock Int      @default(5)
+  costPrice    Decimal  @db.Decimal(10, 2)
+  sellingPrice Decimal  @db.Decimal(10, 2)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  jobParts              JobPart[]
+  inventoryTransactions InventoryTransaction[]
+}
+
+model JobPart {
+  id        String   @id @default(uuid())
+  jobId     String
+  partId    String
+  quantity  Int
+  unitPrice Decimal  @db.Decimal(10, 2)
+  total     Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+
+  job  RepairJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  part Part      @relation(fields: [partId], references: [id])
+
+  @@unique([jobId, partId])
+  @@index([jobId])
+  @@index([partId])
+}
+
+model InventoryTransaction {
+  id            String                   @id @default(uuid())
+  partId        String
+  type          InventoryTransactionType
+  quantity      Int
+  referenceType String?
+  referenceId   String?
+  createdAt     DateTime                 @default(now())
+
+  part Part @relation(fields: [partId], references: [id], onDelete: Cascade)
+
+  @@index([partId])
+  @@index([createdAt])
+}
+
+model Invoice {
+  id            String        @id @default(uuid())
+  invoiceNumber String        @unique
+  customerId    String
+  vehicleId     String
+  repairJobId   String        @unique
+  subtotal      Decimal       @db.Decimal(10, 2)
+  discount      Decimal       @default(0) @db.Decimal(10, 2)
+  tax           Decimal       @default(0) @db.Decimal(10, 2)
+  total         Decimal       @db.Decimal(10, 2)
+  status        InvoiceStatus @default(DRAFT)
+  issuedAt      DateTime?
+  dueDate       DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  customer Customer      @relation(fields: [customerId], references: [id])
+  vehicle  Vehicle       @relation(fields: [vehicleId], references: [id])
+  job      RepairJob     @relation(fields: [repairJobId], references: [id])
+  items    InvoiceItem[]
+  payments Payment[]
+
+  @@index([customerId])
+  @@index([vehicleId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model InvoiceItem {
+  id          String          @id @default(uuid())
+  invoiceId   String
+  partId      String?
+  type        InvoiceItemType @default(LABOUR)
+  description String
+  quantity    Int
+  unitPrice   Decimal         @db.Decimal(10, 2)
+  total       Decimal         @db.Decimal(10, 2)
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+  @@index([partId])
+}
+
+model Payment {
+  id        String        @id @default(uuid())
+  invoiceId String
+  amount    Decimal       @db.Decimal(10, 2)
+  method    PaymentMethod
+  reference String?
+  paidAt    DateTime      @default(now())
+  createdAt DateTime      @default(now())
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+  @@index([paidAt])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@index([createdAt])
+}
