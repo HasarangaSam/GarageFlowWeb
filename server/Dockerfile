@@ -1,7 +1,7 @@
 # ==========================================
 # Stage 1: Build & Compile
 # ==========================================
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -27,12 +27,13 @@ RUN npm run build
 # ==========================================
 # Stage 2: Production Runtime
 # ==========================================
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 
 # Install runtime libraries for Prisma
 RUN apk add --no-cache openssl libc6-compat
+RUN npm install --global npm@12.1.0
 
 ENV NODE_ENV=production
 ENV PORT=5000
