@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import { useAuthStore } from "../stores/authStore";
-
-// Singleton socket reference — shared across renders
-let socketInstance: Socket | null = null;
+import { useSocketStore } from "../stores/socketStore";
 
 /**
  * Creates (or reuses) the Socket.IO connection authenticated with the current
@@ -15,27 +13,22 @@ let socketInstance: Socket | null = null;
  */
 export function useSocket(): Socket | null {
   const accessToken = useAuthStore((state) => state.accessToken);
-  const socketRef = useRef<Socket | null>(null);
-  const [connectedSocket, setConnectedSocket] = useState<Socket | null>(
-    socketInstance,
-  );
+  const connectedSocket = useSocketStore((state) => state.socket);
+  const setSocket = useSocketStore((state) => state.setSocket);
 
   useEffect(() => {
     if (!accessToken) {
       // No token — make sure any old socket is closed
-      if (socketInstance) {
-        socketInstance.disconnect();
-        socketInstance = null;
+      const existingSocket = useSocketStore.getState().socket;
+      if (existingSocket) {
+        existingSocket.disconnect();
+        setSocket(null);
       }
-      socketRef.current = null;
-      setConnectedSocket(null);
       return;
     }
 
     // Re-use an existing connected socket when the token hasn't changed
-    if (socketInstance?.connected) {
-      socketRef.current = socketInstance;
-      setConnectedSocket(socketInstance);
+    if (useSocketStore.getState().socket?.connected) {
       return;
     }
 
@@ -63,17 +56,15 @@ export function useSocket(): Socket | null {
       console.log("[Socket] Disconnected:", reason);
     });
 
-    socketInstance = socket;
-    socketRef.current = socket;
-    setConnectedSocket(socket);
+    setSocket(socket);
 
     return () => {
       socket.disconnect();
-      socketInstance = null;
-      socketRef.current = null;
-      setConnectedSocket(null);
+      if (useSocketStore.getState().socket === socket) {
+        setSocket(null);
+      }
     };
-  }, [accessToken]);
+  }, [accessToken, setSocket]);
 
   return connectedSocket;
 }
