@@ -51,18 +51,25 @@ export default function App() {
             <Route path="/my-jobs" element={<JobsPage isMyJobs />} />
           </Route>
 
-          {/* All authenticated users */}
+          {/* Operational records are limited to front-office roles. Mechanics
+              receive the customer and vehicle context through assigned jobs. */}
           <Route
             element={
-              <RoleRoute allowedRoles={["OWNER", "MANAGER", "MECHANIC"]} />
+              <RoleRoute allowedRoles={["OWNER", "MANAGER"]} />
             }
           >
             <Route path="/customers" element={<CustomersPage />} />
 
             <Route path="/vehicles" element={<VehiclesPage />} />
 
-            <Route path="/inventory" element={<InventoryPage />} />
+              <Route path="/inventory" element={<InventoryPage />} />
+          </Route>
 
+          <Route
+            element={
+              <RoleRoute allowedRoles={["OWNER", "MANAGER", "MECHANIC"]} />
+            }
+          >
             <Route path="/notifications" element={<NotificationsPage />} />
           </Route>
 

@@ -23,10 +23,11 @@ export const useUsers = (params: { role?: UserRole; search?: string } = {}) => {
   });
 };
 
-export const useMechanics = (search?: string) => {
+export const useMechanics = (search?: string, enabled = true) => {
   return useQuery({
     queryKey: userKeys.mechanics(),
     queryFn: () => getMechanics(search),
+    enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes — mechanics list changes infrequently
   });
 };
@@ -42,8 +43,13 @@ export const useCreateStaffUser = () => {
 export const useUpdateStaffUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ userId, data }: { userId: string; data: StaffAccountInput }) =>
-      updateStaffUser(userId, data),
+    mutationFn: ({
+      userId,
+      data,
+    }: {
+      userId: string;
+      data: StaffAccountInput;
+    }) => updateStaffUser(userId, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: userKeys.all }),
   });
 };

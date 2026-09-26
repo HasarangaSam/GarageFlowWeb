@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect -- Loading state is synchronized with the initial page fetch. */
 import { useState, useEffect } from "react";
 import {
   Bell,

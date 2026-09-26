@@ -21,6 +21,7 @@ interface GetRepairJobsParams {
   search?: string;
   status?: string;
   priority?: CreateRepairJobInput["priority"];
+  mechanicId?: string;
   hasInvoice?: boolean;
 }
 
@@ -51,6 +52,7 @@ const validateCustomerAndVehicle = async (
     select: {
       id: true,
       customerId: true,
+      mileage: true,
     },
   });
 
@@ -61,6 +63,8 @@ const validateCustomerAndVehicle = async (
   if (vehicle.customerId !== customerId) {
     throw new AppError("Vehicle does not belong to this customer", 400);
   }
+
+  return vehicle;
 };
 
 const validateMechanic = async (mechanicId: string) => {
@@ -111,6 +115,7 @@ export const getRepairJobs = async ({
   search,
   status,
   priority,
+  mechanicId,
   hasInvoice,
 }: GetRepairJobsParams) => {
   const skip = (page - 1) * limit;
@@ -155,6 +160,14 @@ export const getRepairJobs = async ({
                 },
               },
             },
+            {
+              mechanic: {
+                name: {
+                  contains: search,
+                  mode: "insensitive" as const,
+                },
+              },
+            },
           ],
         }
       : {}),
@@ -164,6 +177,7 @@ export const getRepairJobs = async ({
         : { status }
       : {}),
     ...(priority ? { priority } : {}),
+    ...(mechanicId ? { mechanicId } : {}),
     ...(hasInvoice === false
       ? { invoice: null }
       : hasInvoice === true
@@ -228,7 +242,10 @@ export const getRepairJobs = async ({
   };
 };
 
-export const getRepairJobById = async (jobId: string, userRole: UserRole) => {
+export const getRepairJobById = async (
+  jobId: string,
+  user: { id: string; role: UserRole },
+) => {
   const job = await prisma.repairJob.findUnique({
     where: {
       id: jobId,
@@ -254,7 +271,7 @@ export const getRepairJobById = async (jobId: string, userRole: UserRole) => {
       },
 
       invoice:
-        userRole === "OWNER" || userRole === "MANAGER"
+        user.role === "OWNER" || user.role === "MANAGER"
           ? {
               include: {
                 items: true,
@@ -267,6 +284,10 @@ export const getRepairJobById = async (jobId: string, userRole: UserRole) => {
 
   if (!job) {
     throw new AppError("Repair job not found", 404);
+  }
+
+  if (user.role === "MECHANIC" && job.mechanicId !== user.id) {
+    throw new AppError("You can only view jobs assigned to you", 403);
   }
 
   return job;
@@ -286,7 +307,10 @@ export const createRepairJob = async (input: CreateRepairJobInput) => {
     throw new AppError("Customer not found", 404);
   }
 
-  await validateCustomerAndVehicle(input.customerId, input.vehicleId);
+  const vehicle = await validateCustomerAndVehicle(
+    input.customerId,
+    input.vehicleId,
+  );
 
   if (input.mechanicId) {
     await validateMechanic(input.mechanicId);
@@ -294,47 +318,71 @@ export const createRepairJob = async (input: CreateRepairJobInput) => {
 
   const jobNumber = await generateJobNumber();
 
-  const job = await prisma.repairJob.create({
-    data: {
-      jobNumber,
-      customerId: input.customerId,
-      vehicleId: input.vehicleId,
-      mechanicId: input.mechanicId,
-      complaint: input.complaint,
-      diagnosis: input.diagnosis || null,
-      status: input.status || "RECEIVED",
-      priority: input.priority || "NORMAL",
-      mileageIn: input.mileageIn,
-      notes: input.notes || null,
-    },
+  const mileageIn = input.mileageIn ?? vehicle.mileage ?? undefined;
 
-    include: {
-      customer: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          phone: true,
-        },
+  if (
+    mileageIn !== undefined &&
+    vehicle.mileage !== null &&
+    mileageIn < vehicle.mileage
+  ) {
+    throw new AppError(
+      "Mileage in cannot be lower than the vehicle's current mileage",
+      400,
+    );
+  }
+
+  const job = await prisma.$transaction(async (tx) => {
+    const createdJob = await tx.repairJob.create({
+      data: {
+        jobNumber,
+        customerId: input.customerId,
+        vehicleId: input.vehicleId,
+        mechanicId: input.mechanicId,
+        complaint: input.complaint,
+        diagnosis: input.diagnosis || null,
+        status: input.status || "RECEIVED",
+        priority: input.priority || "NORMAL",
+        mileageIn,
+        notes: input.notes || null,
       },
 
-      vehicle: {
-        select: {
-          id: true,
-          registrationNumber: true,
-          make: true,
-          model: true,
+      include: {
+        customer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            phone: true,
+          },
         },
-      },
 
-      mechanic: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
+        vehicle: {
+          select: {
+            id: true,
+            registrationNumber: true,
+            make: true,
+            model: true,
+          },
+        },
+
+        mechanic: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
         },
       },
-    },
+    });
+
+    if (mileageIn !== undefined && mileageIn > (vehicle.mileage ?? -1)) {
+      await tx.vehicle.update({
+        where: { id: vehicle.id },
+        data: { mileage: mileageIn },
+      });
+    }
+
+    return createdJob;
   });
 
   await invalidateDashboardCache();
@@ -353,6 +401,14 @@ export const updateRepairJob = async (
     where: {
       id: jobId,
     },
+    include: {
+      vehicle: {
+        select: {
+          id: true,
+          mileage: true,
+        },
+      },
+    },
   });
 
   if (!existingJob) {
@@ -361,6 +417,22 @@ export const updateRepairJob = async (
 
   if (input.mechanicId) {
     await validateMechanic(input.mechanicId);
+  }
+
+  if (
+    input.mileageIn !== undefined &&
+    existingJob.mileageOut !== null &&
+    input.mileageIn > existingJob.mileageOut
+  ) {
+    throw new AppError("Mileage in cannot be greater than mileage out", 400);
+  }
+
+  if (
+    input.mileageOut !== undefined &&
+    existingJob.mileageIn !== null &&
+    input.mileageOut < existingJob.mileageIn
+  ) {
+    throw new AppError("Mileage out cannot be lower than mileage in", 400);
   }
 
   if (input.status && input.status !== existingJob.status) {
@@ -389,58 +461,85 @@ export const updateRepairJob = async (
     }
   }
 
-  const job = await prisma.repairJob.update({
-    where: {
-      id: jobId,
-    },
+  const mileageOutAllowed =
+    input.status === "COMPLETED" ||
+    input.status === "READY_FOR_PICKUP" ||
+    input.status === "DELIVERED";
 
-    data: {
-      mechanicId: input.mechanicId,
-      complaint: input.complaint,
-      diagnosis: input.diagnosis,
-      status: input.status,
-      priority: input.priority,
-      mileageIn: input.mileageIn,
-      mileageOut:
-        input.status === "COMPLETED" ||
-        input.status === "READY_FOR_PICKUP" ||
-        input.status === "DELIVERED"
-          ? input.mileageOut
-          : undefined,
-      completedAt:
-        input.status === "COMPLETED" && !existingJob.completedAt
-          ? new Date()
-          : undefined,
-      notes: input.notes,
-    },
+  const mileageOut = mileageOutAllowed ? input.mileageOut : undefined;
 
-    include: {
-      customer: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          phone: true,
-        },
+  if (
+    mileageOut !== undefined &&
+    existingJob.vehicle.mileage !== null &&
+    mileageOut < existingJob.vehicle.mileage
+  ) {
+    throw new AppError(
+      "Mileage out cannot be lower than the vehicle's current mileage",
+      400,
+    );
+  }
+
+  const job = await prisma.$transaction(async (tx) => {
+    const updatedJob = await tx.repairJob.update({
+      where: {
+        id: jobId,
       },
 
-      vehicle: {
-        select: {
-          id: true,
-          registrationNumber: true,
-          make: true,
-          model: true,
-        },
+      data: {
+        mechanicId: input.mechanicId,
+        complaint: input.complaint,
+        diagnosis: input.diagnosis,
+        status: input.status,
+        priority: input.priority,
+        mileageIn: input.mileageIn,
+        mileageOut,
+        completedAt:
+          input.status === "COMPLETED" && !existingJob.completedAt
+            ? new Date()
+            : undefined,
+        notes: input.notes,
       },
 
-      mechanic: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
+      include: {
+        customer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            phone: true,
+          },
+        },
+
+        vehicle: {
+          select: {
+            id: true,
+            registrationNumber: true,
+            make: true,
+            model: true,
+          },
+        },
+
+        mechanic: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
         },
       },
-    },
+    });
+
+    if (
+      mileageOut !== undefined &&
+      mileageOut > (existingJob.vehicle.mileage ?? -1)
+    ) {
+      await tx.vehicle.update({
+        where: { id: existingJob.vehicle.id },
+        data: { mileage: mileageOut },
+      });
+    }
+
+    return updatedJob;
   });
 
   await invalidateDashboardCache();
@@ -474,6 +573,14 @@ export const updateRepairJobAsMechanic = async (
     where: {
       id: jobId,
     },
+    include: {
+      vehicle: {
+        select: {
+          id: true,
+          mileage: true,
+        },
+      },
+    },
   });
 
   if (!existingJob) {
@@ -496,6 +603,17 @@ export const updateRepairJobAsMechanic = async (
     throw new AppError("Mileage out cannot be lower than mileage in", 400);
   }
 
+  if (
+    input.mileageOut !== undefined &&
+    existingJob.vehicle.mileage !== null &&
+    input.mileageOut < existingJob.vehicle.mileage
+  ) {
+    throw new AppError(
+      "Mileage out cannot be lower than the vehicle's current mileage",
+      400,
+    );
+  }
+
   if (input.status && input.status !== existingJob.status) {
     // Mechanics may only set operational statuses; front-office handles READY_FOR_PICKUP and DELIVERED
     const mechanicAllowedStatuses: string[] = [
@@ -514,49 +632,63 @@ export const updateRepairJobAsMechanic = async (
     validateStatusTransition(existingJob.status, input.status);
   }
 
-  const job = await prisma.repairJob.update({
-    where: {
-      id: jobId,
-    },
-
-    data: {
-      diagnosis: input.diagnosis,
-      status: input.status,
-      mileageOut: input.mileageOut,
-      completedAt:
-        input.status === "COMPLETED" && !existingJob.completedAt
-          ? new Date()
-          : undefined,
-      notes: input.notes,
-    },
-
-    include: {
-      customer: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          phone: true,
-        },
+  const job = await prisma.$transaction(async (tx) => {
+    const updatedJob = await tx.repairJob.update({
+      where: {
+        id: jobId,
       },
 
-      vehicle: {
-        select: {
-          id: true,
-          registrationNumber: true,
-          make: true,
-          model: true,
-        },
+      data: {
+        diagnosis: input.diagnosis,
+        status: input.status,
+        mileageOut: input.mileageOut,
+        completedAt:
+          input.status === "COMPLETED" && !existingJob.completedAt
+            ? new Date()
+            : undefined,
+        notes: input.notes,
       },
 
-      mechanic: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
+      include: {
+        customer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            phone: true,
+          },
+        },
+
+        vehicle: {
+          select: {
+            id: true,
+            registrationNumber: true,
+            make: true,
+            model: true,
+          },
+        },
+
+        mechanic: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
         },
       },
-    },
+    });
+
+    if (
+      input.mileageOut !== undefined &&
+      input.mileageOut > (existingJob.vehicle.mileage ?? -1)
+    ) {
+      await tx.vehicle.update({
+        where: { id: existingJob.vehicle.id },
+        data: { mileage: input.mileageOut },
+      });
+    }
+
+    return updatedJob;
   });
 
   await invalidateDashboardCache();
@@ -596,10 +728,40 @@ export const deleteRepairJob = async (jobId: string) => {
     throw new AppError("Repair jobs with invoices cannot be deleted", 409);
   }
 
-  await prisma.repairJob.delete({
-    where: {
-      id: jobId,
-    },
+  if (
+    existingJob.status === "COMPLETED" ||
+    existingJob.status === "READY_FOR_PICKUP" ||
+    existingJob.status === "DELIVERED"
+  ) {
+    throw new AppError(
+      "Completed or later-stage repair jobs cannot be deleted",
+      409,
+    );
+  }
+
+  await prisma.$transaction(async (tx) => {
+    const jobParts = await tx.jobPart.findMany({
+      where: { jobId },
+      select: { partId: true, quantity: true },
+    });
+
+    for (const jobPart of jobParts) {
+      await tx.part.update({
+        where: { id: jobPart.partId },
+        data: { quantity: { increment: jobPart.quantity } },
+      });
+      await tx.inventoryTransaction.create({
+        data: {
+          partId: jobPart.partId,
+          type: "RETURN",
+          quantity: jobPart.quantity,
+          referenceType: "REPAIR_JOB_DELETION",
+          referenceId: jobId,
+        },
+      });
+    }
+
+    await tx.repairJob.delete({ where: { id: jobId } });
   });
 
   await invalidateDashboardCache();
@@ -609,14 +771,48 @@ export const getMyRepairJobs = async (
   mechanicId: string,
   page: number,
   limit: number,
+  search?: string,
+  status?: string,
+  priority?: CreateRepairJobInput["priority"],
 ) => {
   const skip = (page - 1) * limit;
+  const where: any = {
+    mechanicId,
+    ...(search
+      ? {
+          OR: [
+            { jobNumber: { contains: search, mode: "insensitive" as const } },
+            { complaint: { contains: search, mode: "insensitive" as const } },
+            { diagnosis: { contains: search, mode: "insensitive" as const } },
+            { notes: { contains: search, mode: "insensitive" as const } },
+            {
+              customer: {
+                firstName: { contains: search, mode: "insensitive" as const },
+              },
+            },
+            {
+              customer: {
+                lastName: { contains: search, mode: "insensitive" as const },
+              },
+            },
+            {
+              vehicle: {
+                registrationNumber: {
+                  contains: search,
+                  mode: "insensitive" as const,
+                },
+              },
+            },
+          ],
+        }
+      : {}),
+    ...(status ? { status } : {}),
+    ...(priority ? { priority } : {}),
+  };
 
   const [jobs, total] = await prisma.$transaction([
     prisma.repairJob.findMany({
-      where: {
-        mechanicId,
-      },
+      where,
 
       skip,
       take: limit,
@@ -661,9 +857,7 @@ export const getMyRepairJobs = async (
     }),
 
     prisma.repairJob.count({
-      where: {
-        mechanicId,
-      },
+      where,
     }),
   ]);
 
@@ -679,7 +873,7 @@ export const getMyRepairJobs = async (
 };
 
 const validStatusTransitions: Record<string, string[]> = {
-  RECEIVED: ["IN_PROGRESS"],
+  RECEIVED: ["IN_PROGRESS", "COMPLETED"],
   IN_PROGRESS: ["WAITING_FOR_PARTS", "COMPLETED"],
   WAITING_FOR_PARTS: ["IN_PROGRESS", "COMPLETED"],
   COMPLETED: ["READY_FOR_PICKUP"],

@@ -16,6 +16,7 @@ import type {
   PartListParams,
   UpdatePartInput,
 } from "../types/part";
+import { getErrorMessage } from "../utils/errorMessage";
 
 export const partKeys = {
   all: ["parts"] as const,
@@ -67,8 +68,8 @@ export const useCreatePart = () => {
       queryClient.invalidateQueries({ queryKey: partKeys.all });
       toast.success("Part created successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to create part");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to create part"));
     },
   });
 };
@@ -85,8 +86,8 @@ export const useUpdatePart = () => {
       queryClient.invalidateQueries({ queryKey: partKeys.detail(variables.id) });
       toast.success("Part updated successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to update part");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to update part"));
     },
   });
 };
@@ -106,8 +107,8 @@ export const useAdjustStock = () => {
       });
       toast.success("Stock adjusted successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to adjust stock");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to adjust stock"));
     },
   });
 };
@@ -122,8 +123,8 @@ export const useDeletePart = () => {
       queryClient.invalidateQueries({ queryKey: partKeys.all });
       toast.success("Part deleted successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to delete part");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to delete part"));
     },
   });
 };

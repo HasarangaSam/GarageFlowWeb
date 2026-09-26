@@ -127,6 +127,8 @@ DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/garageflow?schema=public
 ACCESS_TOKEN_SECRET="replace-with-a-long-random-secret"
 REFRESH_TOKEN_SECRET="replace-with-a-long-random-secret"
 CLIENT_URL="http://localhost:5173"
+# Optional additional frontend origins, comma-separated. Do not use wildcards.
+ALLOWED_ORIGINS=""
 
 # Optional: Redis-backed cache, rate limits, and token blacklist
 UPSTASH_REDIS_REST_URL=""

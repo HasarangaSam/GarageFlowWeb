@@ -16,7 +16,7 @@ const router = Router();
 
 router.use(requireAuth);
 
-router.get("/", asyncHandler(getVehiclesController));
+router.get("/", requireRole("OWNER", "MANAGER"), asyncHandler(getVehiclesController));
 
 router.post(
   "/",
@@ -24,7 +24,7 @@ router.post(
   asyncHandler(createVehicleController),
 );
 
-router.get("/:id", asyncHandler(getVehicleController));
+router.get("/:id", requireRole("OWNER", "MANAGER"), asyncHandler(getVehicleController));
 
 router.patch(
   "/:id",

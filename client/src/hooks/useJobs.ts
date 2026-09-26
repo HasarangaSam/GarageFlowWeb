@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
   addJobPart,
@@ -32,39 +28,34 @@ export const jobKeys = {
 
   lists: () => [...jobKeys.all, "list"] as const,
 
-  list: (params: JobListParams) =>
-    [...jobKeys.lists(), params] as const,
+  list: (params: JobListParams) => [...jobKeys.lists(), params] as const,
 
   details: () => [...jobKeys.all, "detail"] as const,
 
-  detail: (jobId: string) =>
-    [...jobKeys.details(), jobId] as const,
+  detail: (jobId: string) => [...jobKeys.details(), jobId] as const,
 
   myJobs: () => [...jobKeys.all, "my"] as const,
 
-  myJobList: (page: number, limit: number) =>
-    [...jobKeys.myJobs(), page, limit] as const,
+  myJobList: (
+    params: Pick<
+      JobListParams,
+      "page" | "limit" | "search" | "status" | "priority"
+    >,
+  ) => [...jobKeys.myJobs(), params] as const,
 
-  parts: (jobId: string) =>
-    [...jobKeys.all, "parts", jobId] as const,
+  parts: (jobId: string) => [...jobKeys.all, "parts", jobId] as const,
 };
 
-export const useJobs = (
-  params: JobListParams = {},
-) => {
+export const useJobs = (params: JobListParams = {}) => {
   return useQuery({
     queryKey: jobKeys.list(params),
     queryFn: () => getJobs(params),
   });
 };
 
-export const useJob = (
-  jobId: string | null,
-) => {
+export const useJob = (jobId: string | null) => {
   return useQuery({
-    queryKey: jobId
-      ? jobKeys.detail(jobId)
-      : jobKeys.details(),
+    queryKey: jobId ? jobKeys.detail(jobId) : jobKeys.details(),
 
     queryFn: () => getJobById(jobId as string),
 
@@ -73,22 +64,20 @@ export const useJob = (
 };
 
 export const useMyJobs = (
-  page = 1,
-  limit = 10,
+  params: Pick<
+    JobListParams,
+    "page" | "limit" | "search" | "status" | "priority"
+  > = {},
 ) => {
   return useQuery({
-    queryKey: jobKeys.myJobList(page, limit),
-    queryFn: () => getMyJobs(page, limit),
+    queryKey: jobKeys.myJobList(params),
+    queryFn: () => getMyJobs(params),
   });
 };
 
-export const useJobParts = (
-  jobId: string | null,
-) => {
+export const useJobParts = (jobId: string | null) => {
   return useQuery({
-    queryKey: jobId
-      ? jobKeys.parts(jobId)
-      : [...jobKeys.all, "parts"],
+    queryKey: jobId ? jobKeys.parts(jobId) : [...jobKeys.all, "parts"],
 
     queryFn: () => getJobParts(jobId as string),
 
@@ -100,8 +89,7 @@ export const useCreateJob = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateRepairJobInput) =>
-      createJob(data),
+    mutationFn: (data: CreateRepairJobInput) => createJob(data),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
@@ -138,10 +126,7 @@ export const useUpdateJob = () => {
         queryKey: jobKeys.myJobs(),
       });
 
-      queryClient.setQueryData(
-        jobKeys.detail(updatedJob.id),
-        updatedJob,
-      );
+      queryClient.setQueryData(jobKeys.detail(updatedJob.id), updatedJob);
     },
   });
 };
@@ -168,10 +153,7 @@ export const useUpdateJobAsMechanic = () => {
         queryKey: jobKeys.myJobs(),
       });
 
-      queryClient.setQueryData(
-        jobKeys.detail(updatedJob.id),
-        updatedJob,
-      );
+      queryClient.setQueryData(jobKeys.detail(updatedJob.id), updatedJob);
     },
   });
 };
@@ -180,8 +162,7 @@ export const useDeleteJob = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (jobId: string) =>
-      deleteJob(jobId),
+    mutationFn: (jobId: string) => deleteJob(jobId),
 
     onSuccess: (_, jobId) => {
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
@@ -204,13 +185,8 @@ export const useAddJobPart = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      jobId,
-      data,
-    }: {
-      jobId: string;
-      data: AddJobPartInput;
-    }) => addJobPart(jobId, data),
+    mutationFn: ({ jobId, data }: { jobId: string; data: AddJobPartInput }) =>
+      addJobPart(jobId, data),
 
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
@@ -233,8 +209,12 @@ export const useAddJobParts = () => {
       addJobParts(jobId, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
-      queryClient.invalidateQueries({ queryKey: jobKeys.detail(variables.jobId) });
-      queryClient.invalidateQueries({ queryKey: jobKeys.parts(variables.jobId) });
+      queryClient.invalidateQueries({
+        queryKey: jobKeys.detail(variables.jobId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: jobKeys.parts(variables.jobId),
+      });
     },
   });
 };
@@ -243,13 +223,8 @@ export const useRemoveJobPart = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      jobId,
-      jobPartId,
-    }: {
-      jobId: string;
-      jobPartId: string;
-    }) => removeJobPart(jobId, jobPartId),
+    mutationFn: ({ jobId, jobPartId }: { jobId: string; jobPartId: string }) =>
+      removeJobPart(jobId, jobPartId),
 
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });

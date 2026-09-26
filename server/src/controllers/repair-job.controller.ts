@@ -36,7 +36,8 @@ export const getRepairJobsController = async (req: Request, res: Response) => {
   const search =
     typeof req.query.search === "string" ? req.query.search.trim() : undefined;
 
-  const rawStatus = typeof req.query.status === "string" ? req.query.status.trim() : undefined;
+  const rawStatus =
+    typeof req.query.status === "string" ? req.query.status.trim() : undefined;
   let parsedStatus: string | undefined = undefined;
 
   if (rawStatus) {
@@ -60,12 +61,17 @@ export const getRepairJobsController = async (req: Request, res: Response) => {
     throw new AppError("Invalid job priority", 400);
   }
 
+  const mechanicId =
+    typeof req.query.mechanicId === "string"
+      ? req.query.mechanicId.trim() || undefined
+      : undefined;
+
   const hasInvoice =
     req.query.hasInvoice === "true"
       ? true
       : req.query.hasInvoice === "false"
-      ? false
-      : undefined;
+        ? false
+        : undefined;
 
   const result = await getRepairJobs({
     page,
@@ -73,6 +79,7 @@ export const getRepairJobsController = async (req: Request, res: Response) => {
     search,
     status: parsedStatus,
     priority: priority?.success ? priority.data : undefined,
+    mechanicId,
     hasInvoice,
   });
 
@@ -88,10 +95,7 @@ export const getRepairJobController = async (
 ) => {
   const authenticatedRequest = req as AuthenticatedRequest;
 
-  const job = await getRepairJobById(
-    req.params.id,
-    authenticatedRequest.user.role,
-  );
+  const job = await getRepairJobById(req.params.id, authenticatedRequest.user);
 
   res.status(200).json({
     success: true,
@@ -199,12 +203,32 @@ export const getMyRepairJobsController = async (
     50,
   );
 
+  const search =
+    typeof req.query.search === "string" ? req.query.search.trim() : undefined;
+  const status =
+    typeof req.query.status === "string" ? req.query.status.trim() : undefined;
+  const priority =
+    typeof req.query.priority === "string"
+      ? jobPrioritySchema.safeParse(req.query.priority)
+      : null;
+
+  if (status && !jobStatusSchema.safeParse(status).success) {
+    throw new AppError("Invalid job status", 400);
+  }
+
+  if (priority && !priority.success) {
+    throw new AppError("Invalid job priority", 400);
+  }
+
   const authenticatedRequest = req as AuthenticatedRequest;
 
   const result = await getMyRepairJobs(
     authenticatedRequest.user.id,
     page,
     limit,
+    search,
+    status,
+    priority?.success ? priority.data : undefined,
   );
 
   res.status(200).json({

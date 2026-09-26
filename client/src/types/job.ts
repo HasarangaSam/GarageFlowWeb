@@ -6,11 +6,7 @@ export type JobStatus =
   | "READY_FOR_PICKUP"
   | "DELIVERED";
 
-export type JobPriority =
-  | "LOW"
-  | "NORMAL"
-  | "HIGH"
-  | "URGENT";
+export type JobPriority = "LOW" | "NORMAL" | "HIGH" | "URGENT";
 
 export interface JobCustomer {
   id: string;
@@ -137,6 +133,7 @@ export interface JobListParams {
   search?: string;
   status?: JobStatus | string;
   priority?: JobPriority;
+  mechanicId?: string;
   hasInvoice?: boolean;
 }
 

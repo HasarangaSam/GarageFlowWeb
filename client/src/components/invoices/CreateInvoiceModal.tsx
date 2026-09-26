@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect -- The modal selects its initial job from controlling props. */
 import { useEffect, useState } from "react";
 import {
   AlertCircle,
@@ -16,6 +17,7 @@ import { useJobs, useJob } from "../../hooks/useJobs";
 import { useCreateInvoice } from "../../hooks/useInvoices";
 import type { CreateInvoiceLabourItem } from "../../types/invoice";
 import { formatCurrency } from "../../utils/formatters";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 interface CreateInvoiceModalProps {
   isOpen: boolean;
@@ -64,7 +66,7 @@ export default function CreateInvoiceModal({
       }
       setError(null);
     }
-  }, [isOpen, preselectedJobId, eligibleJobsData]);
+  }, [isOpen, preselectedJobId, eligibleJobsData, selectedJobId]);
 
   const handleAddLabour = () => {
     setLabourItems((prev) => [
@@ -140,8 +142,8 @@ export default function CreateInvoiceModal({
         dueDate: dueDate || undefined,
       });
       onClose();
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to create invoice");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Failed to create invoice"));
     }
   };
 

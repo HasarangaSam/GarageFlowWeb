@@ -19,6 +19,7 @@ export interface CustomerVehicle {
   make: string;
   model: string;
   year: number | null;
+  mileage: number | null;
   color: string | null;
   createdAt: string;
 }

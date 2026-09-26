@@ -14,9 +14,16 @@ interface GetPartsParams {
   limit: number;
   search?: string;
   status?: "all" | "inStock" | "lowStock" | "outOfStock";
+  includeFinancials?: boolean;
 }
 
-export const getParts = async ({ page, limit, search, status = "all" }: GetPartsParams) => {
+export const getParts = async ({
+  page,
+  limit,
+  search,
+  status = "all",
+  includeFinancials = true,
+}: GetPartsParams) => {
   const skip = (page - 1) * limit;
 
   // Build where conditions
@@ -64,6 +71,19 @@ export const getParts = async ({ page, limit, search, status = "all" }: GetParts
       orderBy: {
         createdAt: "desc",
       },
+      select: includeFinancials
+        ? undefined
+        : {
+            id: true,
+            sku: true,
+            name: true,
+            description: true,
+            quantity: true,
+            minimumStock: true,
+            sellingPrice: true,
+            createdAt: true,
+            updatedAt: true,
+          },
     }),
 
     prisma.part.count({

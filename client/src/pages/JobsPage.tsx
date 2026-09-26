@@ -38,6 +38,7 @@ import {
   useUpdateJob,
   useUpdateJobAsMechanic,
 } from "../hooks/useJobs";
+import { useMechanics } from "../hooks/useUsers";
 import { useAuth } from "../hooks/useAuth";
 
 import type { JobFormValues } from "../schemas/jobFormSchema";
@@ -78,6 +79,7 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<JobStatus | "">("");
   const [priorityFilter, setPriorityFilter] = useState<JobPriority | "">("");
+  const [mechanicFilter, setMechanicFilter] = useState("");
   const [page, setPage] = useState(1);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -96,10 +98,22 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
           search: search.trim() || undefined,
           status: (statusFilter as JobStatus) || undefined,
           priority: (priorityFilter as JobPriority) || undefined,
+          mechanicId: mechanicFilter || undefined,
         },
   );
+  const { data: mechanics = [] } = useMechanics(undefined, !isMyJobs);
 
-  const myJobsQuery = useMyJobs(isMyJobs ? page : 1, PAGE_SIZE);
+  const myJobsQuery = useMyJobs(
+    isMyJobs
+      ? {
+          page,
+          limit: PAGE_SIZE,
+          search: search.trim() || undefined,
+          status: (statusFilter as JobStatus) || undefined,
+          priority: (priorityFilter as JobPriority) || undefined,
+        }
+      : {},
+  );
 
   const activeQuery = isMyJobs ? myJobsQuery : allJobsQuery;
   const { data, isLoading, isFetching, isError } = activeQuery;
@@ -263,55 +277,75 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
         )}
       </div>
 
-      {/* Filters (only on main jobs view) */}
-      {!isMyJobs && (
-        <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs md:flex-row md:items-center">
-          <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <Input
-              placeholder="Search job #, customer, or vehicle registration..."
-              value={search}
-              onChange={handleSearchChange}
-              className="pl-9"
-            />
-          </div>
+      {/* Job filters */}
+      <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs md:flex-row md:items-center">
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Input
+            placeholder={
+              isMyJobs
+                ? "Search job #, customer, vehicle, or complaint..."
+                : "Search job #, customer, vehicle, or mechanic..."
+            }
+            value={search}
+            onChange={handleSearchChange}
+            className="pl-9"
+          />
+        </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            <div className="flex items-center gap-1.5">
-              <Filter className="h-4 w-4 text-slate-400" />
-              <select
-                value={statusFilter}
-                onChange={(e) => {
-                  setStatusFilter(e.target.value as JobStatus | "");
-                  setPage(1);
-                }}
-                className="rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              >
-                {statusOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex items-center gap-1.5">
+            <Filter className="h-4 w-4 text-slate-400" />
             <select
-              value={priorityFilter}
+              value={statusFilter}
               onChange={(e) => {
-                setPriorityFilter(e.target.value as JobPriority | "");
+                setStatusFilter(e.target.value as JobStatus | "");
                 setPage(1);
               }}
               className="rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             >
-              {priorityOptions.map((opt) => (
+              {statusOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>
               ))}
             </select>
           </div>
+
+          <select
+            value={priorityFilter}
+            onChange={(e) => {
+              setPriorityFilter(e.target.value as JobPriority | "");
+              setPage(1);
+            }}
+            className="rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          >
+            {priorityOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          {!isMyJobs && (
+            <select
+              aria-label="Filter by mechanic"
+              value={mechanicFilter}
+              onChange={(e) => {
+                setMechanicFilter(e.target.value);
+                setPage(1);
+              }}
+              className="rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            >
+              <option value="">All Mechanics</option>
+              {mechanics.map((mechanic) => (
+                <option key={mechanic.id} value={mechanic.id}>
+                  {mechanic.name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
-      )}
+      </div>
 
       {/* Table Container */}
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
@@ -329,17 +363,18 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
               No repair jobs found
             </p>
             <p className="mt-1 text-sm text-gray-500">
-              {isMyJobs
-                ? "You do not have any repair jobs assigned to you right now."
-                : search || statusFilter || priorityFilter
-                  ? "No jobs match your current search and filter criteria."
+              {search || statusFilter || priorityFilter || mechanicFilter
+                ? "No jobs match your current search and filter criteria."
+                : isMyJobs
+                  ? "You do not have any repair jobs assigned to you right now."
                   : "Get started by creating your first repair job."}
             </p>
             {canManage &&
               !isMyJobs &&
               !search &&
               !statusFilter &&
-              !priorityFilter && (
+              !priorityFilter &&
+              !mechanicFilter && (
                 <Button onClick={handleCreate} className="mt-4">
                   <Plus className="mr-2 h-4 w-4" />
                   New Repair Job

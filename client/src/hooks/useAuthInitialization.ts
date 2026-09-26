@@ -12,10 +12,9 @@ export const useAuthInitialization = () => {
   useEffect(() => {
     const initialize = async () => {
       try {
-        const currentRefreshToken = useAuthStore.getState().refreshToken;
-        const data = await refreshAccessToken(currentRefreshToken);
+        const data = await refreshAccessToken();
 
-        setAuth(data.user, data.accessToken, data.refreshToken);
+        setAuth(data.user, data.accessToken);
       } catch {
         useAuthStore.getState().clearAuth();
       } finally {

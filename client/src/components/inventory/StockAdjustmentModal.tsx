@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect -- The modal intentionally resets its local draft when opened. */
 import { useState, useEffect } from "react";
 import {
   AlertCircle,
@@ -11,6 +12,7 @@ import Input from "../ui/Input";
 import Modal from "../ui/Modal";
 import type { Part } from "../../types/part";
 import { useAdjustStock } from "../../hooks/useParts";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 interface StockAdjustmentModalProps {
   isOpen: boolean;
@@ -84,8 +86,8 @@ export default function StockAdjustmentModal({
         },
       });
       onClose();
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to adjust stock");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Failed to adjust stock"));
     }
   };
 

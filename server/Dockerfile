@@ -24,9 +24,6 @@ COPY tsconfig.json ./
 # then compile TypeScript to dist/
 RUN npm run build
 
-# Prune devDependencies to keep image lightweight
-RUN npm prune --production
-
 # ==========================================
 # Stage 2: Production Runtime
 # ==========================================
@@ -58,5 +55,6 @@ EXPOSE 5000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:5000/api/health || exit 1
 
-# Start the compiled Node.js application
-CMD ["node", "dist/server.js"]
+# Apply migrations before accepting traffic, then start the compiled API.
+# Prisma remains installed so a fresh production database is provisioned.
+CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy && node dist/server.js"]

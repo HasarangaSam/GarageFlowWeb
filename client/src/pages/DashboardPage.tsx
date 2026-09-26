@@ -132,6 +132,7 @@ export default function DashboardPage() {
   const { data, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ["dashboard"],
     queryFn: getDashboard,
+    refetchOnMount: "always",
   });
 
   if (isLoading) {

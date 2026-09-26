@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect -- The modal derives a fresh payment draft when opened. */
 import { useEffect, useState } from "react";
 import {
   AlertCircle,
@@ -12,6 +13,7 @@ import Modal from "../ui/Modal";
 import type { Invoice, PaymentMethod } from "../../types/invoice";
 import { useRecordPayment } from "../../hooks/useInvoices";
 import { formatCurrency } from "../../utils/formatters";
+import { getErrorMessage } from "../../utils/errorMessage";
 
 interface RecordPaymentModalProps {
   isOpen: boolean;
@@ -47,7 +49,7 @@ export default function RecordPaymentModal({
       setReference("");
       setError(null);
     }
-  }, [isOpen, invoice]);
+  }, [isOpen, invoice, remainingBalance]);
 
   if (!invoice) return null;
 
@@ -78,8 +80,8 @@ export default function RecordPaymentModal({
         },
       });
       onClose();
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to record payment");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Failed to record payment"));
     }
   };
 

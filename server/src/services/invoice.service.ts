@@ -384,6 +384,12 @@ export const updateInvoice = async (
     include: {
       items: true,
       payments: true,
+      job: {
+        select: {
+          id: true,
+          status: true,
+        },
+      },
     },
   });
 
@@ -444,40 +450,49 @@ export const updateInvoice = async (
     tax,
   );
 
-  const updatedInvoice = await prisma.invoice.update({
-    where: {
-      id: invoiceId,
-    },
+  const updatedInvoice = await prisma.$transaction(async (tx) => {
+    if (input.status === "ISSUED" && invoice.job.status === "COMPLETED") {
+      await tx.repairJob.update({
+        where: { id: invoice.job.id },
+        data: { status: "READY_FOR_PICKUP" },
+      });
+    }
 
-    data: {
-      discount,
-      tax,
-      subtotal,
-      total,
-
-      dueDate:
-        input.dueDate !== undefined ? new Date(input.dueDate) : undefined,
-
-      status: input.status,
-
-      issuedAt: input.status === "ISSUED" ? new Date() : undefined,
-    },
-
-    include: {
-      customer: true,
-      vehicle: true,
-
-      job: {
-        select: {
-          id: true,
-          jobNumber: true,
-          status: true,
-        },
+    return tx.invoice.update({
+      where: {
+        id: invoiceId,
       },
 
-      items: true,
-      payments: true,
-    },
+      data: {
+        discount,
+        tax,
+        subtotal,
+        total,
+
+        dueDate:
+          input.dueDate !== undefined ? new Date(input.dueDate) : undefined,
+
+        status: input.status,
+
+        issuedAt: input.status === "ISSUED" ? new Date() : undefined,
+      },
+
+      include: {
+        customer: true,
+        vehicle: true,
+
+        job: {
+          select: {
+            id: true,
+            jobNumber: true,
+            status: true,
+          },
+        },
+
+        items: true,
+        payments: true,
+      },
+    });
   });
 
   await invalidateDashboardCache();

@@ -16,6 +16,8 @@ import {
   X,
 } from "lucide-react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 import { useAuth } from "../hooks/useAuth";
@@ -44,13 +46,13 @@ const navigation = [
     label: "Customers",
     path: "/customers",
     icon: Users,
-    roles: ["OWNER", "MANAGER", "MECHANIC"],
+    roles: ["OWNER", "MANAGER"],
   },
   {
     label: "Vehicles",
     path: "/vehicles",
     icon: Car,
-    roles: ["OWNER", "MANAGER", "MECHANIC"],
+    roles: ["OWNER", "MANAGER"],
   },
   {
     label: "Jobs",
@@ -62,7 +64,7 @@ const navigation = [
     label: "Inventory",
     path: "/inventory",
     icon: Package,
-    roles: ["OWNER", "MANAGER", "MECHANIC"],
+    roles: ["OWNER", "MANAGER"],
   },
   {
     label: "Invoices",
@@ -110,11 +112,27 @@ export default function DashboardLayout() {
   const socket = useSocket();
   const { markAsRead, markAllAsRead, isMarkingAll } = useNotifications(socket);
   const unreadCount = useNotificationStore((s) => s.unreadCount);
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+
+    const handleDashboardUpdated = () => {
+      void queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    };
+
+    socket.on("dashboard:updated", handleDashboardUpdated);
+
+    return () => {
+      socket.off("dashboard:updated", handleDashboardUpdated);
+    };
+  }, [queryClient, socket]);
 
   const handleLogout = async () => {
     try {
-      const refreshToken = useAuthStore.getState().refreshToken;
-      await logoutUser(refreshToken);
+      await logoutUser();
     } catch {
       // Clear local authentication even if the server request fails.
     } finally {
@@ -315,9 +333,7 @@ export default function DashboardLayout() {
               <button
                 type="button"
                 id="notification-bell"
-                onClick={() =>
-                  setNotificationPanelOpen(!notificationPanelOpen)
-                }
+                onClick={() => setNotificationPanelOpen(!notificationPanelOpen)}
                 className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/80 bg-white text-slate-600 shadow-xs transition hover:bg-slate-50 hover:text-slate-900"
                 aria-label="Open notifications"
               >

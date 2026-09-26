@@ -6,18 +6,26 @@ import { invalidateDashboardCache } from "../utils/cache.js";
 
 import type { AddJobPartInput } from "../schemas/job-part.schema.js";
 
-export const getJobParts = async (jobId: string) => {
+export const getJobParts = async (
+  jobId: string,
+  user: { id: string; role: string },
+) => {
   const job = await prisma.repairJob.findUnique({
     where: {
       id: jobId,
     },
     select: {
       id: true,
+      mechanicId: true,
     },
   });
 
   if (!job) {
     throw new AppError("Repair job not found", 404);
+  }
+
+  if (user.role === "MECHANIC" && job.mechanicId !== user.id) {
+    throw new AppError("You can only view parts for jobs assigned to you", 403);
   }
 
   return prisma.jobPart.findMany({
@@ -30,7 +38,19 @@ export const getJobParts = async (jobId: string) => {
     },
 
     include: {
-      part: true,
+      part:
+        user.role === "MECHANIC"
+          ? {
+              select: {
+                id: true,
+                sku: true,
+                name: true,
+                description: true,
+                quantity: true,
+                sellingPrice: true,
+              },
+            }
+          : true,
     },
   });
 };
@@ -56,27 +76,24 @@ const addJobPartInTransaction = async (
       throw new AppError("Repair job not found", 404);
     }
 
+    if (
+      job.status === "COMPLETED" ||
+      job.status === "READY_FOR_PICKUP" ||
+      job.status === "DELIVERED"
+    ) {
+      throw new AppError(
+        "Parts cannot be changed after a repair job is completed",
+        400,
+      );
+    }
+
     if (user?.role === "MECHANIC") {
-      if (job.mechanicId && job.mechanicId !== user.id) {
+      if (job.mechanicId !== user.id) {
         throw new AppError(
           "You can only add parts to repair jobs assigned to you",
           403,
         );
       }
-      if (
-        job.status === "COMPLETED" ||
-        job.status === "READY_FOR_PICKUP" ||
-        job.status === "DELIVERED"
-      ) {
-        throw new AppError(
-          "Parts can only be added to jobs in operational status",
-          400,
-        );
-      }
-    }
-
-    if (job.status === "DELIVERED") {
-      throw new AppError("Parts cannot be added to a delivered job", 400);
     }
 
     // Block modifications once an invoice has been generated
@@ -100,13 +117,6 @@ const addJobPartInTransaction = async (
 
     if (!part) {
       throw new AppError("Part not found", 404);
-    }
-
-    if (part.quantity < input.quantity) {
-      throw new AppError(
-        `Insufficient stock. Only ${part.quantity} unit(s) available`,
-        409,
-      );
     }
 
     const existingJobPart = await tx.jobPart.findUnique({
@@ -139,16 +149,21 @@ const addJobPartInTransaction = async (
     });
 
     // Decrement stock and capture the updated part for the low-stock check
-    const updatedPart = await tx.part.update({
-      where: {
-        id: input.partId,
-      },
-
+    const stockUpdate = await tx.part.updateMany({
+      where: { id: input.partId, quantity: { gte: input.quantity } },
       data: {
         quantity: {
           decrement: input.quantity,
         },
       },
+    });
+
+    if (stockUpdate.count === 0) {
+      throw new AppError("Insufficient stock for this allocation", 409);
+    }
+
+    const updatedPart = await tx.part.findUniqueOrThrow({
+      where: { id: input.partId },
     });
 
     await tx.inventoryTransaction.create({
@@ -230,27 +245,24 @@ export const removeJobPart = async (
       throw new AppError("Repair job not found", 404);
     }
 
+    if (
+      job.status === "COMPLETED" ||
+      job.status === "READY_FOR_PICKUP" ||
+      job.status === "DELIVERED"
+    ) {
+      throw new AppError(
+        "Parts cannot be changed after a repair job is completed",
+        400,
+      );
+    }
+
     if (user?.role === "MECHANIC") {
-      if (job.mechanicId && job.mechanicId !== user.id) {
+      if (job.mechanicId !== user.id) {
         throw new AppError(
           "You can only remove parts from repair jobs assigned to you",
           403,
         );
       }
-      if (
-        job.status === "COMPLETED" ||
-        job.status === "READY_FOR_PICKUP" ||
-        job.status === "DELIVERED"
-      ) {
-        throw new AppError(
-          "Parts can only be removed from jobs in operational status",
-          400,
-        );
-      }
-    }
-
-    if (job.status === "DELIVERED") {
-      throw new AppError("Parts cannot be removed from a delivered job", 400);
     }
 
     // Block modifications once an invoice has been generated

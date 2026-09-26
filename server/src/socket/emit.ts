@@ -1,5 +1,16 @@
 import { getSocketIO } from "./io.js";
 
+export const emitDashboardUpdated = () => {
+  try {
+    getSocketIO()
+      .to("role:OWNER")
+      .to("role:MANAGER")
+      .emit("dashboard:updated");
+  } catch {
+    // Socket.IO is unavailable in isolated service and test processes.
+  }
+};
+
 export const emitJobCreated = (userId: string, job: unknown) => {
   getSocketIO().to(`user:${userId}`).emit("job:created", job);
 };

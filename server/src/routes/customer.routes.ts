@@ -16,9 +16,9 @@ const router = Router();
 
 router.use(requireAuth);
 
-router.get("/", asyncHandler(listCustomers));
+router.get("/", requireRole("OWNER", "MANAGER"), asyncHandler(listCustomers));
 
-router.get("/:id", asyncHandler(getCustomer));
+router.get("/:id", requireRole("OWNER", "MANAGER"), asyncHandler(getCustomer));
 
 router.post("/", requireRole("OWNER", "MANAGER"), asyncHandler(create));
 

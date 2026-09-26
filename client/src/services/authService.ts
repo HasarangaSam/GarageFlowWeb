@@ -33,17 +33,17 @@ export const loginUser = async (data: LoginInput) => {
   return response.data.data;
 };
 
-export const refreshAccessToken = async (refreshToken?: string | null) => {
+export const refreshAccessToken = async () => {
   const response = await api.post<{
     success: boolean;
     data: AuthResponse;
-  }>("/auth/refresh", refreshToken ? { refreshToken } : undefined);
+  }>("/auth/refresh");
 
   return response.data.data;
 };
 
-export const logoutUser = async (refreshToken?: string | null) => {
-  await api.post("/auth/logout", refreshToken ? { refreshToken } : undefined);
+export const logoutUser = async () => {
+  await api.post("/auth/logout");
 };
 
 export const getCurrentUser = async () => {

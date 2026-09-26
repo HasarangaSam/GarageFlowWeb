@@ -1,17 +1,17 @@
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import Button from "../ui/Button";
 import Input from "../ui/Input";
-import SearchableSelect, { type SearchableOption } from "../ui/SearchableSelect";
+import SearchableSelect, {
+  type SearchableOption,
+} from "../ui/SearchableSelect";
 import { useCustomer, useCustomers } from "../../hooks/useCustomers";
 import { useMechanics } from "../../hooks/useUsers";
-import {
-  jobFormSchema,
-  type JobFormValues,
-} from "../../schemas/jobFormSchema";
+import { jobFormSchema, type JobFormValues } from "../../schemas/jobFormSchema";
 import type { RepairJob } from "../../types/job";
+import { resolveJobMileageIn } from "../../utils/jobMileage";
 
 interface JobFormProps {
   job?: RepairJob | null;
@@ -48,7 +48,6 @@ export function JobForm({
     register,
     control,
     handleSubmit,
-    watch,
     reset,
     setValue,
     formState: { errors },
@@ -68,7 +67,9 @@ export function JobForm({
     },
   });
 
-  const selectedCustomerId = watch("customerId");
+  const selectedCustomerId = useWatch({ control, name: "customerId" });
+  const selectedVehicleId = useWatch({ control, name: "vehicleId" });
+  const currentMileageIn = useWatch({ control, name: "mileageIn" });
 
   const { data: customersData, isLoading: loadingCustomers } = useCustomers({
     limit: 100,
@@ -79,7 +80,25 @@ export function JobForm({
     selectedCustomerId || null,
   );
 
+  const selectedVehicle = customer?.vehicles.find(
+    (vehicle) => vehicle.id === selectedVehicleId,
+  );
+
   const { data: mechanics = [], isLoading: loadingMechanics } = useMechanics();
+
+  useEffect(() => {
+    const defaultMileageIn = resolveJobMileageIn(
+      selectedVehicle?.mileage ?? null,
+      currentMileageIn,
+    );
+
+    if (
+      defaultMileageIn !== undefined &&
+      (currentMileageIn === undefined || currentMileageIn === null)
+    ) {
+      setValue("mileageIn", defaultMileageIn, { shouldDirty: true });
+    }
+  }, [selectedVehicle, currentMileageIn, setValue]);
 
   useEffect(() => {
     reset({
@@ -111,22 +130,28 @@ export function JobForm({
   const customerOptions: SearchableOption[] = customers.map((c) => ({
     value: c.id,
     label: `${c.firstName} ${c.lastName}`,
-    subLabel: c.phone ? `${c.phone}${c.email ? ` • ${c.email}` : ""}` : c.email ?? undefined,
+    subLabel: c.phone
+      ? `${c.phone}${c.email ? ` • ${c.email}` : ""}`
+      : (c.email ?? undefined),
   }));
   if (customer && !customerOptions.some((c) => c.value === customer.id)) {
     customerOptions.push({
       value: customer.id,
       label: `${customer.firstName} ${customer.lastName}`,
-      subLabel: customer.phone ? `${customer.phone}${customer.email ? ` • ${customer.email}` : ""}` : customer.email ?? undefined,
+      subLabel: customer.phone
+        ? `${customer.phone}${customer.email ? ` • ${customer.email}` : ""}`
+        : (customer.email ?? undefined),
     });
   }
 
-  const vehicleOptions: SearchableOption[] = (customer?.vehicles || []).map((v) => ({
-    value: v.id,
-    label: `${v.make} ${v.model}${v.year ? ` (${v.year})` : ""}`,
-    badge: v.registrationNumber,
-    subLabel: v.color || undefined,
-  }));
+  const vehicleOptions: SearchableOption[] = (customer?.vehicles || []).map(
+    (v) => ({
+      value: v.id,
+      label: `${v.make} ${v.model}${v.year ? ` (${v.year})` : ""}`,
+      badge: v.registrationNumber,
+      subLabel: v.color || undefined,
+    }),
+  );
   if (job?.vehicle && !vehicleOptions.some((v) => v.value === job.vehicle.id)) {
     vehicleOptions.push({
       value: job.vehicle.id,
@@ -196,7 +221,23 @@ export function JobForm({
                 searchPlaceholder="Search by license plate or model..."
                 options={vehicleOptions}
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(val) => {
+                  field.onChange(val);
+                  if (val) {
+                    const pickedVehicle = customer?.vehicles.find(
+                      (vehicle) => vehicle.id === val,
+                    );
+                    const defaultMileageIn = resolveJobMileageIn(
+                      pickedVehicle?.mileage ?? null,
+                      undefined,
+                    );
+                    if (defaultMileageIn !== undefined) {
+                      setValue("mileageIn", defaultMileageIn, {
+                        shouldDirty: true,
+                      });
+                    }
+                  }
+                }}
                 isLoading={loadingCustomer}
                 error={errors.vehicleId?.message}
                 emptyMessage="No vehicles found for this customer."

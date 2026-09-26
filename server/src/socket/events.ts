@@ -3,6 +3,8 @@ import type { Notification } from "../generated/prisma/client.js";
 export interface ServerToClientEvents {
   "token:expired": () => void;
 
+  "dashboard:updated": () => void;
+
   "job:created": (job: unknown) => void;
 
   "job:assigned": (job: unknown) => void;

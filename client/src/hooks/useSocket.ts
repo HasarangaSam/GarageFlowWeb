@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useAuthStore } from "../stores/authStore";
 
@@ -16,6 +16,9 @@ let socketInstance: Socket | null = null;
 export function useSocket(): Socket | null {
   const accessToken = useAuthStore((state) => state.accessToken);
   const socketRef = useRef<Socket | null>(null);
+  const [connectedSocket, setConnectedSocket] = useState<Socket | null>(
+    socketInstance,
+  );
 
   useEffect(() => {
     if (!accessToken) {
@@ -25,21 +28,28 @@ export function useSocket(): Socket | null {
         socketInstance = null;
       }
       socketRef.current = null;
+      setConnectedSocket(null);
       return;
     }
 
     // Re-use an existing connected socket when the token hasn't changed
     if (socketInstance?.connected) {
       socketRef.current = socketInstance;
+      setConnectedSocket(socketInstance);
       return;
     }
 
     // Create a new connection
-    const socket = io(import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:5000", {
-      auth: { accessToken },
-      withCredentials: true,
-      transports: ["websocket", "polling"],
-    });
+    const socket = io(
+      import.meta.env.VITE_SOCKET_URL ||
+        import.meta.env.VITE_API_URL?.replace("/api", "") ||
+        "http://localhost:5000",
+      {
+        auth: { accessToken },
+        withCredentials: true,
+        transports: ["websocket", "polling"],
+      },
+    );
 
     socket.on("connect", () => {
       console.log("[Socket] Connected:", socket.id);
@@ -55,13 +65,15 @@ export function useSocket(): Socket | null {
 
     socketInstance = socket;
     socketRef.current = socket;
+    setConnectedSocket(socket);
 
     return () => {
       socket.disconnect();
       socketInstance = null;
       socketRef.current = null;
+      setConnectedSocket(null);
     };
   }, [accessToken]);
 
-  return socketRef.current;
+  return connectedSocket;
 }

@@ -18,6 +18,7 @@ import type {
   UpdateInvoiceInput,
 } from "../types/invoice";
 import { jobKeys } from "./useJobs";
+import { getErrorMessage } from "../utils/errorMessage";
 
 export const invoiceKeys = {
   all: ["invoices"] as const,
@@ -72,8 +73,8 @@ export const useCreateInvoice = () => {
       queryClient.invalidateQueries({ queryKey: jobKeys.all });
       toast.success(`Invoice ${invoice.invoiceNumber} created`);
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to create invoice");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to create invoice"));
     },
   });
 };
@@ -93,8 +94,8 @@ export const useUpdateInvoice = () => {
       queryClient.invalidateQueries({ queryKey: jobKeys.all });
       toast.success("Invoice updated successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to update invoice");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to update invoice"));
     },
   });
 };
@@ -110,8 +111,8 @@ export const useDeleteInvoice = () => {
       queryClient.invalidateQueries({ queryKey: jobKeys.all });
       toast.success("Invoice deleted successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to delete invoice");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to delete invoice"));
     },
   });
 };
@@ -139,8 +140,8 @@ export const useRecordPayment = () => {
       queryClient.invalidateQueries({ queryKey: jobKeys.all });
       toast.success("Payment recorded successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to record payment");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to record payment"));
     },
   });
 };
@@ -168,8 +169,8 @@ export const useDeletePayment = () => {
       queryClient.invalidateQueries({ queryKey: jobKeys.all });
       toast.success("Payment removed successfully");
     },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to remove payment");
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to remove payment"));
     },
   });
 };

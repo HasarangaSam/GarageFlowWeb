@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import { registerUser } from "../services/authService";
+import { getErrorMessage } from "../utils/errorMessage";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -28,8 +29,8 @@ export default function RegisterPage() {
       toast.success("Account created successfully");
 
       navigate("/login");
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Registration failed");
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, "Registration failed"));
     } finally {
       setLoading(false);
     }

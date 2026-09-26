@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import { loginUser } from "../services/authService";
 import { useAuthStore } from "../stores/authStore";
+import { getErrorMessage } from "../utils/errorMessage";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -26,14 +27,15 @@ export default function LoginPage() {
         password,
       });
 
-      setAuth(data.user, data.accessToken, data.refreshToken);
+      setAuth(data.user, data.accessToken);
 
       toast.success("Welcome to GarageFlow");
 
-      const destination = data.user.role === "MECHANIC" ? "/my-jobs" : "/dashboard";
+      const destination =
+        data.user.role === "MECHANIC" ? "/my-jobs" : "/dashboard";
       navigate(destination);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Login failed");
+    } catch (error: unknown) {
+      toast.error(getErrorMessage(error, "Login failed"));
     } finally {
       setLoading(false);
     }
@@ -83,13 +85,6 @@ export default function LoginPage() {
             {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>
-
-        <p className="mt-6 text-center text-sm text-gray-500">
-          Don't have an account?{" "}
-          <Link to="/register" className="font-medium text-black">
-            Create one
-          </Link>
-        </p>
       </div>
     </main>
   );

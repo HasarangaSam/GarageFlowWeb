@@ -36,20 +36,23 @@ app.use(helmet());
 
 const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
 const clientBase = clientUrl.replace(/\/$/, "");
-const allowedOrigins = [
+const allowedOrigins = new Set([
   clientBase,
-  `${clientBase}/`,
   "http://localhost:5173",
   "http://localhost:5174",
-];
+  ...(process.env.ALLOWED_ORIGINS || "")
+    .split(",")
+    .map((origin) => origin.trim().replace(/\/$/, ""))
+    .filter(Boolean),
+]);
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+      if (!origin || allowedOrigins.has(origin.replace(/\/$/, ""))) {
         callback(null, true);
       } else {
-        callback(null, true);
+        callback(new Error("Origin is not allowed by CORS"));
       }
     },
     credentials: true,

@@ -55,14 +55,17 @@ export default function MechanicJobForm({
           {job.status === "RECEIVED" && (
             <option value="RECEIVED">Received</option>
           )}
-          {(job.status === "RECEIVED" || job.status === "IN_PROGRESS") && (
+          {(job.status === "RECEIVED" ||
+            job.status === "IN_PROGRESS" ||
+            job.status === "WAITING_FOR_PARTS") && (
             <option value="IN_PROGRESS">In Progress</option>
           )}
           {(job.status === "IN_PROGRESS" ||
             job.status === "WAITING_FOR_PARTS") && (
             <option value="WAITING_FOR_PARTS">Waiting for Parts</option>
           )}
-          {(job.status === "IN_PROGRESS" ||
+          {(job.status === "RECEIVED" ||
+            job.status === "IN_PROGRESS" ||
             job.status === "WAITING_FOR_PARTS") && (
             <option value="COMPLETED">Completed</option>
           )}

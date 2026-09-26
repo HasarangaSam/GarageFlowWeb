@@ -29,6 +29,18 @@ jobs:
         working-directory: ./client
         run: npm test
 
+      - name: Enforce test coverage
+        working-directory: ./client
+        run: npm run test:coverage
+
+      - name: Run ESLint
+        working-directory: ./client
+        run: npm run lint
+
+      - name: Dependency audit
+        working-directory: ./client
+        run: npm audit --audit-level=high
+
       - name: Build Frontend Application
         working-directory: ./client
         run: npm run build
@@ -38,8 +50,22 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/garageflow?schema=public"
-      JWT_SECRET: "ci-secret-key-minimum-32-characters-long"
-      JWT_REFRESH_SECRET: "ci-refresh-secret-minimum-32-characters-long"
+      ACCESS_TOKEN_SECRET: "ci-access-token-secret-minimum-32-characters-long"
+      REFRESH_TOKEN_SECRET: "ci-refresh-token-secret-minimum-32-characters-long"
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: garageflow
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d garageflow"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -59,6 +85,10 @@ jobs:
         working-directory: ./server
         run: npx prisma generate
 
+      - name: Apply database migrations
+        working-directory: ./server
+        run: npx prisma migrate deploy
+
       - name: Run Unit Tests (Vitest)
         working-directory: ./server
         run: npm test
@@ -66,6 +96,20 @@ jobs:
       - name: Build TypeScript Code
         working-directory: ./server
         run: npm run build
+
+      - name: API health integration check
+        working-directory: ./server
+        run: |
+          npm start &
+          for attempt in {1..20}; do
+            curl --fail --silent http://localhost:5000/api/health && exit 0
+            sleep 1
+          done
+          exit 1
+
+      - name: Dependency audit
+        working-directory: ./server
+        run: npm audit --audit-level=high
 
   docker-build:
     name: Docker Container Build
@@ -84,4 +128,12 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: false
+          load: true
           tags: garageflow-backend:latest
+
+      - name: Scan image for high and critical vulnerabilities
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: garageflow-backend:latest
+          severity: HIGH,CRITICAL
+          exit-code: "1"

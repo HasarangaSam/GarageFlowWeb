@@ -18,7 +18,11 @@ const router = Router();
 
 router.use(requireAuth);
 
-router.get("/", asyncHandler(getRepairJobsController));
+router.get(
+  "/",
+  requireRole("OWNER", "MANAGER"),
+  asyncHandler(getRepairJobsController),
+);
 
 router.post(
   "/",

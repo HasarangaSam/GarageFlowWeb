@@ -10,6 +10,15 @@ import type { SocketData } from "./socket.js";
 export const initializeSocket = (httpServer: HttpServer) => {
   const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
   const clientBase = clientUrl.replace(/\/$/, "");
+  const allowedOrigins = new Set([
+    clientBase,
+    "http://localhost:5173",
+    "http://localhost:5174",
+    ...(process.env.ALLOWED_ORIGINS || "")
+      .split(",")
+      .map((origin) => origin.trim().replace(/\/$/, ""))
+      .filter(Boolean),
+  ]);
 
   const io = new Server<
     ClientToServerEvents,
@@ -19,10 +28,10 @@ export const initializeSocket = (httpServer: HttpServer) => {
   >(httpServer, {
     cors: {
       origin: (origin, callback) => {
-        if (!origin || origin.startsWith(clientBase) || origin.endsWith(".vercel.app") || origin.includes("localhost")) {
+        if (!origin || allowedOrigins.has(origin.replace(/\/$/, ""))) {
           callback(null, true);
         } else {
-          callback(null, true);
+          callback(new Error("Origin is not allowed by CORS"));
         }
       },
       credentials: true,
@@ -60,6 +69,7 @@ export const initializeSocket = (httpServer: HttpServer) => {
     const userRoom = `user:${user.id}`;
 
     socket.join(userRoom);
+    socket.join(`role:${user.role}`);
 
     console.log(`Socket connected: ${user.id}`);
 

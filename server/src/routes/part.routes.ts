@@ -21,7 +21,11 @@ router.use(requireAuth);
 
 router.get("/", asyncHandler(getPartsController));
 
-router.get("/summary", asyncHandler(getInventorySummaryController));
+router.get(
+  "/summary",
+  requireRole("OWNER", "MANAGER"),
+  asyncHandler(getInventorySummaryController),
+);
 
 router.post(
   "/",
@@ -29,9 +33,13 @@ router.post(
   asyncHandler(createPartController),
 );
 
-router.get("/:id", asyncHandler(getPartController));
+router.get("/:id", requireRole("OWNER", "MANAGER"), asyncHandler(getPartController));
 
-router.get("/:id/transactions", asyncHandler(getPartTransactionsController));
+router.get(
+  "/:id/transactions",
+  requireRole("OWNER", "MANAGER"),
+  asyncHandler(getPartTransactionsController),
+);
 
 router.post(
   "/:id/adjust",

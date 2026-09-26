@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect -- The modal intentionally resets its local draft when its controlling props change. */
 import { useEffect, useState } from "react";
 import Button from "../ui/Button";
 import Input from "../ui/Input";

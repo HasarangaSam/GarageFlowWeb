@@ -1,4 +1,5 @@
 import { redis, isRedisConfigured } from "../config/redis.js";
+import { emitDashboardUpdated } from "../socket/emit.js";
 
 const DASHBOARD_CACHE_KEY = "dashboard:summary";
 const DASHBOARD_CACHE_TTL = 60; // 60 seconds TTL
@@ -45,13 +46,13 @@ export const setDashboardCache = async (dashboard: unknown): Promise<void> => {
 };
 
 export const invalidateDashboardCache = async (): Promise<void> => {
-  if (!isRedisConfigured) {
-    return;
+  if (isRedisConfigured) {
+    try {
+      await redis.del(DASHBOARD_CACHE_KEY);
+    } catch (error) {
+      console.error("Failed to invalidate dashboard cache in Upstash Redis:", error);
+    }
   }
 
-  try {
-    await redis.del(DASHBOARD_CACHE_KEY);
-  } catch (error) {
-    console.error("Failed to invalidate dashboard cache in Upstash Redis:", error);
-  }
+  emitDashboardUpdated();
 };

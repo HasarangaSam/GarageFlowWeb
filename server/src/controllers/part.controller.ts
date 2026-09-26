@@ -49,6 +49,8 @@ export const getPartsController = async (req: Request, res: Response) => {
     limit,
     search,
     status,
+    includeFinancials:
+      (req as AuthenticatedRequest).user.role !== "MECHANIC",
   });
 
   res.status(200).json({

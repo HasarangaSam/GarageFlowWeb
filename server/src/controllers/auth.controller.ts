@@ -59,7 +59,6 @@ export const login = async (req: Request, res: Response) => {
     success: true,
     data: {
       accessToken: resultData.accessToken,
-      refreshToken: resultData.refreshToken,
       user: resultData.user,
     },
   });
@@ -81,7 +80,6 @@ export const refresh = async (req: Request, res: Response) => {
     success: true,
     data: {
       accessToken: result.accessToken,
-      refreshToken: result.refreshToken,
       user: result.user,
     },
   });

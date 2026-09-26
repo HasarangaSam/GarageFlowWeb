@@ -32,13 +32,11 @@ api.interceptors.response.use(
 
     try {
       if (!refreshPromise) {
-        const currentRefreshToken = useAuthStore.getState().refreshToken;
-
-        refreshPromise = refreshAccessToken(currentRefreshToken)
+        refreshPromise = refreshAccessToken()
           .then((data) => {
             useAuthStore
               .getState()
-              .setAuth(data.user, data.accessToken, data.refreshToken);
+              .setAuth(data.user, data.accessToken);
 
             return data.accessToken;
           })

@@ -21,7 +21,8 @@ export const getJobPartsController = async (
   req: Request<JobPartParams>,
   res: Response,
 ) => {
-  const parts = await getJobParts(req.params.id);
+  const authReq = req as unknown as AuthenticatedRequest;
+  const parts = await getJobParts(req.params.id, authReq.user);
 
   res.status(200).json({
     success: true,
