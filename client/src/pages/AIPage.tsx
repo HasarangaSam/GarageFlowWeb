@@ -1,6 +1,7 @@
 import {
   AlertCircle,
   ArrowRight,
+  BarChart3,
   Bot,
   BriefcaseBusiness,
   Car,
@@ -13,7 +14,7 @@ import {
   User,
   Users,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import toast from "react-hot-toast";
 
 import { chatWithGarageFlowAI } from "../services/aiService";
@@ -26,8 +27,89 @@ interface ChatMessage {
   timestamp: string;
 }
 
-// 6 Defined AI Tools in GarageFlow
+const renderInlineMarkdown = (text: string) => {
+  const tokens = /\*\*(.+?)\*\*|__(.+?)__|\*([^*\n]+)\*|_([^_\n]+)_|`([^`]+)`/g;
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = tokens.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+    const key = `inline-${match.index}`;
+    if (match[1] || match[2]) {
+      parts.push(<strong key={key}>{match[1] ?? match[2]}</strong>);
+    } else if (match[3] || match[4]) {
+      parts.push(<em key={key}>{match[3] ?? match[4]}</em>);
+    } else {
+      parts.push(<code key={key} className="rounded bg-slate-200/70 px-1 py-0.5 font-mono text-[0.9em]">{match[5]}</code>);
+    }
+    lastIndex = tokens.lastIndex;
+  }
+
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts;
+};
+
+const MarkdownMessage = ({ content }: { content: string }) => {
+  const lines = content.replace(/\r\n?/g, "\n").split("\n");
+  const blocks: ReactNode[] = [];
+
+  for (let index = 0; index < lines.length;) {
+    const line = lines[index];
+    if (!line.trim()) {
+      index += 1;
+      continue;
+    }
+
+    const heading = line.match(/^\s{0,3}(#{1,6})\s+(.+?)\s*#*\s*$/);
+    if (heading) {
+      const level = Math.min(heading[1].length, 4);
+      const className = level <= 2 ? "text-sm font-bold" : "font-semibold";
+      blocks.push(<h3 key={`block-${index}`} className={className}>{renderInlineMarkdown(heading[2])}</h3>);
+      index += 1;
+      continue;
+    }
+
+    const listItem = line.match(/^(\s*)([-*+]\s+|\d+[.)]\s+)(.+)$/);
+    if (listItem) {
+      const ordered = /^\d/.test(listItem[2]);
+      const items: ReactNode[] = [];
+      while (index < lines.length) {
+        const item = lines[index].match(/^(\s*)([-*+]\s+|\d+[.)]\s+)(.+)$/);
+        if (!item || /^\d/.test(item[2]) !== ordered) break;
+        const indent = Math.min(Math.floor(item[1].length / 2), 4);
+        items.push(<li key={`item-${index}`} style={{ marginLeft: indent * 16 }}>{renderInlineMarkdown(item[3])}</li>);
+        index += 1;
+      }
+      const List = ordered ? "ol" : "ul";
+      blocks.push(<List key={`block-${index}`} className={`${ordered ? "list-decimal" : "list-disc"} space-y-1 pl-5`}>{items}</List>);
+      continue;
+    }
+
+    const paragraph: ReactNode[] = [renderInlineMarkdown(line)];
+    index += 1;
+    while (index < lines.length && lines[index].trim() && !/^\s{0,3}#{1,6}\s+/.test(lines[index]) && !/^(\s*)([-*+]\s+|\d+[.)]\s+)/.test(lines[index])) {
+      paragraph.push(<br key={`br-${index}`} />, ...renderInlineMarkdown(lines[index]));
+      index += 1;
+    }
+    blocks.push(<p key={`block-${index}`} className="whitespace-pre-wrap">{paragraph}</p>);
+  }
+
+  return <div className="space-y-2">{blocks}</div>;
+};
+
+// AI capabilities backed by read-only GarageFlow data tools.
 const toolCapabilities = [
+  {
+    id: "businessAnalytics",
+    icon: BarChart3,
+    iconColor: "text-blue-600 bg-blue-50 border-blue-200/80",
+    title: "Business Trends & Comparisons",
+    tool: "getBusinessAnalytics",
+    description:
+      "Compare jobs and collections across periods, with trends by month or breakdowns by mechanic, status, and vehicle make.",
+    examplePrompt: "For the last 90 days, how many jobs were created each month, and how does that compare with the previous 90 days?",
+  },
   {
     id: "activeJobs",
     icon: BriefcaseBusiness,
@@ -198,7 +280,7 @@ export default function AIPage() {
               <div className="mt-8">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                    Available AI Capabilities (6 Defined Tools)
+                    Available AI Capabilities ({toolCapabilities.length})
                   </span>
                   <span className="text-[11px] text-slate-400">
                     Click any prompt to ask
@@ -295,7 +377,11 @@ export default function AIPage() {
                           {message.timestamp}
                         </span>
                       </div>
-                      <p className="whitespace-pre-wrap">{message.content}</p>
+                      {isUser ? (
+                        <p className="whitespace-pre-wrap">{message.content}</p>
+                      ) : (
+                        <MarkdownMessage content={message.content} />
+                      )}
                     </div>
 
                     {isUser && (

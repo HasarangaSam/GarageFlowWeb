@@ -298,3 +298,114 @@ export const getMechanicPerformance = async () => {
     }),
   };
 };
+
+type AnalyticsBreakdown = "month" | "status" | "mechanic" | "vehicle_make";
+
+/** Summarizes a bounded time window so the model can answer trend and comparison questions. */
+export const getBusinessAnalytics = async (
+  requestedDays: number,
+  breakdown: AnalyticsBreakdown = "month",
+  includeFinancials = true,
+) => {
+  const days = Math.min(Math.max(Math.trunc(requestedDays) || 30, 7), 365);
+  const end = new Date();
+  const start = new Date(end.getTime() - days * 24 * 60 * 60 * 1000);
+  const previousStart = new Date(start.getTime() - days * 24 * 60 * 60 * 1000);
+
+  const [jobs, previousJobs, payments, previousPayments, invoices, lowStock] =
+    await Promise.all([
+      prisma.repairJob.findMany({
+        where: { createdAt: { gte: start, lt: end } },
+        select: {
+          status: true,
+          priority: true,
+          createdAt: true,
+          completedAt: true,
+          mechanic: { select: { name: true } },
+          vehicle: { select: { make: true } },
+        },
+      }),
+      prisma.repairJob.count({
+        where: { createdAt: { gte: previousStart, lt: start } },
+      }),
+      includeFinancials
+        ? prisma.payment.findMany({
+            where: { paidAt: { gte: start, lt: end } },
+            select: { amount: true, paidAt: true },
+          })
+        : Promise.resolve([]),
+      includeFinancials
+        ? prisma.payment.aggregate({
+            _sum: { amount: true },
+            where: { paidAt: { gte: previousStart, lt: start } },
+          })
+        : Promise.resolve({ _sum: { amount: null } }),
+      includeFinancials
+        ? prisma.invoice.findMany({
+            where: { issuedAt: { gte: start, lt: end }, status: { not: "VOID" } },
+            select: { total: true },
+          })
+        : Promise.resolve([]),
+      prisma.part.count({ where: { quantity: { lte: 0 } } }),
+    ]);
+
+  const completed = jobs.filter((job) => job.completedAt !== null).length;
+  const revenue = payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
+  const previousRevenue = Number(previousPayments._sum.amount ?? 0);
+  const completionRate = jobs.length ? Math.round((completed / jobs.length) * 100) : 0;
+  const grouped = new Map<string, { jobs: number; completed: number; revenue: number }>();
+  const keyFor = (job: (typeof jobs)[number]) => {
+    if (breakdown === "status") return job.status;
+    if (breakdown === "mechanic") return job.mechanic?.name ?? "Unassigned";
+    if (breakdown === "vehicle_make") return job.vehicle.make;
+    return `${job.createdAt.getFullYear()}-${String(job.createdAt.getMonth() + 1).padStart(2, "0")}`;
+  };
+  for (const job of jobs) {
+    const key = keyFor(job);
+    const row = grouped.get(key) ?? { jobs: 0, completed: 0, revenue: 0 };
+    row.jobs += 1;
+    if (job.completedAt) row.completed += 1;
+    grouped.set(key, row);
+  }
+  if (breakdown === "month") {
+    for (const payment of payments) {
+      const key = `${payment.paidAt.getFullYear()}-${String(payment.paidAt.getMonth() + 1).padStart(2, "0")}`;
+      const row = grouped.get(key) ?? { jobs: 0, completed: 0, revenue: 0 };
+      row.revenue += Number(payment.amount);
+      grouped.set(key, row);
+    }
+  }
+
+  return {
+    period: { start, end, days },
+    comparison: {
+      previousPeriodJobs: previousJobs,
+      jobsChange: jobs.length - previousJobs,
+      ...(includeFinancials
+        ? { previousPeriodRevenue: previousRevenue, revenueChange: revenue - previousRevenue }
+        : {}),
+    },
+    summary: {
+      jobsCreated: jobs.length,
+      jobsCompleted: completed,
+      completionRatePercent: completionRate,
+      urgentOrHighPriorityJobs: jobs.filter((job) => ["URGENT", "HIGH"].includes(job.priority)).length,
+      zeroStockPartCount: lowStock,
+      ...(includeFinancials
+        ? {
+            paymentsCollected: revenue,
+            averageIssuedInvoice: invoices.length
+              ? invoices.reduce((sum, invoice) => sum + Number(invoice.total), 0) / invoices.length
+              : 0,
+            issuedInvoiceCount: invoices.length,
+          }
+        : {}),
+    },
+    breakdownBy: breakdown,
+    breakdown: [...grouped.entries()]
+      .map(([label, values]) => ({ label, ...values }))
+      .sort((a, b) => breakdown === "month" ? a.label.localeCompare(b.label) : b.jobs - a.jobs)
+      .slice(0, 20),
+    note: "Job completion count includes jobs created in this period that have a completion timestamp. Payments are cash collected during the period; issued invoice totals are a separate measure.",
+  };
+};
