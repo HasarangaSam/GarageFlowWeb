@@ -25,17 +25,17 @@ interface NotificationDropdownProps {
 function typeIcon(type: NotificationType) {
   switch (type) {
     case "JOB_ASSIGNED":
-      return <Wrench size={15} className="text-blue-500" />;
+      return <Wrench size={15} className="text-blue-500 dark:text-blue-400" />;
     case "JOB_COMPLETED":
-      return <ClipboardList size={15} className="text-emerald-500" />;
+      return <ClipboardList size={15} className="text-emerald-500 dark:text-emerald-400" />;
     case "JOB_STATUS_CHANGED":
-      return <ClipboardList size={15} className="text-purple-500" />;
+      return <ClipboardList size={15} className="text-purple-500 dark:text-purple-400" />;
     case "LOW_STOCK":
-      return <PackageX size={15} className="text-amber-500" />;
+      return <PackageX size={15} className="text-amber-500 dark:text-amber-400" />;
     case "PAYMENT_RECEIVED":
-      return <CreditCard size={15} className="text-green-500" />;
+      return <CreditCard size={15} className="text-emerald-500 dark:text-emerald-400" />;
     default:
-      return <Bell size={15} className="text-gray-400" />;
+      return <Bell size={15} className="text-slate-400 dark:text-slate-500" />;
   }
 }
 
@@ -63,18 +63,20 @@ function NotificationRow({
     <button
       type="button"
       onClick={() => !notification.read && onMarkRead(notification.id)}
-      className={`w-full text-left flex items-start gap-3 px-4 py-3 transition hover:bg-gray-50 ${
-        !notification.read ? "bg-blue-50/50" : ""
+      className={`w-full text-left flex items-start gap-3 px-4 py-3 transition hover:bg-slate-50 dark:hover:bg-slate-800/60 ${
+        !notification.read
+          ? "bg-indigo-50/40 dark:bg-indigo-500/10"
+          : ""
       }`}
     >
       {/* Unread dot + icon */}
       <div className="mt-0.5 flex shrink-0 items-center gap-1.5">
         <span
           className={`h-1.5 w-1.5 rounded-full shrink-0 ${
-            notification.read ? "bg-transparent" : "bg-blue-500"
+            notification.read ? "bg-transparent" : "bg-indigo-600 dark:bg-indigo-400"
           }`}
         />
-        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100">
+        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
           {typeIcon(notification.type)}
         </div>
       </div>
@@ -84,16 +86,16 @@ function NotificationRow({
         <p
           className={`text-sm leading-snug ${
             notification.read
-              ? "font-normal text-gray-700"
-              : "font-semibold text-gray-900"
+              ? "font-normal text-slate-700 dark:text-slate-300"
+              : "font-semibold text-slate-900 dark:text-slate-100"
           }`}
         >
           {notification.title}
         </p>
-        <p className="mt-0.5 text-xs text-gray-500 line-clamp-2">
+        <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
           {formatNotificationMessage(notification.message)}
         </p>
-        <p className="mt-1 text-[10px] text-gray-400">
+        <p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">
           {relativeTime(notification.createdAt)}
         </p>
       </div>
@@ -129,17 +131,17 @@ export default function NotificationDropdown({
   return (
     <div
       ref={ref}
-      className="absolute right-0 top-full mt-2 z-50 w-80 sm:w-96 rounded-xl border border-gray-200 bg-white shadow-xl overflow-hidden"
+      className="absolute right-0 top-full mt-2 z-50 w-80 sm:w-96 rounded-2xl border border-slate-200/80 bg-white shadow-xl overflow-hidden dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/70 ring-1 ring-black/5 dark:ring-white/10"
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b px-4 py-3">
+      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-4 py-3">
         <div className="flex items-center gap-2">
-          <Bell size={16} className="text-gray-600" />
-          <span className="text-sm font-semibold text-gray-900">
+          <Bell size={16} className="text-slate-600 dark:text-slate-400" />
+          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
             Notifications
           </span>
           {unreadCount > 0 && (
-            <span className="rounded-full bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white leading-none">
+            <span className="rounded-full bg-indigo-600 px-1.5 py-0.5 text-[10px] font-bold text-white leading-none">
               {unreadCount > 99 ? "99+" : unreadCount}
             </span>
           )}
@@ -152,7 +154,7 @@ export default function NotificationDropdown({
               onClick={onMarkAllRead}
               disabled={isMarkingAll}
               title="Mark all as read"
-              className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-blue-600 hover:bg-blue-50 disabled:opacity-50 transition"
+              className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-500/15 disabled:opacity-50 transition cursor-pointer"
             >
               <CheckCheck size={13} />
               All read
@@ -161,7 +163,7 @@ export default function NotificationDropdown({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md p-1 text-gray-400 hover:bg-gray-100 transition"
+            className="rounded-md p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition cursor-pointer"
           >
             <X size={15} />
           </button>
@@ -169,17 +171,17 @@ export default function NotificationDropdown({
       </div>
 
       {/* Notification list */}
-      <div className="max-h-[420px] overflow-y-auto divide-y divide-gray-100">
+      <div className="max-h-[420px] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/80">
         {recent.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 py-10 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-              <Bell size={22} className="text-gray-400" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+              <Bell size={22} className="text-slate-400 dark:text-slate-500" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600">
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
                 No notifications yet
               </p>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-slate-400 dark:text-slate-500">
                 You're all caught up!
               </p>
             </div>
@@ -196,14 +198,14 @@ export default function NotificationDropdown({
       </div>
 
       {/* Footer */}
-      <div className="border-t px-4 py-2.5">
+      <div className="border-t border-slate-100 dark:border-slate-800 px-4 py-2.5">
         <button
           type="button"
           onClick={() => {
             navigate("/notifications");
             onClose();
           }}
-          className="w-full text-center text-xs font-medium text-blue-600 hover:text-blue-700 transition"
+          className="w-full text-center text-xs font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition cursor-pointer"
         >
           View all notifications →
         </button>

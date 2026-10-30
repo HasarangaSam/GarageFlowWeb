@@ -115,7 +115,7 @@ export default function CustomerForm({
       <div>
         <label
           htmlFor="address"
-          className="mb-1.5 block text-sm font-medium text-gray-700"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-slate-300"
         >
           Address
         </label>
@@ -124,16 +124,16 @@ export default function CustomerForm({
           id="address"
           rows={3}
           placeholder="Enter customer address"
-          className={`w-full resize-none rounded-lg border bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:ring-2 ${
+          className={`w-full resize-none rounded-lg border bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:ring-2 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 ${
             errors.address
-              ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-              : "border-gray-300 focus:border-gray-500 focus:ring-gray-100"
+              ? "border-red-400 focus:border-red-500 focus:ring-red-100 dark:border-rose-500 dark:focus:ring-rose-950/20"
+              : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-100 dark:border-slate-700 dark:focus:border-indigo-500 dark:focus:ring-indigo-500/20"
           }`}
           {...register("address")}
         />
 
         {errors.address && (
-          <p className="mt-1.5 text-xs text-red-600">
+          <p className="mt-1.5 text-xs text-red-600 dark:text-rose-400">
             {errors.address.message}
           </p>
         )}
@@ -142,7 +142,7 @@ export default function CustomerForm({
       <div>
         <label
           htmlFor="notes"
-          className="mb-1.5 block text-sm font-medium text-gray-700"
+          className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-slate-300"
         >
           Notes
         </label>
@@ -151,20 +151,20 @@ export default function CustomerForm({
           id="notes"
           rows={4}
           placeholder="Add any additional notes"
-          className={`w-full resize-none rounded-lg border bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:ring-2 ${
+          className={`w-full resize-none rounded-lg border bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:ring-2 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 ${
             errors.notes
-              ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-              : "border-gray-300 focus:border-gray-500 focus:ring-gray-100"
+              ? "border-red-400 focus:border-red-500 focus:ring-red-100 dark:border-rose-500 dark:focus:ring-rose-950/20"
+              : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-100 dark:border-slate-700 dark:focus:border-indigo-500 dark:focus:ring-indigo-500/20"
           }`}
           {...register("notes")}
         />
 
         {errors.notes && (
-          <p className="mt-1.5 text-xs text-red-600">{errors.notes.message}</p>
+          <p className="mt-1.5 text-xs text-red-600 dark:text-rose-400">{errors.notes.message}</p>
         )}
       </div>
 
-      <div className="flex justify-end gap-2 border-t pt-4">
+      <div className="flex justify-end gap-2 border-t pt-4 dark:border-slate-800">
         <Button
           type="button"
           variant="secondary"

@@ -161,11 +161,11 @@ export default function CreateInvoiceModal({
         {/* Job Selection */}
         <div>
           {isLoadingEligible ? (
-            <div className="flex h-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
+            <div className="flex h-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800/50">
               <Loading />
             </div>
           ) : eligibleJobs.length === 0 && !preselectedJobId ? (
-            <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300">
               There are no completed repair jobs waiting for an invoice. Only jobs
               marked as COMPLETED or READY_FOR_PICKUP without existing invoices
               can be billed.
@@ -192,36 +192,36 @@ export default function CreateInvoiceModal({
 
         {/* Selected Job Overview */}
         {selectedJob && (
-          <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4 text-xs">
+          <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4 text-xs dark:border-blue-900/40 dark:bg-blue-950/20">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <div className="flex items-center gap-2">
-                <User size={16} className="text-blue-600" />
+                <User size={16} className="text-blue-600 dark:text-indigo-400" />
                 <div>
-                  <p className="font-semibold text-gray-900">
+                  <p className="font-semibold text-gray-900 dark:text-slate-100">
                     {selectedJob.customer.firstName}{" "}
                     {selectedJob.customer.lastName}
                   </p>
-                  <p className="text-gray-500">{selectedJob.customer.phone}</p>
+                  <p className="text-gray-500 dark:text-slate-400">{selectedJob.customer.phone}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Car size={16} className="text-blue-600" />
+                <Car size={16} className="text-blue-600 dark:text-indigo-400" />
                 <div>
-                  <p className="font-semibold text-gray-900">
+                  <p className="font-semibold text-gray-900 dark:text-slate-100">
                     {selectedJob.vehicle.registrationNumber}
                   </p>
-                  <p className="text-gray-500">
+                  <p className="text-gray-500 dark:text-slate-400">
                     {selectedJob.vehicle.make} {selectedJob.vehicle.model}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Wrench size={16} className="text-blue-600" />
+                <Wrench size={16} className="text-blue-600 dark:text-indigo-400" />
                 <div>
-                  <p className="font-semibold text-gray-900">
+                  <p className="font-semibold text-gray-900 dark:text-slate-100">
                     {selectedJob.jobNumber}
                   </p>
-                  <p className="text-gray-500">{selectedJob.status}</p>
+                  <p className="text-gray-500 dark:text-slate-400">{selectedJob.status}</p>
                 </div>
               </div>
             </div>
@@ -230,40 +230,40 @@ export default function CreateInvoiceModal({
 
         {/* Installed Parts from Job */}
         {selectedJob && (
-          <div className="rounded-xl border border-gray-200 bg-white p-4">
-            <div className="flex items-center justify-between pb-2 border-b">
-              <span className="text-xs font-semibold uppercase tracking-wider text-gray-700">
+          <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900/60">
+            <div className="flex items-center justify-between pb-2 border-b dark:border-slate-800">
+              <span className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-slate-300">
                 Parts Installed on Job ({installedParts.length})
               </span>
-              <span className="text-xs font-bold text-gray-900">
+              <span className="text-xs font-bold text-gray-900 dark:text-slate-100">
                 Parts Total: {formatCurrency(partsSubtotal)}
               </span>
             </div>
 
             {installedParts.length === 0 ? (
-              <p className="py-3 text-xs text-gray-400 italic">
+              <p className="py-3 text-xs text-gray-400 italic dark:text-slate-500">
                 No inventory parts were added to this job.
               </p>
             ) : (
-              <div className="mt-2 divide-y divide-gray-100 text-xs">
+              <div className="mt-2 divide-y divide-gray-100 text-xs dark:divide-slate-800">
                 {installedParts.map((p) => (
                   <div
                     key={p.id}
                     className="flex items-center justify-between py-2"
                   >
                     <div>
-                      <span className="font-medium text-gray-900">
+                      <span className="font-medium text-gray-900 dark:text-slate-100">
                         {p.part.name}
                       </span>
-                      <span className="ml-2 font-mono text-[11px] text-gray-400">
+                      <span className="ml-2 font-mono text-[11px] text-gray-400 dark:text-slate-500">
                         ({p.part.sku})
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-gray-500">
+                      <span className="text-gray-500 dark:text-slate-400">
                         {p.quantity} × {formatCurrency(Number(p.unitPrice))}
                       </span>
-                      <span className="font-semibold text-gray-900">
+                      <span className="font-semibold text-gray-900 dark:text-slate-100">
                         {formatCurrency(Number(p.total))}
                       </span>
                     </div>
@@ -275,15 +275,15 @@ export default function CreateInvoiceModal({
         )}
 
         {/* Labour Items */}
-        <div className="rounded-xl border border-gray-200 bg-white p-4">
-          <div className="flex items-center justify-between pb-2 border-b">
-            <span className="text-xs font-semibold uppercase tracking-wider text-gray-700">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900/60">
+          <div className="flex items-center justify-between pb-2 border-b dark:border-slate-800">
+            <span className="text-xs font-semibold uppercase tracking-wider text-gray-700 dark:text-slate-300">
               Labour & Service Charges
             </span>
             <button
               type="button"
               onClick={handleAddLabour}
-              className="flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700"
+              className="cursor-pointer flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-indigo-400 dark:hover:text-indigo-300"
             >
               <Plus size={14} />
               <span>Add Labour Item</span>
@@ -300,7 +300,7 @@ export default function CreateInvoiceModal({
                   onChange={(e) =>
                     handleLabourChange(idx, "description", e.target.value)
                   }
-                  className="flex-1 rounded-lg border border-gray-300 px-3 py-1.5 text-xs focus:border-blue-500 focus:outline-none"
+                  className="flex-1 rounded-lg border border-gray-300 px-3 py-1.5 text-xs focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
                 />
                 <input
                   type="number"
@@ -315,7 +315,7 @@ export default function CreateInvoiceModal({
                       parseFloat(e.target.value) || 0,
                     )
                   }
-                  className="w-20 rounded-lg border border-gray-300 px-2 py-1.5 text-xs text-center focus:border-blue-500 focus:outline-none"
+                  className="w-20 rounded-lg border border-gray-300 px-2 py-1.5 text-xs text-center focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                 />
                 <input
                   type="number"
@@ -330,9 +330,9 @@ export default function CreateInvoiceModal({
                       parseFloat(e.target.value) || 0,
                     )
                   }
-                  className="w-24 rounded-lg border border-gray-300 px-2 py-1.5 text-xs text-right focus:border-blue-500 focus:outline-none"
+                  className="w-24 rounded-lg border border-gray-300 px-2 py-1.5 text-xs text-right focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                 />
-                <span className="w-20 text-right text-xs font-semibold text-gray-900">
+                <span className="w-20 text-right text-xs font-semibold text-gray-900 dark:text-slate-100">
                   {formatCurrency(
                     (Number(item.quantity) || 0) * (Number(item.unitPrice) || 0),
                   )}
@@ -340,7 +340,7 @@ export default function CreateInvoiceModal({
                 <button
                   type="button"
                   onClick={() => handleRemoveLabour(idx)}
-                  className="p-1 text-gray-400 hover:text-rose-600"
+                  className="cursor-pointer p-1 text-gray-400 hover:text-rose-600 dark:text-slate-500 dark:hover:text-rose-400"
                 >
                   <Trash2 size={15} />
                 </button>
@@ -352,7 +352,7 @@ export default function CreateInvoiceModal({
         {/* Discount, Tax & Due Date */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
-            <label className="block text-xs font-medium text-gray-700">
+            <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
               Discount (Rs.)
             </label>
             <Input
@@ -366,7 +366,7 @@ export default function CreateInvoiceModal({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700">
+            <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
               Tax (Rs.)
             </label>
             <Input
@@ -380,7 +380,7 @@ export default function CreateInvoiceModal({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700">
+            <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
               Payment Due Date
             </label>
             <Input
@@ -393,44 +393,44 @@ export default function CreateInvoiceModal({
         </div>
 
         {/* Invoice Totals Summary Box */}
-        <div className="rounded-xl border border-gray-200 bg-gray-50/80 p-4 text-xs space-y-1.5">
-          <div className="flex justify-between text-gray-600">
+        <div className="rounded-xl border border-gray-200 bg-gray-50/80 p-4 text-xs space-y-1.5 dark:border-slate-800 dark:bg-slate-800/40">
+          <div className="flex justify-between text-gray-600 dark:text-slate-400">
             <span>Parts Subtotal:</span>
             <span>{formatCurrency(partsSubtotal)}</span>
           </div>
-          <div className="flex justify-between text-gray-600">
+          <div className="flex justify-between text-gray-600 dark:text-slate-400">
             <span>Labour Subtotal:</span>
             <span>{formatCurrency(labourSubtotal)}</span>
           </div>
           {numDiscount > 0 && (
-            <div className="flex justify-between text-rose-600 font-medium">
+            <div className="flex justify-between text-rose-600 font-medium dark:text-rose-400">
               <span>Discount:</span>
               <span>-{formatCurrency(numDiscount)}</span>
             </div>
           )}
           {numTax > 0 && (
-            <div className="flex justify-between text-gray-600">
+            <div className="flex justify-between text-gray-600 dark:text-slate-400">
               <span>Tax:</span>
               <span>+{formatCurrency(numTax)}</span>
             </div>
           )}
-          <div className="flex justify-between pt-2 border-t text-sm font-bold text-gray-900">
+          <div className="flex justify-between pt-2 border-t text-sm font-bold text-gray-900 dark:border-slate-700 dark:text-slate-100">
             <span>Grand Total:</span>
-            <span className="text-base text-blue-600">
+            <span className="text-base text-blue-600 dark:text-indigo-400">
               {formatCurrency(grandTotal)}
             </span>
           </div>
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 rounded-lg bg-rose-50 p-2.5 text-xs text-rose-700 border border-rose-200">
+          <div className="flex items-center gap-2 rounded-lg bg-rose-50 p-2.5 text-xs text-rose-700 border border-rose-200 dark:border-rose-900/50 dark:bg-rose-950/20 dark:text-rose-400">
             <AlertCircle size={15} />
             <span>{error}</span>
           </div>
         )}
 
         {/* Footer Actions */}
-        <div className="flex justify-end gap-3 pt-3 border-t">
+        <div className="flex justify-end gap-3 pt-3 border-t dark:border-slate-800">
           <Button
             type="button"
             variant="secondary"

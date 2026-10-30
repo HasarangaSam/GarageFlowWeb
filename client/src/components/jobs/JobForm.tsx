@@ -264,7 +264,7 @@ export function JobForm({
       <div>
         <label
           htmlFor="diagnosis"
-          className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700"
+          className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300"
         >
           Diagnosis
         </label>
@@ -272,8 +272,8 @@ export function JobForm({
           id="diagnosis"
           rows={3}
           placeholder="Initial findings, inspection notes, or technician remarks"
-          className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-50 ${
-            errors.diagnosis ? "border-rose-400" : "border-slate-200/80"
+          className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-50 dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:ring-indigo-500/20 ${
+            errors.diagnosis ? "border-rose-400 dark:border-rose-500" : "border-slate-200/80"
           }`}
           {...register("diagnosis")}
         />
@@ -288,7 +288,7 @@ export function JobForm({
         <div>
           <label
             htmlFor="status"
-            className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700"
+            className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300"
           >
             Job Status
           </label>
@@ -299,8 +299,8 @@ export function JobForm({
               <select
                 {...field}
                 id="status"
-                className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-50 ${
-                  errors.status ? "border-rose-400" : "border-slate-200/80"
+                className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-50 dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-100 dark:focus:ring-indigo-500/20 ${
+                  errors.status ? "border-rose-400 dark:border-rose-500" : "border-slate-200/80"
                 }`}
               >
                 {statuses.map((status) => (
@@ -321,7 +321,7 @@ export function JobForm({
         <div>
           <label
             htmlFor="priority"
-            className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700"
+            className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300"
           >
             Priority
           </label>
@@ -332,8 +332,8 @@ export function JobForm({
               <select
                 {...field}
                 id="priority"
-                className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-50 ${
-                  errors.priority ? "border-rose-400" : "border-slate-200/80"
+                className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-50 dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-100 dark:focus:ring-indigo-500/20 ${
+                  errors.priority ? "border-rose-400 dark:border-rose-500" : "border-slate-200/80"
                 }`}
               >
                 {priorities.map((priority) => (
@@ -412,7 +412,7 @@ export function JobForm({
       <div>
         <label
           htmlFor="notes"
-          className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700"
+          className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300"
         >
           Internal Notes
         </label>
@@ -420,8 +420,8 @@ export function JobForm({
           id="notes"
           rows={3}
           placeholder="Internal garage remarks (not shown to customer)"
-          className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-50 ${
-            errors.notes ? "border-rose-400" : "border-slate-200/80"
+          className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-50 dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:ring-indigo-500/20 ${
+            errors.notes ? "border-rose-400 dark:border-rose-500" : "border-slate-200/80"
           }`}
           {...register("notes")}
         />
@@ -430,7 +430,7 @@ export function JobForm({
         )}
       </div>
 
-      <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+      <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
         <Button type="button" variant="secondary" onClick={onCancel}>
           Cancel
         </Button>

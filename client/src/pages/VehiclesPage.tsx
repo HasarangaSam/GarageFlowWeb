@@ -147,8 +147,8 @@ export default function VehiclesPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">Vehicles</h1>
-          <p className="mt-1 text-xs text-slate-500">
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100">Vehicles</h1>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             Manage customer vehicles, registration records, and service logs.
           </p>
         </div>
@@ -161,7 +161,7 @@ export default function VehiclesPage() {
         )}
       </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs">
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
         <div className="relative max-w-md">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
 
@@ -174,7 +174,7 @@ export default function VehiclesPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
+      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
         {isLoading ? (
           <div className="flex min-h-[300px] items-center justify-center">
             <Loading size="lg" text="Loading vehicles..." />
@@ -182,19 +182,19 @@ export default function VehiclesPage() {
         ) : isError ? (
           <div className="flex min-h-[300px] items-center justify-center px-6 text-center">
             <div>
-              <p className="font-medium text-slate-900">
+              <p className="font-medium text-slate-900 dark:text-slate-100">
                 Unable to load vehicles
               </p>
 
-              <p className="mt-1 text-xs text-slate-500">Please try again.</p>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Please try again.</p>
             </div>
           </div>
         ) : vehicles.length === 0 ? (
           <div className="flex min-h-[300px] items-center justify-center px-6 text-center">
             <div>
-              <p className="font-medium text-slate-900">No vehicles found</p>
+              <p className="font-medium text-slate-900 dark:text-slate-100">No vehicles found</p>
 
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 {search
                   ? "Try changing your search."
                   : "Add your first vehicle to get started."}
@@ -223,7 +223,7 @@ export default function VehiclesPage() {
                     <TableRow key={vehicle.id}>
                       <TableCell>
                         <div>
-                          <p className="font-semibold text-xs text-slate-900">
+                          <p className="font-semibold text-xs text-slate-900 dark:text-slate-100">
                             {vehicle.make} {vehicle.model}
                           </p>
 
@@ -234,19 +234,19 @@ export default function VehiclesPage() {
                       </TableCell>
 
                       <TableCell>
-                        <span className="inline-flex items-center rounded-md border border-slate-300 bg-slate-100 px-2 py-0.5 font-mono text-[11px] font-bold text-slate-800 shadow-2xs">
+                        <span className="inline-flex items-center rounded-md border border-slate-300 bg-slate-100 px-2 py-0.5 font-mono text-[11px] font-bold text-slate-800 shadow-2xs dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
                           {vehicle.registrationNumber}
                         </span>
                       </TableCell>
 
                       <TableCell>
                         <div>
-                          <p className="font-medium text-slate-900">
+                          <p className="font-medium text-slate-900 dark:text-slate-100">
                             {vehicle.customer.firstName}{" "}
                             {vehicle.customer.lastName}
                           </p>
 
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
                             {vehicle.customer.phone}
                           </p>
                         </div>
@@ -293,7 +293,7 @@ export default function VehiclesPage() {
                               onClick={() => setDeletingVehicle(vehicle)}
                               title="Delete vehicle"
                             >
-                              <Trash2 className="h-4 w-4 text-red-600" />
+                              <Trash2 className="h-4 w-4 text-red-600 dark:text-rose-400" />
                             </Button>
                           )}
                         </div>
@@ -305,8 +305,8 @@ export default function VehiclesPage() {
             </div>
 
             {pagination && pagination.totalPages > 1 && (
-              <div className="flex flex-col gap-3 border-t border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-xs text-slate-500">
+              <div className="flex flex-col gap-3 border-t border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Showing page {pagination.page} of {pagination.totalPages} ({pagination.total} vehicles)
                 </p>
 
@@ -381,7 +381,7 @@ export default function VehiclesPage() {
                   Vehicle
                 </p>
 
-                <p className="mt-1 font-medium text-slate-900">
+                <p className="mt-1 font-medium text-slate-900 dark:text-slate-100">
                   {vehicleDetails.make} {vehicleDetails.model}
                 </p>
               </div>
@@ -391,7 +391,7 @@ export default function VehiclesPage() {
                   Registration
                 </p>
 
-                <p className="mt-1 font-medium text-slate-900">
+                <p className="mt-1 font-medium text-slate-900 dark:text-slate-100">
                   {vehicleDetails.registrationNumber}
                 </p>
               </div>
@@ -401,7 +401,7 @@ export default function VehiclesPage() {
                   Customer
                 </p>
 
-                <p className="mt-1 text-slate-900">
+                <p className="mt-1 text-slate-900 dark:text-slate-100">
                   {vehicleDetails.customer.firstName}{" "}
                   {vehicleDetails.customer.lastName}
                 </p>
@@ -412,7 +412,7 @@ export default function VehiclesPage() {
                   Phone
                 </p>
 
-                <p className="mt-1 text-slate-900">
+                <p className="mt-1 text-slate-900 dark:text-slate-100">
                   {vehicleDetails.customer.phone}
                 </p>
               </div>
@@ -422,7 +422,7 @@ export default function VehiclesPage() {
                   Year
                 </p>
 
-                <p className="mt-1 text-slate-900">
+                <p className="mt-1 text-slate-900 dark:text-slate-100">
                   {vehicleDetails.year ?? "-"}
                 </p>
               </div>
@@ -432,7 +432,7 @@ export default function VehiclesPage() {
                   Mileage
                 </p>
 
-                <p className="mt-1 text-slate-900">
+                <p className="mt-1 text-slate-900 dark:text-slate-100">
                   {vehicleDetails.mileage != null
                     ? `${vehicleDetails.mileage.toLocaleString()} km`
                     : "-"}
@@ -441,18 +441,18 @@ export default function VehiclesPage() {
             </div>
 
             <div>
-              <h3 className="mb-3 text-sm font-semibold text-slate-900">
+              <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-100">
                 Service History
               </h3>
 
               {vehicleDetails.jobs.length === 0 ? (
-                <div className="rounded-lg border border-dashed border-slate-300 px-4 py-8 text-center">
-                  <p className="text-sm text-slate-500">
+                <div className="rounded-lg border border-dashed border-slate-300 px-4 py-8 text-center dark:border-slate-800">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     No service history yet.
                   </p>
                 </div>
               ) : (
-                <div className="overflow-x-auto rounded-lg border border-slate-200/80">
+                <div className="overflow-x-auto rounded-lg border border-slate-200/80 dark:border-slate-800">
                   <Table>
                     <TableHeader>
                       <TableRow>

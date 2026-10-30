@@ -60,11 +60,11 @@ const invoiceStatusLabels: Record<string, string> = {
 };
 
 const invoiceStatusColors: Record<string, string> = {
-  DRAFT: "bg-gray-100 text-gray-700",
-  ISSUED: "bg-blue-50 text-blue-700",
-  PARTIALLY_PAID: "bg-orange-50 text-orange-700",
-  PAID: "bg-green-50 text-green-700",
-  VOID: "bg-red-50 text-red-700",
+  DRAFT: "bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300",
+  ISSUED: "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300",
+  PARTIALLY_PAID: "bg-orange-50 text-orange-700 dark:bg-amber-950/40 dark:text-amber-300",
+  PAID: "bg-green-50 text-green-700 dark:bg-emerald-950/40 dark:text-emerald-300",
+  VOID: "bg-red-50 text-red-700 dark:bg-rose-950/40 dark:text-rose-300",
 };
 
 const formatMoney = (value: number | string) =>
@@ -108,9 +108,9 @@ export default function JobDetails({
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
         <div>
-          <p className="text-sm text-gray-500">Repair Job</p>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Repair Job</p>
 
-          <h2 className="mt-1 text-2xl font-bold text-gray-900">
+          <h2 className="mt-1 text-2xl font-bold text-gray-900 dark:text-slate-100">
             {job.jobNumber}
           </h2>
 
@@ -128,89 +128,89 @@ export default function JobDetails({
       {/* Info Cards */}
       <div className="grid gap-4 md:grid-cols-3">
         {/* Customer */}
-        <div className="rounded-xl border border-gray-200 p-4">
-          <div className="mb-3 flex items-center gap-2 text-gray-500">
+        <div className="rounded-xl border border-gray-200 p-4 dark:border-slate-800 dark:bg-slate-900/60">
+          <div className="mb-3 flex items-center gap-2 text-gray-500 dark:text-slate-400">
             <User size={18} />
             <span className="text-sm font-medium">Customer</span>
           </div>
 
-          <p className="font-semibold text-gray-900">
+          <p className="font-semibold text-gray-900 dark:text-slate-100">
             {job.customer.firstName} {job.customer.lastName}
           </p>
-          <p className="mt-1 text-sm text-gray-500">{job.customer.phone}</p>
+          <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">{job.customer.phone}</p>
           {job.customer.email && (
-            <p className="mt-1 text-sm text-gray-500">{job.customer.email}</p>
+            <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">{job.customer.email}</p>
           )}
         </div>
 
         {/* Vehicle */}
-        <div className="rounded-xl border border-gray-200 p-4">
-          <div className="mb-3 flex items-center gap-2 text-gray-500">
+        <div className="rounded-xl border border-gray-200 p-4 dark:border-slate-800 dark:bg-slate-900/60">
+          <div className="mb-3 flex items-center gap-2 text-gray-500 dark:text-slate-400">
             <Car size={18} />
             <span className="text-sm font-medium">Vehicle</span>
           </div>
 
-          <p className="font-semibold text-gray-900">
+          <p className="font-semibold text-gray-900 dark:text-slate-100">
             {job.vehicle.registrationNumber}
           </p>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
             {job.vehicle.make} {job.vehicle.model}
           </p>
           {job.vehicle.year && (
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
               Year: {job.vehicle.year}
             </p>
           )}
         </div>
 
         {/* Mechanic */}
-        <div className="rounded-xl border border-gray-200 p-4">
-          <div className="mb-3 flex items-center gap-2 text-gray-500">
+        <div className="rounded-xl border border-gray-200 p-4 dark:border-slate-800 dark:bg-slate-900/60">
+          <div className="mb-3 flex items-center gap-2 text-gray-500 dark:text-slate-400">
             <Wrench size={18} />
             <span className="text-sm font-medium">Mechanic</span>
           </div>
 
           {job.mechanic ? (
             <>
-              <p className="font-semibold text-gray-900">{job.mechanic.name}</p>
-              <p className="mt-1 text-sm text-gray-500">{job.mechanic.email}</p>
+              <p className="font-semibold text-gray-900 dark:text-slate-100">{job.mechanic.name}</p>
+              <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">{job.mechanic.email}</p>
             </>
           ) : (
-            <p className="text-sm text-gray-400 italic">Not assigned</p>
+            <p className="text-sm text-gray-400 italic dark:text-slate-500">Not assigned</p>
           )}
         </div>
       </div>
 
       {/* Job Info */}
-      <div className="rounded-xl border border-gray-200">
-        <div className="border-b border-gray-200 px-5 py-4">
-          <h3 className="font-semibold text-gray-900">Job Information</h3>
+      <div className="rounded-xl border border-gray-200 dark:border-slate-800 dark:bg-slate-900/60">
+        <div className="border-b border-gray-200 px-5 py-4 dark:border-slate-800">
+          <h3 className="font-semibold text-gray-900 dark:text-slate-100">Job Information</h3>
         </div>
 
         <div className="grid gap-5 p-5 md:grid-cols-2">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">
               Complaint
             </p>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-gray-800">
+            <p className="mt-1 whitespace-pre-wrap text-sm text-gray-800 dark:text-slate-200">
               {job.complaint}
             </p>
           </div>
 
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">
               Diagnosis
             </p>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-gray-800">
+            <p className="mt-1 whitespace-pre-wrap text-sm text-gray-800 dark:text-slate-200">
               {job.diagnosis || "Not provided"}
             </p>
           </div>
 
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">
               Mileage In
             </p>
-            <p className="mt-1 text-sm text-gray-800">
+            <p className="mt-1 text-sm text-gray-800 dark:text-slate-200">
               {job.mileageIn !== null && job.mileageIn !== undefined
                 ? `${job.mileageIn.toLocaleString()} km`
                 : "Not provided"}
@@ -218,10 +218,10 @@ export default function JobDetails({
           </div>
 
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">
               Mileage Out
             </p>
-            <p className="mt-1 text-sm text-gray-800">
+            <p className="mt-1 text-sm text-gray-800 dark:text-slate-200">
               {job.mileageOut !== null && job.mileageOut !== undefined
                 ? `${job.mileageOut.toLocaleString()} km`
                 : "Not provided"}
@@ -229,10 +229,10 @@ export default function JobDetails({
           </div>
 
           <div className="md:col-span-2">
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-slate-400">
               Notes
             </p>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-gray-800">
+            <p className="mt-1 whitespace-pre-wrap text-sm text-gray-800 dark:text-slate-200">
               {job.notes || "No notes"}
             </p>
           </div>
@@ -240,13 +240,13 @@ export default function JobDetails({
       </div>
 
       {/* Parts */}
-      <div className="rounded-xl border border-gray-200">
-        <div className="flex items-center justify-between gap-2 border-b border-gray-200 px-5 py-4">
+      <div className="rounded-xl border border-gray-200 dark:border-slate-800 dark:bg-slate-900/60">
+        <div className="flex items-center justify-between gap-2 border-b border-gray-200 px-5 py-4 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <ClipboardList size={18} className="text-gray-500" />
-            <h3 className="font-semibold text-gray-900">Parts Used</h3>
+            <ClipboardList size={18} className="text-gray-500 dark:text-slate-400" />
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100">Parts Used</h3>
             {parts.length > 0 && (
-              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-slate-800 dark:text-slate-300">
                 {parts.length}
               </span>
             )}
@@ -254,7 +254,7 @@ export default function JobDetails({
 
           <div className="flex items-center gap-2">
             {hasInvoice && (
-              <span className="flex items-center gap-1 rounded-md border border-orange-200 bg-orange-50 px-2 py-1 text-xs text-orange-700">
+              <span className="flex items-center gap-1 rounded-md border border-orange-200 bg-orange-50 px-2 py-1 text-xs text-orange-700 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-400">
                 <Lock className="h-3 w-3" />
                 Locked (invoiced)
               </span>
@@ -275,38 +275,38 @@ export default function JobDetails({
           </div>
         ) : parts.length === 0 ? (
           <div className="flex flex-col items-center p-10 text-center">
-            <ClipboardList className="mb-2 h-8 w-8 text-gray-300" />
-            <p className="text-sm font-medium text-gray-500">
+            <ClipboardList className="mb-2 h-8 w-8 text-gray-300 dark:text-slate-600" />
+            <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
               No parts added yet
             </p>
             {canAddParts && (
-              <p className="mt-1 text-xs text-gray-400">
+              <p className="mt-1 text-xs text-gray-400 dark:text-slate-500">
                 Click "Add Parts" to install parts from inventory.
               </p>
             )}
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-gray-100 dark:divide-slate-800">
             {parts.map((jobPart) => (
               <div
                 key={jobPart.id}
                 className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center"
               >
                 <div>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-gray-900 dark:text-slate-100">
                     {jobPart.part.name}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-slate-400">
                     SKU: {jobPart.part.sku}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-5">
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-gray-600 dark:text-slate-300">
                     {jobPart.quantity} × {formatMoney(jobPart.unitPrice)}
                   </span>
 
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-gray-900 dark:text-slate-100">
                     {formatMoney(jobPart.total)}
                   </span>
 
@@ -321,7 +321,7 @@ export default function JobDetails({
                           jobPartId: jobPart.id,
                         })
                       }
-                      className="rounded-lg p-1.5 text-red-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                      className="cursor-pointer rounded-lg p-1.5 text-red-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-rose-400 dark:hover:bg-rose-950/40 dark:hover:text-rose-300 disabled:opacity-50"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -331,11 +331,11 @@ export default function JobDetails({
             ))}
 
             {/* Parts total */}
-            <div className="flex items-center justify-end gap-3 bg-gray-50 px-4 py-3">
-              <span className="text-sm font-medium text-gray-600">
+            <div className="flex items-center justify-end gap-3 bg-gray-50 px-4 py-3 dark:bg-slate-800/50">
+              <span className="text-sm font-medium text-gray-600 dark:text-slate-300">
                 Parts Subtotal
               </span>
-              <span className="text-base font-bold text-gray-900">
+              <span className="text-base font-bold text-gray-900 dark:text-slate-100">
                 {formatMoney(partsTotal)}
               </span>
             </div>
@@ -345,14 +345,14 @@ export default function JobDetails({
 
       {/* Invoice summary */}
       {job.invoice ? (
-        <div className="rounded-xl border border-gray-200">
-          <div className="flex items-center gap-2 border-b border-gray-200 px-5 py-4">
-            <FileText size={18} className="text-gray-500" />
-            <h3 className="font-semibold text-gray-900">Invoice</h3>
+        <div className="rounded-xl border border-gray-200 dark:border-slate-800 dark:bg-slate-900/60">
+          <div className="flex items-center gap-2 border-b border-gray-200 px-5 py-4 dark:border-slate-800">
+            <FileText size={18} className="text-gray-500 dark:text-slate-400" />
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100">Invoice</h3>
             <span
               className={`rounded-md px-2 py-0.5 text-xs font-semibold ${
                 invoiceStatusColors[job.invoice.status] ??
-                "bg-gray-100 text-gray-600"
+                "bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-300"
               }`}
             >
               {invoiceStatusLabels[job.invoice.status] ?? job.invoice.status}
@@ -371,47 +371,47 @@ export default function JobDetails({
 
           <div className="grid gap-4 p-5 sm:grid-cols-2">
             <div>
-              <p className="text-xs uppercase tracking-wide text-gray-500">
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-slate-400">
                 Invoice Number
               </p>
-              <p className="mt-1 font-semibold text-gray-900">
+              <p className="mt-1 font-semibold text-gray-900 dark:text-slate-100">
                 {job.invoice.invoiceNumber}
               </p>
             </div>
 
             <div>
-              <p className="text-xs uppercase tracking-wide text-gray-500">
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-slate-400">
                 Subtotal
               </p>
-              <p className="mt-1 text-sm text-gray-800">
+              <p className="mt-1 text-sm text-gray-800 dark:text-slate-200">
                 {formatMoney(job.invoice.subtotal)}
               </p>
             </div>
 
             <div>
-              <p className="text-xs uppercase tracking-wide text-gray-500">
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-slate-400">
                 Discount
               </p>
-              <p className="mt-1 text-sm text-gray-800">
+              <p className="mt-1 text-sm text-gray-800 dark:text-slate-200">
                 {formatMoney(job.invoice.discount)}
               </p>
             </div>
 
             <div>
-              <p className="text-xs uppercase tracking-wide text-gray-500">
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-slate-400">
                 Tax
               </p>
-              <p className="mt-1 text-sm text-gray-800">
+              <p className="mt-1 text-sm text-gray-800 dark:text-slate-200">
                 {formatMoney(job.invoice.tax)}
               </p>
             </div>
 
-            <div className="sm:col-span-2 border-t border-gray-100 pt-3 flex justify-end">
+            <div className="sm:col-span-2 border-t border-gray-100 pt-3 flex justify-end dark:border-slate-800">
               <div className="text-right">
-                <p className="text-xs uppercase tracking-wide text-gray-500">
+                <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-slate-400">
                   Grand Total
                 </p>
-                <p className="mt-1 text-2xl font-bold text-gray-900">
+                <p className="mt-1 text-2xl font-bold text-gray-900 dark:text-slate-100">
                   {formatMoney(job.invoice.total)}
                 </p>
               </div>
@@ -420,12 +420,12 @@ export default function JobDetails({
         </div>
       ) : (job.status === "COMPLETED" || job.status === "READY_FOR_PICKUP") &&
         canManage ? (
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-blue-100 bg-blue-50/70 p-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-blue-100 bg-blue-50/70 p-4 dark:border-blue-900/40 dark:bg-blue-950/20">
           <div>
-            <p className="text-sm font-semibold text-gray-900">
+            <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">
               Ready for Invoicing
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-slate-400">
               This repair job is finished. Generate a customer invoice with
               parts & labour.
             </p>
@@ -443,8 +443,8 @@ export default function JobDetails({
 
       {/* Next Status */}
       {availableStatuses.length > 0 && (
-        <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-          <p className="text-sm font-medium text-gray-700">
+        <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-slate-800 dark:bg-slate-900/60">
+          <p className="text-sm font-medium text-gray-700 dark:text-slate-300">
             Next available status
           </p>
 
@@ -452,7 +452,7 @@ export default function JobDetails({
             {availableStatuses.map((status) => (
               <span
                 key={status}
-                className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700"
+                className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
               >
                 {statusLabels[status]}
               </span>

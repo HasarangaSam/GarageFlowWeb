@@ -151,7 +151,7 @@ export default function PartFormModal({
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* SKU */}
           <div>
-            <label className="block text-xs font-medium text-gray-700">
+            <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
               SKU / Part Code <span className="text-rose-500">*</span>
             </label>
             <Input
@@ -169,7 +169,7 @@ export default function PartFormModal({
 
           {/* Name */}
           <div>
-            <label className="block text-xs font-medium text-gray-700">
+            <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
               Part Name <span className="text-rose-500">*</span>
             </label>
             <Input
@@ -186,7 +186,7 @@ export default function PartFormModal({
 
         {/* Description */}
         <div>
-          <label className="block text-xs font-medium text-gray-700">
+          <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
             Description / Specifications
           </label>
           <textarea
@@ -194,7 +194,7 @@ export default function PartFormModal({
             onChange={(e) => handleChange("description", e.target.value)}
             rows={2}
             placeholder="Vehicle compatibility, dimensions, grade, manufacturer notes..."
-            className="w-full rounded-lg border border-gray-300 p-2.5 text-sm transition focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 p-2.5 text-sm transition focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-500/20"
             disabled={isSubmitting}
           />
         </div>
@@ -202,7 +202,7 @@ export default function PartFormModal({
         {/* Stock quantities */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="block text-xs font-medium text-gray-700">
+            <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
               Current Stock Quantity
             </label>
             <Input
@@ -224,7 +224,7 @@ export default function PartFormModal({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700">
+            <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
               Minimum Stock Threshold (Alert Level)
             </label>
             <Input
@@ -251,7 +251,7 @@ export default function PartFormModal({
         {/* Pricing */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="block text-xs font-medium text-gray-700">
+            <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
               Cost Price (Rs.) <span className="text-rose-500">*</span>
             </label>
             <Input
@@ -273,7 +273,7 @@ export default function PartFormModal({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700">
+            <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
               Selling / Retail Price (Rs.){" "}
               <span className="text-rose-500">*</span>
             </label>
@@ -299,27 +299,25 @@ export default function PartFormModal({
         </div>
 
         {/* Profit margin live calculation */}
-        <div className="rounded-lg border border-gray-200 bg-gray-50/70 p-3 text-xs">
-          <div className="flex items-center justify-between text-gray-600">
+        <div className="rounded-lg border border-gray-200 bg-gray-50/70 p-3 text-xs dark:border-slate-800 dark:bg-slate-800/40">
+          <div className="flex items-center justify-between text-gray-600 dark:text-slate-400">
             <span>Unit Profit:</span>
             <span
-              className={`font-semibold ${
-                profit >= 0 ? "text-emerald-600" : "text-rose-600"
-              }`}
+              className={`font-semibold ${profit >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
+                }`}
             >
               {formatCurrency(profit)}
             </span>
           </div>
-          <div className="mt-1 flex items-center justify-between text-gray-600">
+          <div className="mt-1 flex items-center justify-between text-gray-600 dark:text-slate-400">
             <span>Gross Margin:</span>
             <span
-              className={`font-semibold ${
-                Number(margin) >= 30
-                  ? "text-emerald-600"
+              className={`font-semibold ${Number(margin) >= 30
+                  ? "text-emerald-600 dark:text-emerald-400"
                   : Number(margin) > 0
-                    ? "text-amber-600"
-                    : "text-rose-600"
-              }`}
+                    ? "text-amber-600 dark:text-amber-400"
+                    : "text-rose-600 dark:text-rose-400"
+                }`}
             >
               {margin}%
             </span>
@@ -327,7 +325,7 @@ export default function PartFormModal({
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3 pt-3 border-t">
+        <div className="flex justify-end gap-3 pt-3 border-t dark:border-slate-800">
           <Button
             type="button"
             variant="secondary"

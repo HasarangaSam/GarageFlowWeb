@@ -107,10 +107,10 @@ export default function InvoicesPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100">
             Invoices & Payments
           </h1>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             Generate invoices, collect payments, print receipts, and track receivables
           </p>
         </div>
@@ -155,7 +155,7 @@ export default function InvoicesPage() {
       />
 
       {/* Search & Filter Tabs */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs md:flex-row md:items-center md:justify-between dark:border-slate-800/80 dark:bg-slate-900/60">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
           <Search
@@ -170,22 +170,22 @@ export default function InvoicesPage() {
               setSearchTerm(e.target.value);
               setPage(1);
             }}
-            className="w-full rounded-xl border border-slate-200/80 bg-slate-50/50 py-2 pl-9 pr-3 text-xs text-slate-900 transition focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-xl border border-slate-200/80 bg-slate-50/50 py-2 pl-9 pr-3 text-xs text-slate-900 transition focus:border-indigo-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-200 dark:focus:bg-slate-800 dark:placeholder-slate-400"
           />
         </div>
 
         {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1 overflow-x-auto rounded-xl border border-slate-200/80 bg-slate-50 p-1">
+        <div className="flex items-center gap-1 overflow-x-auto rounded-xl border border-slate-200/80 bg-slate-50 p-1 dark:border-slate-800/80 dark:bg-slate-800/50">
           <button
             type="button"
             onClick={() => {
               setActiveFilter("all");
               setPage(1);
             }}
-            className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+            className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium transition ${
               activeFilter === "all"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-white text-gray-900 shadow-sm dark:bg-slate-800 dark:text-slate-100 dark:shadow-slate-950/20"
+                : "text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-200"
             }`}
           >
             All Invoices
@@ -197,10 +197,10 @@ export default function InvoicesPage() {
               setActiveFilter("DRAFT");
               setPage(1);
             }}
-            className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+            className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium transition ${
               activeFilter === "DRAFT"
-                ? "bg-white text-purple-700 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-white text-purple-700 shadow-sm dark:bg-slate-800 dark:text-purple-300 dark:shadow-slate-950/20"
+                : "text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-200"
             }`}
           >
             Draft ({summaryData?.draftCount ?? 0})
@@ -212,10 +212,10 @@ export default function InvoicesPage() {
               setActiveFilter("ISSUED");
               setPage(1);
             }}
-            className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+            className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium transition ${
               activeFilter === "ISSUED"
-                ? "bg-white text-blue-700 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-white text-blue-700 shadow-sm dark:bg-slate-800 dark:text-blue-300 dark:shadow-slate-950/20"
+                : "text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-200"
             }`}
           >
             Issued ({summaryData?.issuedCount ?? 0})
@@ -227,10 +227,10 @@ export default function InvoicesPage() {
               setActiveFilter("PARTIALLY_PAID");
               setPage(1);
             }}
-            className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+            className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium transition ${
               activeFilter === "PARTIALLY_PAID"
-                ? "bg-white text-amber-700 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-white text-amber-700 shadow-sm dark:bg-slate-800 dark:text-amber-300 dark:shadow-slate-950/20"
+                : "text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-200"
             }`}
           >
             Partial ({summaryData?.partiallyPaidCount ?? 0})
@@ -242,10 +242,10 @@ export default function InvoicesPage() {
               setActiveFilter("PAID");
               setPage(1);
             }}
-            className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+            className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium transition ${
               activeFilter === "PAID"
-                ? "bg-white text-emerald-700 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-white text-emerald-700 shadow-sm dark:bg-slate-800 dark:text-emerald-300 dark:shadow-slate-950/20"
+                : "text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-200"
             }`}
           >
             Paid ({summaryData?.paidCount ?? 0})
@@ -257,10 +257,10 @@ export default function InvoicesPage() {
               setActiveFilter("VOID");
               setPage(1);
             }}
-            className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+            className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium transition ${
               activeFilter === "VOID"
-                ? "bg-white text-rose-700 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-white text-rose-700 shadow-sm dark:bg-slate-800 dark:text-rose-300 dark:shadow-slate-950/20"
+                : "text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-200"
             }`}
           >
             Void
@@ -269,20 +269,20 @@ export default function InvoicesPage() {
       </div>
 
       {/* Invoices Table */}
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
         {isInvoicesLoading ? (
           <div className="flex h-64 items-center justify-center">
             <Loading />
           </div>
         ) : invoices.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-slate-800 dark:text-slate-500">
               <FileText size={24} />
             </div>
-            <h3 className="mt-3 text-base font-semibold text-gray-900">
+            <h3 className="mt-3 text-base font-semibold text-gray-900 dark:text-slate-100">
               No invoices found
             </h3>
-            <p className="mt-1 max-w-sm text-xs text-gray-500">
+            <p className="mt-1 max-w-sm text-xs text-gray-500 dark:text-slate-400">
               {searchTerm
                 ? `No invoices match "${searchTerm}".`
                 : activeFilter !== "all"
@@ -317,7 +317,7 @@ export default function InvoicesPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-gray-200 bg-gray-50/75 text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <thead className="border-b border-gray-200 bg-gray-50/75 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-400">
                 <tr>
                   <th className="py-3.5 px-4">Invoice #</th>
                   <th className="py-3.5 px-4">Status</th>
@@ -328,7 +328,7 @@ export default function InvoicesPage() {
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
                 {invoices.map((inv) => {
                   const total = Number(inv.total) || 0;
                   const payments = inv.payments || [];
@@ -347,10 +347,10 @@ export default function InvoicesPage() {
                   return (
                     <tr
                       key={inv.id}
-                      className="transition-colors hover:bg-gray-50/70"
+                      className="transition-colors hover:bg-gray-50/70 dark:hover:bg-slate-800/50"
                     >
                       {/* Invoice number */}
-                      <td className="py-3 px-4 font-mono font-bold text-gray-900">
+                      <td className="py-3 px-4 font-mono font-bold text-gray-900 dark:text-slate-100">
                         {inv.invoiceNumber}
                       </td>
 
@@ -362,10 +362,10 @@ export default function InvoicesPage() {
                       {/* Customer & Vehicle */}
                       <td className="py-3 px-4">
                         <div className="flex flex-col">
-                          <span className="font-semibold text-gray-900">
+                          <span className="font-semibold text-gray-900 dark:text-slate-100">
                             {inv.customer.firstName} {inv.customer.lastName}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 dark:text-slate-400">
                             {inv.vehicle.registrationNumber} ({inv.vehicle.make}{" "}
                             {inv.vehicle.model})
                           </span>
@@ -374,13 +374,13 @@ export default function InvoicesPage() {
 
                       {/* Job */}
                       <td className="py-3 px-4">
-                        <span className="font-mono text-xs font-semibold text-blue-600">
+                        <span className="font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">
                           {inv.job?.jobNumber || "—"}
                         </span>
                       </td>
 
                       {/* Total */}
-                      <td className="py-3 px-4 text-right font-semibold text-gray-900">
+                      <td className="py-3 px-4 text-right font-semibold text-gray-900 dark:text-slate-100">
                         {formatCurrency(total)}
                       </td>
 
@@ -389,8 +389,8 @@ export default function InvoicesPage() {
                         <span
                           className={`font-bold ${
                             balance === 0
-                              ? "text-emerald-600"
-                              : "text-amber-600"
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-amber-600 dark:text-amber-400"
                           }`}
                         >
                           {balance === 0 ? "Paid in full" : formatCurrency(balance)}
@@ -405,7 +405,7 @@ export default function InvoicesPage() {
                             type="button"
                             title="Print / View Invoice"
                             onClick={() => setInvoiceToPrint(inv)}
-                            className="rounded-lg p-1.5 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
+                            className="cursor-pointer rounded-lg p-1.5 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                           >
                             <Printer size={16} />
                           </button>
@@ -418,7 +418,7 @@ export default function InvoicesPage() {
                                   type="button"
                                   title="Issue Invoice (finalize draft)"
                                   onClick={() => setInvoiceToIssue(inv)}
-                                  className="rounded-lg p-1.5 text-blue-600 transition hover:bg-blue-50"
+                                  className="cursor-pointer rounded-lg p-1.5 text-blue-600 transition hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950/40 dark:hover:text-blue-300"
                                 >
                                   <Send size={15} />
                                 </button>
@@ -430,7 +430,7 @@ export default function InvoicesPage() {
                                   type="button"
                                   title="Record Payment"
                                   onClick={() => setInvoiceToPay(inv)}
-                                  className="rounded-lg p-1.5 text-emerald-600 transition hover:bg-emerald-50"
+                                  className="cursor-pointer rounded-lg p-1.5 text-emerald-600 transition hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300"
                                 >
                                   <DollarSign size={16} />
                                 </button>
@@ -442,7 +442,7 @@ export default function InvoicesPage() {
                                   type="button"
                                   title="Void Invoice"
                                   onClick={() => setInvoiceToVoid(inv)}
-                                  className="rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-rose-600"
+                                  className="cursor-pointer rounded-lg p-1.5 text-gray-400 transition hover:bg-gray-100 hover:text-rose-600 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-rose-400"
                                 >
                                   <Ban size={15} />
                                 </button>
@@ -454,7 +454,7 @@ export default function InvoicesPage() {
                                   type="button"
                                   title="Delete Draft"
                                   onClick={() => setInvoiceToDelete(inv)}
-                                  className="rounded-lg p-1.5 text-rose-500 transition hover:bg-rose-50 hover:text-rose-700"
+                                  className="cursor-pointer rounded-lg p-1.5 text-rose-500 transition hover:bg-rose-50 hover:text-rose-700 dark:text-rose-400 dark:hover:bg-rose-950/40 dark:hover:text-rose-300"
                                 >
                                   <Trash2 size={15} />
                                 </button>
@@ -473,8 +473,8 @@ export default function InvoicesPage() {
 
         {/* Pagination */}
         {pagination && pagination.totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6">
-            <span className="text-xs text-gray-500">
+          <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6 dark:border-slate-800">
+            <span className="text-xs text-gray-500 dark:text-slate-400">
               Showing page {pagination.page} of {pagination.totalPages} (
               {pagination.total} invoices)
             </span>
@@ -528,18 +528,18 @@ export default function InvoicesPage() {
         size="md"
       >
         <div className="space-y-3">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-slate-300">
             Are you ready to issue invoice{" "}
-            <span className="font-semibold text-gray-900">
+            <span className="font-semibold text-gray-900 dark:text-slate-100">
               {invoiceToIssue?.invoiceNumber}
             </span>{" "}
             for{" "}
-            <span className="font-semibold text-gray-900">
+            <span className="font-semibold text-gray-900 dark:text-slate-100">
               {formatCurrency(Number(invoiceToIssue?.total || 0))}
             </span>
             ?
           </p>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-slate-400">
             Once an invoice is issued, its prices and line items are locked to
             preserve financial accounting, and it will be ready to receive
             payments.
@@ -570,14 +570,14 @@ export default function InvoicesPage() {
         size="md"
       >
         <div className="space-y-3">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-slate-300">
             Are you sure you want to mark invoice{" "}
-            <span className="font-semibold text-gray-900">
+            <span className="font-semibold text-gray-900 dark:text-slate-100">
               {invoiceToVoid?.invoiceNumber}
             </span>{" "}
             as VOID?
           </p>
-          <p className="text-xs text-rose-600">
+          <p className="text-xs text-rose-600 dark:text-rose-400">
             Voiding cancels all further billing and payment collections for this
             invoice.
           </p>
@@ -608,9 +608,9 @@ export default function InvoicesPage() {
         size="md"
       >
         <div className="space-y-3">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-slate-300">
             Are you sure you want to delete draft invoice{" "}
-            <span className="font-semibold text-gray-900">
+            <span className="font-semibold text-gray-900 dark:text-slate-100">
               {invoiceToDelete?.invoiceNumber}
             </span>
             ?

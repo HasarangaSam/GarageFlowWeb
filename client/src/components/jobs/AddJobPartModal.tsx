@@ -117,13 +117,13 @@ export default function AddJobPartModal({
           />
         </div>
 
-        <div className="max-h-64 overflow-y-auto rounded-lg border border-gray-200">
+        <div className="max-h-64 overflow-y-auto rounded-lg border border-gray-200 dark:border-slate-800">
           {isLoading ? (
             <div className="flex items-center justify-center p-8">
               <Loading />
             </div>
           ) : parts.length === 0 ? (
-            <div className="space-y-2 p-8 text-center text-sm text-gray-500">
+            <div className="space-y-2 p-8 text-center text-sm text-gray-500 dark:text-slate-400">
               <p>
                 {search
                   ? "No parts found matching your search."
@@ -133,14 +133,14 @@ export default function AddJobPartModal({
                 <Link
                   to="/inventory"
                   onClick={handleClose}
-                  className="text-xs font-semibold text-blue-600 underline hover:text-blue-700"
+                  className="text-xs font-semibold text-blue-600 underline hover:text-blue-700 dark:text-indigo-400 dark:hover:text-indigo-300"
                 >
                   Go to Inventory to manage parts
                 </Link>
               )}
             </div>
           ) : (
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-100 dark:divide-slate-800">
               {parts.map((part) => {
                 const isSelected = Boolean(selected[part.id]);
                 const outOfStock = part.quantity === 0;
@@ -150,12 +150,12 @@ export default function AddJobPartModal({
                     type="button"
                     disabled={outOfStock}
                     onClick={() => togglePart(part)}
-                    className={`w-full px-4 py-3 text-left transition-colors ${outOfStock ? "cursor-not-allowed bg-gray-50 opacity-50" : isSelected ? "bg-blue-50" : "hover:bg-gray-50"}`}
+                    className={`cursor-pointer w-full px-4 py-3 text-left transition-colors ${outOfStock ? "cursor-not-allowed bg-gray-50 opacity-50 dark:bg-slate-900/50" : isSelected ? "bg-blue-50 dark:bg-indigo-950/30" : "hover:bg-gray-50 dark:hover:bg-slate-800/40"}`}
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex min-w-0 items-center gap-3">
                         <div
-                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${isSelected ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-500"}`}
+                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${isSelected ? "bg-blue-600 text-white dark:bg-indigo-600" : "bg-gray-100 text-gray-500 dark:bg-slate-800 dark:text-slate-400"}`}
                         >
                           {isSelected ? (
                             <Check className="h-4 w-4" />
@@ -165,21 +165,21 @@ export default function AddJobPartModal({
                         </div>
                         <div className="min-w-0">
                           <p
-                            className={`truncate text-sm font-medium ${isSelected ? "text-blue-900" : "text-gray-900"}`}
+                            className={`truncate text-sm font-medium ${isSelected ? "text-blue-900 dark:text-indigo-200" : "text-gray-900 dark:text-slate-100"}`}
                           >
                             {part.name}
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 dark:text-slate-400">
                             SKU: {part.sku}
                           </p>
                         </div>
                       </div>
                       <div className="shrink-0 text-right">
-                        <p className="text-sm font-semibold text-gray-800">
+                        <p className="text-sm font-semibold text-gray-800 dark:text-slate-200">
                           {formatMoney(part.sellingPrice)}
                         </p>
                         <p
-                          className={`text-xs ${part.quantity <= part.minimumStock ? "font-medium text-orange-600" : "text-gray-500"}`}
+                          className={`text-xs ${part.quantity <= part.minimumStock ? "font-medium text-orange-600 dark:text-amber-400" : "text-gray-500 dark:text-slate-400"}`}
                         >
                           {outOfStock
                             ? "Out of stock"
@@ -195,12 +195,12 @@ export default function AddJobPartModal({
         </div>
 
         {selectedParts.length > 0 && (
-          <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
+          <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-indigo-900/50 dark:bg-indigo-950/20">
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-sm font-semibold text-blue-900">
+              <p className="text-sm font-semibold text-blue-900 dark:text-indigo-200">
                 Selected parts ({selectedParts.length})
               </p>
-              <p className="text-sm font-bold text-blue-900">
+              <p className="text-sm font-bold text-blue-900 dark:text-indigo-200">
                 {formatMoney(total)}
               </p>
             </div>
@@ -208,13 +208,13 @@ export default function AddJobPartModal({
               {selectedParts.map(({ part, quantity }) => (
                 <div
                   key={part.id}
-                  className="flex items-center gap-3 rounded-lg bg-white p-2.5"
+                  className="flex items-center gap-3 rounded-lg bg-white p-2.5 dark:bg-slate-800/80"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-gray-900">
+                    <p className="truncate text-sm font-medium text-gray-900 dark:text-slate-100">
                       {part.name}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-slate-400">
                       {formatMoney(part.sellingPrice)} each · {part.quantity}{" "}
                       available
                     </p>
@@ -234,7 +234,7 @@ export default function AddJobPartModal({
                   <button
                     type="button"
                     onClick={() => togglePart(part)}
-                    className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-red-600"
+                    className="cursor-pointer rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-red-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-rose-400"
                     aria-label={`Remove ${part.name}`}
                   >
                     <X className="h-4 w-4" />
@@ -245,7 +245,7 @@ export default function AddJobPartModal({
           </div>
         )}
 
-        <div className="flex justify-end gap-3 border-t border-gray-100 pt-4">
+        <div className="flex justify-end gap-3 border-t border-gray-100 pt-4 dark:border-slate-800">
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>

@@ -102,14 +102,14 @@ export default function StockAdjustmentModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Part summary card */}
-        <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 text-xs">
+        <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 text-xs dark:border-slate-800 dark:bg-slate-800/40">
           <div>
-            <p className="font-mono font-medium text-gray-500">{part.sku}</p>
-            <p className="font-medium text-gray-800">{part.name}</p>
+            <p className="font-mono font-medium text-gray-500 dark:text-slate-400">{part.sku}</p>
+            <p className="font-medium text-gray-800 dark:text-slate-200">{part.name}</p>
           </div>
           <div className="text-right">
-            <span className="text-gray-500">Current Stock</span>
-            <p className="text-base font-bold text-gray-900">
+            <span className="text-gray-500 dark:text-slate-400">Current Stock</span>
+            <p className="text-base font-bold text-gray-900 dark:text-slate-100">
               {part.quantity} units
             </p>
           </div>
@@ -117,17 +117,17 @@ export default function StockAdjustmentModal({
 
         {/* Action Type */}
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+          <label className="block text-xs font-medium text-gray-700 mb-1.5 dark:text-slate-300">
             Adjustment Type
           </label>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             <button
               type="button"
               onClick={() => setType("PURCHASE")}
-              className={`flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
+              className={`cursor-pointer flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
                 type === "PURCHASE"
-                  ? "border-emerald-600 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600"
-                  : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                  ? "border-emerald-600 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600 dark:border-emerald-500 dark:bg-emerald-950/40 dark:text-emerald-300"
+                  : "border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               }`}
             >
               <PackagePlus size={16} />
@@ -137,10 +137,10 @@ export default function StockAdjustmentModal({
             <button
               type="button"
               onClick={() => setType("ADJUSTMENT")}
-              className={`flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
+              className={`cursor-pointer flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
                 type === "ADJUSTMENT"
-                  ? "border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600"
-                  : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                  ? "border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600 dark:border-indigo-500 dark:bg-indigo-950/40 dark:text-indigo-300"
+                  : "border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               }`}
             >
               <RefreshCw size={16} />
@@ -150,10 +150,10 @@ export default function StockAdjustmentModal({
             <button
               type="button"
               onClick={() => setType("DAMAGE")}
-              className={`flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
+              className={`cursor-pointer flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
                 type === "DAMAGE"
-                  ? "border-rose-600 bg-rose-50 text-rose-700 ring-1 ring-rose-600"
-                  : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                  ? "border-rose-600 bg-rose-50 text-rose-700 ring-1 ring-rose-600 dark:border-rose-500 dark:bg-rose-950/40 dark:text-rose-300"
+                  : "border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               }`}
             >
               <ArrowDownCircle size={16} />
@@ -163,10 +163,10 @@ export default function StockAdjustmentModal({
             <button
               type="button"
               onClick={() => setType("RETURN")}
-              className={`flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
+              className={`cursor-pointer flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
                 type === "RETURN"
-                  ? "border-purple-600 bg-purple-50 text-purple-700 ring-1 ring-purple-600"
-                  : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                  ? "border-purple-600 bg-purple-50 text-purple-700 ring-1 ring-purple-600 dark:border-purple-500 dark:bg-purple-950/40 dark:text-purple-300"
+                  : "border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               }`}
             >
               <ArrowUpCircle size={16} />
@@ -178,11 +178,11 @@ export default function StockAdjustmentModal({
         {/* If recount/adjustment, allow add or subtract */}
         {type === "ADJUSTMENT" && (
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-gray-700 mb-1 dark:text-slate-300">
               Discrepancy Direction
             </label>
             <div className="flex gap-3">
-              <label className="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+              <label className="flex items-center gap-2 text-xs text-gray-700 cursor-pointer dark:text-slate-300">
                 <input
                   type="radio"
                   name="direction"
@@ -192,7 +192,7 @@ export default function StockAdjustmentModal({
                 />
                 <span>Add surplus (+ units found)</span>
               </label>
-              <label className="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+              <label className="flex items-center gap-2 text-xs text-gray-700 cursor-pointer dark:text-slate-300">
                 <input
                   type="radio"
                   name="direction"
@@ -208,7 +208,7 @@ export default function StockAdjustmentModal({
 
         {/* Quantity */}
         <div>
-          <label className="block text-xs font-medium text-gray-700">
+          <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
             {type === "PURCHASE"
               ? "Units Received"
               : type === "DAMAGE"
@@ -231,18 +231,18 @@ export default function StockAdjustmentModal({
         </div>
 
         {/* Projected stock preview */}
-        <div className="rounded-lg border border-blue-100 bg-blue-50/70 p-3 text-xs flex items-center justify-between">
-          <span className="text-gray-600">Projected stock after adjustment:</span>
+        <div className="rounded-lg border border-blue-100 bg-blue-50/70 p-3 text-xs flex items-center justify-between dark:border-blue-900/40 dark:bg-blue-950/20">
+          <span className="text-gray-600 dark:text-slate-400">Projected stock after adjustment:</span>
           <div className="flex items-center gap-2">
-            <span className="text-gray-500 line-through">{currentStock}</span>
-            <span className="text-gray-400">→</span>
+            <span className="text-gray-500 line-through dark:text-slate-400">{currentStock}</span>
+            <span className="text-gray-400 dark:text-slate-500">→</span>
             <span
               className={`font-bold text-sm ${
                 projectedStock === 0
-                  ? "text-rose-600"
+                  ? "text-rose-600 dark:text-rose-400"
                   : projectedStock <= part.minimumStock
-                  ? "text-amber-600"
-                  : "text-emerald-700"
+                  ? "text-amber-600 dark:text-amber-400"
+                  : "text-emerald-700 dark:text-emerald-400"
               }`}
             >
               {projectedStock} units
@@ -252,7 +252,7 @@ export default function StockAdjustmentModal({
 
         {/* Reason / Reference */}
         <div>
-          <label className="block text-xs font-medium text-gray-700">
+          <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
             Reason / Supplier PO / Note (optional)
           </label>
           <Input
@@ -264,14 +264,14 @@ export default function StockAdjustmentModal({
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 rounded-lg bg-rose-50 p-2.5 text-xs text-rose-700 border border-rose-200">
+          <div className="flex items-center gap-2 rounded-lg bg-rose-50 p-2.5 text-xs text-rose-700 border border-rose-200 dark:border-rose-900/50 dark:bg-rose-950/20 dark:text-rose-400">
             <AlertCircle size={15} />
             <span>{error}</span>
           </div>
         )}
 
         {/* Actions */}
-        <div className="flex justify-end gap-3 pt-3 border-t">
+        <div className="flex justify-end gap-3 pt-3 border-t dark:border-slate-800">
           <Button
             type="button"
             variant="secondary"

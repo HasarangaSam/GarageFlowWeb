@@ -100,10 +100,10 @@ export default function StaffPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100">
             Staff Management
           </h1>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             Create and manage manager and mechanic team accounts.
           </p>
         </div>
@@ -113,7 +113,7 @@ export default function StaffPage() {
         </Button>
       </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs">
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
         <div className="flex gap-2">
           <div className="flex-1">
             <Input
@@ -132,15 +132,15 @@ export default function StaffPage() {
       </div>
 
       {isLoading ? (
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-12 shadow-xs">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-12 shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
           <Loading size="lg" text="Loading staff..." />
         </div>
       ) : isError ? (
-        <div className="rounded-2xl border border-rose-200/80 bg-rose-50 p-8 text-center text-sm text-rose-700 shadow-xs">
+        <div className="rounded-2xl border border-rose-200/80 bg-rose-50 p-8 text-center text-sm text-rose-700 shadow-xs dark:border-rose-900/50 dark:bg-rose-950/20 dark:text-rose-400">
           Unable to load staff accounts. Please try again.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
+        <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
           <Table>
             <TableHeader>
               <TableRow>
@@ -154,9 +154,9 @@ export default function StaffPage() {
               {staff.length === 0 ? (
                 <TableRow>
                   <TableCell {...({ colSpan: 4 } as { colSpan: number })} className="py-16 text-center">
-                    <UsersRound className="mx-auto mb-3 text-slate-300" size={32} />
-                    <p className="font-medium text-slate-900">No staff accounts found</p>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <UsersRound className="mx-auto mb-3 text-slate-300 dark:text-slate-600" size={32} />
+                    <p className="font-medium text-slate-900 dark:text-slate-100">No staff accounts found</p>
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                       Create a manager or mechanic account to get started.
                     </p>
                   </TableCell>
@@ -165,15 +165,15 @@ export default function StaffPage() {
                 staff.map((user) => (
                   <TableRow key={user.id}>
                     <TableCell>
-                      <p className="font-medium text-slate-900">{user.name}</p>
-                      <p className="text-xs text-slate-500">{user.email}</p>
+                      <p className="font-medium text-slate-900 dark:text-slate-100">{user.name}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{user.email}</p>
                     </TableCell>
                     <TableCell>
                       <Badge variant={user.role === "MANAGER" ? "info" : "success"}>
                         {user.role}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-xs text-slate-600">
+                    <TableCell className="text-xs text-slate-600 dark:text-slate-400">
                       {new Date(user.createdAt).toLocaleDateString("en-LK", {
                         day: "numeric",
                         month: "short",
@@ -186,7 +186,7 @@ export default function StaffPage() {
                           type="button"
                           title="Edit staff account"
                           onClick={() => openEdit(user)}
-                          className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                          className="cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                         >
                           <Pencil size={17} />
                         </button>
@@ -194,7 +194,7 @@ export default function StaffPage() {
                           type="button"
                           title="Delete staff account"
                           onClick={() => setDeleteTarget(user)}
-                          className="rounded-lg p-2 text-slate-500 transition hover:bg-rose-50 hover:text-rose-600"
+                          className="cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-rose-50 hover:text-rose-600 dark:text-rose-400 dark:hover:bg-rose-950/40 dark:hover:text-rose-300"
                         >
                           <Trash2 size={17} />
                         </button>
@@ -249,7 +249,7 @@ export default function StaffPage() {
             onChange={(event) => setForm({ ...form, password: event.target.value })}
           />
           <div className="space-y-1.5">
-            <label htmlFor="staff-role" className="block text-xs font-medium text-slate-700">
+            <label htmlFor="staff-role" className="block text-xs font-medium text-slate-700 dark:text-slate-300">
               Role
             </label>
             <select
@@ -258,7 +258,7 @@ export default function StaffPage() {
               onChange={(event) =>
                 setForm({ ...form, role: event.target.value as "MANAGER" | "MECHANIC" })
               }
-              className="w-full rounded-xl border border-slate-200/80 bg-white px-3 py-2.5 text-xs text-slate-900 shadow-xs transition focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-xl border border-slate-200/80 bg-white px-3 py-2.5 text-xs text-slate-900 shadow-xs transition focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-200 dark:focus:ring-indigo-500/20"
             >
               <option value="MECHANIC">Mechanic</option>
               <option value="MANAGER">Manager</option>

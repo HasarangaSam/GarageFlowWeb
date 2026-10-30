@@ -258,11 +258,11 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
         <div>
           <div className="flex items-center gap-2">
             {isMyJobs && <Wrench className="h-5 w-5 text-indigo-600" />}
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100">
               {isMyJobs ? "My Assigned Jobs" : "Repair Jobs"}
             </h1>
           </div>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             {isMyJobs
               ? "View and update repair jobs currently assigned to you."
               : "Track, manage, and assign repair jobs across your garage."}
@@ -278,7 +278,7 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
       </div>
 
       {/* Job filters */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs md:flex-row md:items-center">
+      <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs md:flex-row md:items-center dark:border-slate-800/80 dark:bg-slate-900/60">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <Input
@@ -302,7 +302,7 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
                 setStatusFilter(e.target.value as JobStatus | "");
                 setPage(1);
               }}
-              className="rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-200 dark:focus:ring-indigo-500/20"
             >
               {statusOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -318,7 +318,7 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
               setPriorityFilter(e.target.value as JobPriority | "");
               setPage(1);
             }}
-            className="rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-200 dark:focus:ring-indigo-500/20"
           >
             {priorityOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -334,7 +334,7 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
                 setMechanicFilter(e.target.value);
                 setPage(1);
               }}
-              className="rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-slate-700/80 dark:bg-slate-800/80 dark:text-slate-200 dark:focus:ring-indigo-500/20"
             >
               <option value="">All Mechanics</option>
               {mechanics.map((mechanic) => (
@@ -348,21 +348,21 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
       </div>
 
       {/* Table Container */}
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
         {isLoading ? (
           <div className="flex min-h-[300px] items-center justify-center">
             <Loading />
           </div>
         ) : isError ? (
-          <div className="p-8 text-center text-sm text-red-500">
+          <div className="p-8 text-center text-sm text-red-500 dark:text-rose-400">
             Failed to load repair jobs. Please try refreshing the page.
           </div>
         ) : jobs.length === 0 ? (
           <div className="p-12 text-center">
-            <p className="text-base font-medium text-gray-900">
+            <p className="text-base font-medium text-gray-900 dark:text-slate-100">
               No repair jobs found
             </p>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
               {search || statusFilter || priorityFilter || mechanicFilter
                 ? "No jobs match your current search and filter criteria."
                 : isMyJobs
@@ -401,25 +401,25 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
                 <TableBody>
                   {jobs.map((job) => (
                     <TableRow key={job.id}>
-                      <TableCell className="font-semibold text-gray-900">
+                      <TableCell className="font-semibold text-slate-900 dark:text-slate-100">
                         {job.jobNumber}
                       </TableCell>
 
                       <TableCell>
-                        <div className="font-semibold text-xs text-slate-900">
+                        <div className="font-semibold text-xs text-slate-900 dark:text-slate-100">
                           {job.customer.firstName} {job.customer.lastName}
                         </div>
-                        <div className="text-[11px] text-slate-400">
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400">
                           {job.customer.phone}
                         </div>
                       </TableCell>
 
                       <TableCell>
                         <div className="flex flex-col gap-1 items-start">
-                          <span className="inline-flex items-center rounded-md border border-slate-300 bg-slate-100 px-2 py-0.5 font-mono text-[11px] font-bold text-slate-800">
+                          <span className="inline-flex items-center rounded-md border border-slate-300 bg-slate-100 px-2 py-0.5 font-mono text-[11px] font-bold text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
                             {job.vehicle.registrationNumber}
                           </span>
-                          <span className="text-[11px] text-slate-500">
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400">
                             {job.vehicle.make} {job.vehicle.model}
                           </span>
                         </div>
@@ -435,7 +435,7 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
 
                       <TableCell>
                         {job.mechanic ? (
-                          <span className="inline-flex items-center rounded-lg border border-indigo-100 bg-indigo-50 px-2 py-0.5 text-xs font-semibold text-indigo-700">
+                          <span className="inline-flex items-center rounded-lg border border-indigo-100 bg-indigo-50 px-2 py-0.5 text-xs font-semibold text-indigo-700 dark:border-indigo-500/30 dark:bg-indigo-500/15 dark:text-indigo-400">
                             {job.mechanic.name}
                           </span>
                         ) : (
@@ -445,7 +445,7 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
                         )}
                       </TableCell>
 
-                      <TableCell className="text-sm text-gray-500">
+                      <TableCell className="text-sm text-gray-500 dark:text-slate-400">
                         {formatDate(job.createdAt)}
                       </TableCell>
 
@@ -455,7 +455,7 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
                             type="button"
                             title="View Details"
                             onClick={() => setViewingJobId(job.id)}
-                            className="rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+                            className="cursor-pointer rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                           >
                             <Eye className="h-4 w-4" />
                           </button>
@@ -465,7 +465,7 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
                               type="button"
                               title="Edit Job"
                               onClick={() => handleEdit(job)}
-                              className="rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+                              className="cursor-pointer rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                             >
                               <Pencil className="h-4 w-4" />
                             </button>
@@ -476,7 +476,7 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
                               type="button"
                               title="Delete Job"
                               onClick={() => setDeletingJob(job)}
-                              className="rounded-lg p-1.5 text-red-500 transition-colors hover:bg-red-50 hover:text-red-700"
+                              className="cursor-pointer rounded-lg p-1.5 text-red-500 transition-colors hover:bg-red-50 hover:text-red-700 dark:text-rose-400 dark:hover:bg-rose-950/40 dark:hover:text-rose-300"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -491,8 +491,8 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
 
             {/* Pagination */}
             {pagination && pagination.totalPages > 1 && (
-              <div className="flex items-center justify-between border-t border-gray-200 px-6 py-4">
-                <div className="text-sm text-gray-500">
+              <div className="flex items-center justify-between border-t border-gray-200 px-6 py-4 dark:border-slate-800">
+                <div className="text-sm text-gray-500 dark:text-slate-400">
                   Showing page {pagination.page} of {pagination.totalPages} (
                   {pagination.total} total jobs)
                 </div>

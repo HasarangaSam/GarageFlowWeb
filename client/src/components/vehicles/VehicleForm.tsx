@@ -73,17 +73,17 @@ export const VehicleForm = ({
         <div className="md:col-span-2">
           {isEditMode ? (
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700">
+              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-slate-300">
                 Customer
               </label>
 
-              <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-700">
+              <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-700 dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-300">
                 {vehicle?.customer
                   ? `${vehicle.customer.firstName} ${vehicle.customer.lastName}`
                   : "Customer"}
               </div>
 
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
                 The customer cannot be changed after the vehicle is created.
               </p>
             </div>
@@ -186,7 +186,7 @@ export const VehicleForm = ({
         />
       </div>
 
-      <div className="flex justify-end gap-3 border-t border-gray-100 pt-5">
+      <div className="flex justify-end gap-3 border-t border-gray-100 pt-5 dark:border-slate-800">
         <Button
           type="button"
           variant="secondary"

@@ -96,28 +96,28 @@ export default function RecordPaymentModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Balance Overview Box */}
-        <div className="rounded-xl border border-gray-200 bg-gray-50/80 p-4 text-xs space-y-2">
-          <div className="flex justify-between text-gray-500">
+        <div className="rounded-xl border border-gray-200 bg-gray-50/80 p-4 text-xs space-y-2 dark:border-slate-800 dark:bg-slate-800/40">
+          <div className="flex justify-between text-gray-500 dark:text-slate-400">
             <span>Customer:</span>
-            <span className="font-semibold text-gray-900">
+            <span className="font-semibold text-gray-900 dark:text-slate-100">
               {invoice.customer.firstName} {invoice.customer.lastName}
             </span>
           </div>
-          <div className="flex justify-between text-gray-500">
+          <div className="flex justify-between text-gray-500 dark:text-slate-400">
             <span>Total Invoiced:</span>
-            <span className="font-semibold text-gray-900">
+            <span className="font-semibold text-gray-900 dark:text-slate-100">
               {formatCurrency(total)}
             </span>
           </div>
-          <div className="flex justify-between text-gray-500">
+          <div className="flex justify-between text-gray-500 dark:text-slate-400">
             <span>Already Paid:</span>
-            <span className="font-semibold text-emerald-600">
+            <span className="font-semibold text-emerald-600 dark:text-emerald-400">
               {formatCurrency(alreadyPaid)}
             </span>
           </div>
-          <div className="flex justify-between pt-2 border-t text-sm font-bold text-gray-900">
+          <div className="flex justify-between pt-2 border-t text-sm font-bold text-gray-900 dark:border-slate-700 dark:text-slate-100">
             <span>Remaining Due:</span>
-            <span className="text-amber-600 font-bold">
+            <span className="text-amber-600 font-bold dark:text-amber-400">
               {formatCurrency(remainingBalance)}
             </span>
           </div>
@@ -126,13 +126,13 @@ export default function RecordPaymentModal({
         {/* Payment Amount */}
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="block text-xs font-medium text-gray-700">
+            <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
               Payment Amount (Rs.) <span className="text-rose-500">*</span>
             </label>
             <button
               type="button"
               onClick={() => setAmount(Number(remainingBalance.toFixed(2)))}
-              className="text-[11px] font-semibold text-blue-600 hover:text-blue-700"
+              className="cursor-pointer text-[11px] font-semibold text-blue-600 hover:text-blue-700 dark:text-indigo-400 dark:hover:text-indigo-300"
             >
               Pay Full Remaining ({formatCurrency(remainingBalance)})
             </button>
@@ -153,17 +153,17 @@ export default function RecordPaymentModal({
 
         {/* Payment Method Selector */}
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+          <label className="block text-xs font-medium text-gray-700 mb-1.5 dark:text-slate-300">
             Payment Method
           </label>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             <button
               type="button"
               onClick={() => setMethod("CASH")}
-              className={`flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
+              className={`cursor-pointer flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
                 method === "CASH"
-                  ? "border-emerald-600 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600"
-                  : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                  ? "border-emerald-600 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600 dark:border-emerald-500 dark:bg-emerald-950/40 dark:text-emerald-300"
+                  : "border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               }`}
             >
               <Banknote size={16} />
@@ -173,10 +173,10 @@ export default function RecordPaymentModal({
             <button
               type="button"
               onClick={() => setMethod("CARD")}
-              className={`flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
+              className={`cursor-pointer flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
                 method === "CARD"
-                  ? "border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600"
-                  : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                  ? "border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600 dark:border-indigo-500 dark:bg-indigo-950/40 dark:text-indigo-300"
+                  : "border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               }`}
             >
               <CreditCard size={16} />
@@ -186,10 +186,10 @@ export default function RecordPaymentModal({
             <button
               type="button"
               onClick={() => setMethod("BANK_TRANSFER")}
-              className={`flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
+              className={`cursor-pointer flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
                 method === "BANK_TRANSFER"
-                  ? "border-purple-600 bg-purple-50 text-purple-700 ring-1 ring-purple-600"
-                  : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                  ? "border-purple-600 bg-purple-50 text-purple-700 ring-1 ring-purple-600 dark:border-purple-500 dark:bg-purple-950/40 dark:text-purple-300"
+                  : "border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               }`}
             >
               <Building2 size={16} />
@@ -199,10 +199,10 @@ export default function RecordPaymentModal({
             <button
               type="button"
               onClick={() => setMethod("OTHER")}
-              className={`flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
+              className={`cursor-pointer flex flex-col items-center gap-1 rounded-lg border p-2 text-xs font-medium transition ${
                 method === "OTHER"
-                  ? "border-gray-600 bg-gray-100 text-gray-800 ring-1 ring-gray-600"
-                  : "border-gray-200 text-gray-700 hover:bg-gray-50"
+                  ? "border-gray-600 bg-gray-100 text-gray-800 ring-1 ring-gray-600 dark:border-slate-500 dark:bg-slate-800 dark:text-slate-200"
+                  : "border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               }`}
             >
               <HelpCircle size={16} />
@@ -213,7 +213,7 @@ export default function RecordPaymentModal({
 
         {/* Reference / Notes */}
         <div>
-          <label className="block text-xs font-medium text-gray-700">
+          <label className="block text-xs font-medium text-gray-700 dark:text-slate-300">
             Transaction Reference / Notes (Optional)
           </label>
           <Input
@@ -225,11 +225,11 @@ export default function RecordPaymentModal({
         </div>
 
         {/* Projected Outcome Pill */}
-        <div className="rounded-lg border border-blue-100 bg-blue-50/60 p-3 text-xs flex items-center justify-between">
-          <span className="text-gray-600">Balance after this payment:</span>
+        <div className="rounded-lg border border-blue-100 bg-blue-50/60 p-3 text-xs flex items-center justify-between dark:border-blue-900/40 dark:bg-blue-950/20">
+          <span className="text-gray-600 dark:text-slate-400">Balance after this payment:</span>
           <span
             className={`font-bold ${
-              projectedBalance === 0 ? "text-emerald-600" : "text-amber-600"
+              projectedBalance === 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
             }`}
           >
             {projectedBalance === 0
@@ -239,14 +239,14 @@ export default function RecordPaymentModal({
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 rounded-lg bg-rose-50 p-2.5 text-xs text-rose-700 border border-rose-200">
+          <div className="flex items-center gap-2 rounded-lg bg-rose-50 p-2.5 text-xs text-rose-700 border border-rose-200 dark:border-rose-900/50 dark:bg-rose-950/20 dark:text-rose-400">
             <AlertCircle size={15} />
             <span>{error}</span>
           </div>
         )}
 
         {/* Action Buttons */}
-        <div className="flex justify-end gap-3 pt-3 border-t">
+        <div className="flex justify-end gap-3 pt-3 border-t dark:border-slate-800">
           <Button
             type="button"
             variant="secondary"

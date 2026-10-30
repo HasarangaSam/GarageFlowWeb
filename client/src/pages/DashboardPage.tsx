@@ -47,43 +47,50 @@ const getStatusConfig = (status: JobStatus) => {
     case "RECEIVED":
       return {
         label: "Received",
-        badge: "bg-slate-100 text-slate-700 border-slate-200/80",
-        dot: "bg-slate-400",
+        badge:
+          "bg-slate-100 text-slate-700 border-slate-200/80 dark:bg-slate-800/80 dark:text-slate-300 dark:border-slate-700/60",
+        dot: "bg-slate-400 dark:bg-slate-500",
       };
     case "IN_PROGRESS":
       return {
         label: "In Progress",
-        badge: "bg-indigo-50 text-indigo-700 border-indigo-200/80",
+        badge:
+          "bg-indigo-50 text-indigo-700 border-indigo-200/80 dark:bg-indigo-500/15 dark:text-indigo-400 dark:border-indigo-500/30",
         dot: "bg-indigo-500",
       };
     case "WAITING_FOR_PARTS":
       return {
         label: "Waiting for Parts",
-        badge: "bg-amber-50 text-amber-700 border-amber-200/80",
+        badge:
+          "bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-500/15 dark:text-amber-400 dark:border-amber-500/30",
         dot: "bg-amber-500",
       };
     case "READY_FOR_PICKUP":
       return {
         label: "Ready for Pickup",
-        badge: "bg-teal-50 text-teal-700 border-teal-200/80",
+        badge:
+          "bg-teal-50 text-teal-700 border-teal-200/80 dark:bg-teal-500/15 dark:text-teal-400 dark:border-teal-500/30",
         dot: "bg-teal-500",
       };
     case "COMPLETED":
       return {
         label: "Completed",
-        badge: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
+        badge:
+          "bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-500/15 dark:text-emerald-400 dark:border-emerald-500/30",
         dot: "bg-emerald-500",
       };
     case "DELIVERED":
       return {
         label: "Delivered",
-        badge: "bg-violet-50 text-violet-700 border-violet-200/80",
+        badge:
+          "bg-violet-50 text-violet-700 border-violet-200/80 dark:bg-violet-500/15 dark:text-violet-400 dark:border-violet-500/30",
         dot: "bg-violet-500",
       };
     default:
       return {
         label: status,
-        badge: "bg-slate-100 text-slate-700 border-slate-200/80",
+        badge:
+          "bg-slate-100 text-slate-700 border-slate-200/80 dark:bg-slate-800/80 dark:text-slate-300 dark:border-slate-700/60",
         dot: "bg-slate-400",
       };
   }
@@ -94,22 +101,26 @@ const getPriorityConfig = (priority: JobPriority) => {
     case "URGENT":
       return {
         label: "Urgent",
-        className: "bg-rose-50 text-rose-700 border-rose-200 font-semibold",
+        className:
+          "bg-rose-50 text-rose-700 border-rose-200 font-semibold dark:bg-rose-500/15 dark:text-rose-400 dark:border-rose-500/30",
       };
     case "HIGH":
       return {
         label: "High",
-        className: "bg-amber-50 text-amber-700 border-amber-200 font-medium",
+        className:
+          "bg-amber-50 text-amber-700 border-amber-200 font-medium dark:bg-amber-500/15 dark:text-amber-400 dark:border-amber-500/30",
       };
     case "NORMAL":
       return {
         label: "Normal",
-        className: "bg-slate-100 text-slate-600 border-slate-200",
+        className:
+          "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800/80 dark:text-slate-300 dark:border-slate-700/60",
       };
     case "LOW":
       return {
         label: "Low",
-        className: "bg-slate-50 text-slate-500 border-slate-200",
+        className:
+          "bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-800/40 dark:text-slate-400 dark:border-slate-700/60",
       };
   }
 };
@@ -141,20 +152,20 @@ export default function DashboardPage() {
 
   if (isError || !data) {
     return (
-      <div className="mx-auto max-w-lg rounded-2xl border border-slate-200/80 bg-white p-8 text-center shadow-sm">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 ring-1 ring-rose-500/20">
+      <div className="mx-auto max-w-lg rounded-2xl border border-slate-200/80 bg-white p-8 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 ring-1 ring-rose-500/20 dark:bg-rose-500/15 dark:text-rose-400">
           <AlertTriangle size={24} />
         </div>
-        <h2 className="mt-4 text-base font-semibold text-slate-900">
+        <h2 className="mt-4 text-base font-semibold text-slate-900 dark:text-slate-100">
           Failed to load dashboard
         </h2>
-        <p className="mt-1.5 text-xs text-slate-500">
+        <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
           Unable to fetch real-time garage statistics. Please verify your connection.
         </p>
         <button
           type="button"
           onClick={() => refetch()}
-          className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-slate-800"
+          className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 cursor-pointer"
         >
           <RefreshCw size={14} />
           Retry Connection
@@ -176,15 +187,15 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Top Welcome Banner & Actions */}
+      {/* Top welcome banner */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl">
               Good day, {firstName} 👋
             </h1>
           </div>
-          <p className="mt-1 text-xs font-normal text-slate-500 sm:text-sm">
+          <p className="mt-1 text-xs font-normal text-slate-500 dark:text-slate-400 sm:text-sm">
             Here is what is happening across your workshop bays today.
           </p>
         </div>
@@ -194,19 +205,19 @@ export default function DashboardPage() {
             type="button"
             onClick={() => refetch()}
             disabled={isFetching}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-600 shadow-xs transition hover:bg-slate-50 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-600 shadow-xs transition hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700/70 dark:bg-slate-800/80 dark:text-slate-300 dark:hover:bg-slate-700/80 cursor-pointer"
             title="Refresh dashboard metrics"
           >
             <RefreshCw
               size={14}
-              className={`${isFetching ? "animate-spin text-indigo-600" : ""}`}
+              className={`${isFetching ? "animate-spin text-indigo-600 dark:text-indigo-400" : ""}`}
             />
             <span className="hidden sm:inline">Refresh</span>
           </button>
 
           <Link
             to="/jobs"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-3.5 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-slate-800"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-3.5 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500"
           >
             <Plus size={14} />
             <span>New Job</span>
@@ -214,34 +225,34 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* KPI Cards Grid */}
+      {/* KPI cards */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {/* Active Jobs */}
-        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-md">
+        {/* Active jobs */}
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-slate-800/80 dark:bg-slate-900/60 dark:hover:border-slate-700">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Active Workshop Jobs
             </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-500/20 dark:bg-indigo-500/15 dark:text-indigo-400 dark:ring-indigo-500/30">
               <BriefcaseBusiness size={18} />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold tracking-tight text-slate-900">
+            <span className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
               {summary.activeJobs}
             </span>
-            <span className="text-xs font-medium text-slate-600">
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
               in workshop
             </span>
           </div>
-          <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
-            <span className="flex items-center gap-1 text-slate-600">
+          <div className="mt-3 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-3 text-xs">
+            <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
               <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
               Real-time load
             </span>
             <Link
               to="/jobs"
-              className="inline-flex items-center gap-1 font-semibold text-indigo-600 hover:text-indigo-700"
+              className="inline-flex items-center gap-1 font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
             >
               View bay <ArrowRight size={12} />
             </Link>
@@ -249,31 +260,31 @@ export default function DashboardPage() {
         </div>
 
         {/* Completed Today */}
-        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-md">
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-slate-800/80 dark:bg-slate-900/60 dark:hover:border-slate-700">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Completed Today
             </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-500/20 dark:bg-emerald-500/15 dark:text-emerald-400 dark:ring-emerald-500/30">
               <CheckCircle2 size={18} />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold tracking-tight text-slate-900">
+            <span className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
               {summary.completedToday}
             </span>
-            <span className="text-xs font-medium text-emerald-600">
+            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
               jobs finished
             </span>
           </div>
-          <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
-            <span className="flex items-center gap-1 text-slate-600">
+          <div className="mt-3 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-3 text-xs">
+            <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              Kept after pickup or delivery
+              Today's deliveries
             </span>
             <Link
               to="/jobs"
-              className="inline-flex items-center gap-1 font-semibold text-emerald-600 hover:text-emerald-700"
+              className="inline-flex items-center gap-1 font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
             >
               Details <ArrowRight size={12} />
             </Link>
@@ -281,28 +292,28 @@ export default function DashboardPage() {
         </div>
 
         {/* Today's Revenue */}
-        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-md">
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-slate-800/80 dark:bg-slate-900/60 dark:hover:border-slate-700">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Today's Revenue
             </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-600 ring-1 ring-teal-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-600 ring-1 ring-teal-500/20 dark:bg-teal-500/15 dark:text-teal-400 dark:ring-teal-500/30">
               <TrendingUp size={18} />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="truncate text-2xl font-extrabold tracking-tight text-slate-900">
+            <span className="truncate text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
               {formatCurrency(summary.todayRevenue)}
             </span>
           </div>
-          <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
-            <span className="flex items-center gap-1 text-slate-600">
+          <div className="mt-3 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-3 text-xs">
+            <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
               <span className="h-1.5 w-1.5 rounded-full bg-teal-500" />
               Settled payments
             </span>
             <Link
               to="/invoices"
-              className="inline-flex items-center gap-1 font-semibold text-teal-600 hover:text-teal-700"
+              className="inline-flex items-center gap-1 font-semibold text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300"
             >
               Invoices <ArrowRight size={12} />
             </Link>
@@ -310,28 +321,28 @@ export default function DashboardPage() {
         </div>
 
         {/* Outstanding Receivables */}
-        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-md">
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-slate-800/80 dark:bg-slate-900/60 dark:hover:border-slate-700">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Outstanding Balance
             </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 ring-1 ring-amber-500/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 ring-1 ring-amber-500/20 dark:bg-amber-500/15 dark:text-amber-400 dark:ring-amber-500/30">
               <CircleDollarSign size={18} />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="truncate text-2xl font-extrabold tracking-tight text-slate-900">
+            <span className="truncate text-2xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
               {formatCurrency(summary.outstandingPayments)}
             </span>
           </div>
-          <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
-            <span className="flex items-center gap-1 text-slate-600">
+          <div className="mt-3 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-3 text-xs">
+            <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
               Pending invoices
             </span>
             <Link
               to="/invoices"
-              className="inline-flex items-center gap-1 font-semibold text-amber-600 hover:text-amber-700"
+              className="inline-flex items-center gap-1 font-semibold text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300"
             >
               Collect <ArrowRight size={12} />
             </Link>
@@ -339,78 +350,77 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Current workshop queue only; completed and pickup work are not mechanic workload. */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+      {/* Workshop queue snapshot */}
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-indigo-600" />
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-600">
+            <span className="h-2 w-2 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
               Current Workshop Queue
             </span>
           </div>
-          <span className="text-xs text-slate-600">
+          <span className="text-xs text-slate-500 dark:text-slate-400">
             {summary.activeJobs} ongoing jobs across mechanics
           </span>
         </div>
 
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-          <div className="flex items-center gap-2.5 rounded-xl bg-slate-50 p-2.5 border border-slate-100">
+          <div className="flex items-center gap-2.5 rounded-xl bg-slate-50 p-2.5 border border-slate-100 dark:bg-slate-800/50 dark:border-slate-800">
             <div className="h-2 w-2 rounded-full bg-slate-400" />
             <div className="min-w-0">
-              <p className="text-[11px] font-medium text-slate-500">Received</p>
-              <p className="text-sm font-bold text-slate-800">
+              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">Received</p>
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
                 {jobStatusCounts.received}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 rounded-xl bg-indigo-50/60 p-2.5 border border-indigo-100/70">
+          <div className="flex items-center gap-2.5 rounded-xl bg-indigo-50/60 p-2.5 border border-indigo-100/70 dark:bg-indigo-500/10 dark:border-indigo-500/20">
             <div className="h-2 w-2 rounded-full bg-indigo-500" />
             <div className="min-w-0">
-              <p className="text-[11px] font-medium text-indigo-700">
+              <p className="text-[11px] font-medium text-indigo-700 dark:text-indigo-400">
                 In Progress
               </p>
-              <p className="text-sm font-bold text-indigo-900">
+              <p className="text-sm font-bold text-indigo-900 dark:text-indigo-300">
                 {jobStatusCounts.inProgress}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 rounded-xl bg-amber-50/60 p-2.5 border border-amber-100/70">
+          <div className="flex items-center gap-2.5 rounded-xl bg-amber-50/60 p-2.5 border border-amber-100/70 dark:bg-amber-500/10 dark:border-amber-500/20">
             <div className="h-2 w-2 rounded-full bg-amber-500" />
             <div className="min-w-0">
-              <p className="text-[11px] font-medium text-amber-700">Waiting Parts</p>
-              <p className="text-sm font-bold text-amber-900">
+              <p className="text-[11px] font-medium text-amber-700 dark:text-amber-400">Waiting Parts</p>
+              <p className="text-sm font-bold text-amber-900 dark:text-amber-300">
                 {jobStatusCounts.waitingForParts}
               </p>
             </div>
           </div>
-
         </div>
       </div>
 
       {/* Main 2-Column Section: Recent Jobs & Recent Payments */}
       <div className="grid gap-6 xl:grid-cols-2">
         {/* Recent Jobs Card */}
-        <section className="flex flex-col rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
-          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <section className="flex flex-col rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden dark:border-slate-800/80 dark:bg-slate-900/60">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-5 py-4">
             <div>
-              <h2 className="text-sm font-bold tracking-tight text-slate-900">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
                 Recent Repair Jobs
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Most recently updated jobs
               </p>
             </div>
             <Link
               to="/jobs"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 transition hover:text-indigo-700"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 transition hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
             >
               View all <ArrowUpRight size={14} />
             </Link>
           </div>
 
-          <div className="flex-1 divide-y divide-slate-100">
+          <div className="flex-1 divide-y divide-slate-100 dark:divide-slate-800/80">
             {recentJobs.length === 0 ? (
               <EmptyState message="No repair jobs recorded yet." />
             ) : (
@@ -423,29 +433,29 @@ export default function DashboardPage() {
                 return (
                   <div
                     key={job.id}
-                    className="group p-4 transition hover:bg-slate-50/70"
+                    className="group p-4 transition hover:bg-slate-50/70 dark:hover:bg-slate-800/50"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
                         {/* Customer Avatar */}
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-xs font-bold text-slate-700 border border-slate-200/60">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-xs font-bold text-slate-700 border border-slate-200/60 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700/60">
                           {customerInitials}
                         </div>
 
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="font-semibold text-sm text-slate-900">
+                            <span className="font-semibold text-sm text-slate-900 dark:text-slate-100">
                               {job.jobNumber}
                             </span>
                             {/* License plate tag */}
-                            <span className="inline-flex items-center rounded-md border border-slate-300 bg-slate-100 px-2 py-0.5 font-mono text-[11px] font-bold tracking-wider text-slate-800 shadow-2xs">
+                            <span className="inline-flex items-center rounded-md border border-slate-300 bg-slate-100 px-2 py-0.5 font-mono text-[11px] font-bold tracking-wider text-slate-800 shadow-2xs dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
                               {job.vehicle.registrationNumber}
                             </span>
                           </div>
 
-                          <p className="mt-1 truncate text-xs text-slate-600">
+                          <p className="mt-1 truncate text-xs text-slate-600 dark:text-slate-400">
                             {job.vehicle.make} {job.vehicle.model} •{" "}
-                            <span className="text-slate-500">
+                            <span className="text-slate-500 dark:text-slate-400">
                               {job.customer.firstName} {job.customer.lastName}
                             </span>
                           </p>
@@ -455,23 +465,23 @@ export default function DashboardPage() {
                       {/* Status badge */}
                       <div className="shrink-0 text-right">
                         <span
-                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${statusConfig.badge}`}
+                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium transition-colors ${statusConfig.badge}`}
                         >
                           <span
                             className={`h-1.5 w-1.5 rounded-full ${statusConfig.dot}`}
                           />
                           {statusConfig.label}
                         </span>
-                        <p className="mt-1 text-[11px] text-slate-400">
+                        <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">
                           {formatTimeAgo(job.updatedAt)}
                         </p>
                       </div>
                     </div>
 
                     {/* Footer Row */}
-                    <div className="mt-3 flex items-center justify-between border-t border-slate-100/60 pt-2.5 text-xs">
-                      <div className="flex items-center gap-1.5 text-slate-500">
-                        <Wrench size={13} className="text-slate-400" />
+                    <div className="mt-3 flex items-center justify-between border-t border-slate-100/60 dark:border-slate-800 pt-2.5 text-xs">
+                      <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+                        <Wrench size={13} className="text-slate-400 dark:text-slate-500" />
                         <span>
                           {job.mechanic?.name ?? "Unassigned"}
                         </span>
@@ -491,25 +501,25 @@ export default function DashboardPage() {
         </section>
 
         {/* Recent Payments Card */}
-        <section className="flex flex-col rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
-          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <section className="flex flex-col rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden dark:border-slate-800/80 dark:bg-slate-900/60">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-5 py-4">
             <div>
-              <h2 className="text-sm font-bold tracking-tight text-slate-900">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
                 Recent Payments
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Invoices paid and settled recently
               </p>
             </div>
             <Link
               to="/invoices"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 transition hover:text-indigo-700"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 transition hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
             >
               View all <ArrowUpRight size={14} />
             </Link>
           </div>
 
-          <div className="flex-1 divide-y divide-slate-100">
+          <div className="flex-1 divide-y divide-slate-100 dark:divide-slate-800/80">
             {recentPayments.length === 0 ? (
               <EmptyState message="No payments recorded yet." />
             ) : (
@@ -518,25 +528,25 @@ export default function DashboardPage() {
                 return (
                   <div
                     key={payment.id}
-                    className="flex items-center justify-between gap-4 p-4 transition hover:bg-slate-50/70"
+                    className="flex items-center justify-between gap-4 p-4 transition hover:bg-slate-50/70 dark:hover:bg-slate-800/50"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200/60">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200/60 dark:bg-emerald-500/15 dark:text-emerald-400 dark:border-emerald-500/30">
                         <MethodIcon size={18} />
                       </div>
 
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-xs text-slate-900">
+                          <span className="font-semibold text-xs text-slate-900 dark:text-slate-100">
                             {payment.invoice.customer.firstName}{" "}
                             {payment.invoice.customer.lastName}
                           </span>
-                          <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">
+                          <span className="rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 font-mono text-[10px] text-slate-600 dark:text-slate-300">
                             {payment.invoice.invoiceNumber}
                           </span>
                         </div>
 
-                        <p className="mt-0.5 text-[11px] text-slate-500">
+                        <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">
                           {payment.method.replace("_", " ")}
                           {payment.reference ? ` • ${payment.reference}` : ""} •{" "}
                           {formatDate(payment.paidAt)}
@@ -545,10 +555,10 @@ export default function DashboardPage() {
                     </div>
 
                     <div className="shrink-0 text-right">
-                      <p className="font-bold text-sm text-emerald-700">
+                      <p className="font-bold text-sm text-emerald-600 dark:text-emerald-400">
                         +{formatCurrency(payment.amount)}
                       </p>
-                      <span className="inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-600">
+                      <span className="inline-block rounded-full bg-emerald-50 dark:bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
                         Paid
                       </span>
                     </div>
@@ -563,14 +573,14 @@ export default function DashboardPage() {
       {/* Bottom 2-Column Section: Low Stock Parts & Mechanic Workload */}
       <div className="grid gap-6 xl:grid-cols-2">
         {/* Low Stock Parts Card */}
-        <section className="flex flex-col rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
-          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <section className="flex flex-col rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden dark:border-slate-800/80 dark:bg-slate-900/60">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-5 py-4">
             <div className="flex items-center gap-2.5">
               <div>
-                <h2 className="text-sm font-bold tracking-tight text-slate-900">
+                <h2 className="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
                   Inventory Alerts
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Items below or at minimum threshold
                 </p>
               </div>
@@ -578,24 +588,24 @@ export default function DashboardPage() {
 
             <div className="flex items-center gap-2">
               {summary.lowStockParts > 0 ? (
-                <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 ring-1 ring-amber-500/20">
+                <span className="rounded-full bg-amber-50 dark:bg-amber-500/15 px-2.5 py-1 text-xs font-semibold text-amber-700 dark:text-amber-400 ring-1 ring-amber-500/20 dark:ring-amber-500/30">
                   {summary.lowStockParts} attention needed
                 </span>
               ) : (
-                <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                <span className="rounded-full bg-emerald-50 dark:bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                   Healthy
                 </span>
               )}
               <Link
                 to="/inventory"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 transition hover:text-indigo-700"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 transition hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
               >
                 Manage <ArrowUpRight size={14} />
               </Link>
             </div>
           </div>
 
-          <div className="flex-1 divide-y divide-slate-100">
+          <div className="flex-1 divide-y divide-slate-100 dark:divide-slate-800/80">
             {lowStockParts.length === 0 ? (
               <EmptyState message="All inventory parts are sufficiently stocked." />
             ) : (
@@ -609,15 +619,15 @@ export default function DashboardPage() {
                 return (
                   <div
                     key={part.id}
-                    className="p-4 transition hover:bg-slate-50/70"
+                    className="p-4 transition hover:bg-slate-50/70 dark:hover:bg-slate-800/50"
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div className="min-w-0">
-                        <p className="font-semibold text-xs text-slate-900 truncate">
+                        <p className="font-semibold text-xs text-slate-900 dark:text-slate-100 truncate">
                           {part.name}
                         </p>
-                        <p className="text-[11px] text-slate-400 mt-0.5">
-                          SKU: <span className="font-mono text-slate-600">{part.sku}</span>
+                        <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                          SKU: <span className="font-mono text-slate-600 dark:text-slate-400">{part.sku}</span>
                         </p>
                       </div>
 
@@ -625,20 +635,20 @@ export default function DashboardPage() {
                         <div className="flex items-center justify-end gap-1.5">
                           <span
                             className={`text-sm font-bold ${
-                              isCritical ? "text-rose-600" : "text-amber-600"
+                              isCritical ? "text-rose-600 dark:text-rose-400" : "text-amber-600 dark:text-amber-400"
                             }`}
                           >
                             {part.quantity} left
                           </span>
-                          <span className="text-xs text-slate-400">
+                          <span className="text-xs text-slate-400 dark:text-slate-500">
                             / min {part.minimumStock}
                           </span>
                         </div>
                         <span
                           className={`inline-block mt-0.5 text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded ${
                             isCritical
-                              ? "bg-rose-50 text-rose-700"
-                              : "bg-amber-50 text-amber-700"
+                              ? "bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-400"
+                              : "bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400"
                           }`}
                         >
                           {part.quantity === 0 ? "Out of stock" : "Low stock"}
@@ -648,7 +658,7 @@ export default function DashboardPage() {
 
                     {/* Visual Progress Bar */}
                     <div className="mt-3">
-                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
                         <div
                           className={`h-full rounded-full transition-all ${
                             isCritical ? "bg-rose-500" : "bg-amber-500"
@@ -665,25 +675,25 @@ export default function DashboardPage() {
         </section>
 
         {/* Mechanic Workload Card */}
-        <section className="flex flex-col rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden">
-          <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+        <section className="flex flex-col rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden dark:border-slate-800/80 dark:bg-slate-900/60">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-5 py-4">
             <div>
-              <h2 className="text-sm font-bold tracking-tight text-slate-900">
+              <h2 className="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
                 Mechanic Bay Workload
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Current active capacity across workshop staff
               </p>
             </div>
             <Link
               to="/staff"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 transition hover:text-indigo-700"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 transition hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
             >
               Staff <ArrowUpRight size={14} />
             </Link>
           </div>
 
-          <div className="flex-1 divide-y divide-slate-100">
+          <div className="flex-1 divide-y divide-slate-100 dark:divide-slate-800/80">
             {mechanicWorkload.length === 0 ? (
               <EmptyState message="No mechanics active in this garage." />
             ) : (
@@ -698,37 +708,37 @@ export default function DashboardPage() {
                 return (
                   <div
                     key={mechanic.mechanicId}
-                    className="p-4 transition hover:bg-slate-50/70"
+                    className="p-4 transition hover:bg-slate-50/70 dark:hover:bg-slate-800/50"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 font-bold text-xs text-indigo-700">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 font-bold text-xs text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400">
                           {mechanicInitials}
                         </div>
                         <div>
-                          <p className="font-semibold text-xs text-slate-900">
+                          <p className="font-semibold text-xs text-slate-900 dark:text-slate-100">
                             {mechanic.mechanicName}
                           </p>
-                          <p className="text-[11px] text-slate-400">
+                          <p className="text-[11px] text-slate-400 dark:text-slate-500">
                             Mechanic
                           </p>
                         </div>
                       </div>
 
-                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700">
+                      <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-xs font-bold text-slate-700 dark:text-slate-300">
                         {mechanic.total} {mechanic.total === 1 ? "job" : "jobs"}
                       </span>
                     </div>
 
                     {/* Breakdown Badges */}
                     <div className="mt-3 flex flex-wrap gap-1.5 text-[11px]">
-                      <span className="rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-slate-600">
-                        Received: <b className="text-slate-800">{mechanic.received}</b>
+                      <span className="rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-slate-600 dark:border-slate-700/60 dark:bg-slate-800/60 dark:text-slate-300">
+                        Received: <b className="text-slate-800 dark:text-slate-200">{mechanic.received}</b>
                       </span>
-                      <span className="rounded-md border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-indigo-700">
+                      <span className="rounded-md border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-indigo-700 dark:border-indigo-500/30 dark:bg-indigo-500/15 dark:text-indigo-400">
                         In Progress: <b>{mechanic.inProgress}</b>
                       </span>
-                      <span className="rounded-md border border-amber-200 bg-amber-50 px-2 py-0.5 text-amber-700">
+                      <span className="rounded-md border border-amber-200 bg-amber-50 px-2 py-0.5 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/15 dark:text-amber-400">
                         Waiting: <b>{mechanic.waitingForParts}</b>
                       </span>
                     </div>
@@ -742,16 +752,16 @@ export default function DashboardPage() {
 
       {/* Global Low Stock Attention Banner */}
       {summary.lowStockParts > 0 && (
-        <div className="flex flex-col gap-3 rounded-2xl border border-amber-200/80 bg-gradient-to-r from-amber-50/90 to-orange-50/50 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-2xl border border-amber-200/80 bg-gradient-to-r from-amber-50/90 to-orange-50/50 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-amber-500/30 dark:from-amber-950/40 dark:to-orange-950/20">
           <div className="flex items-start gap-3">
-            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-800">
+            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-400">
               <AlertTriangle size={18} />
             </div>
             <div>
-              <p className="text-xs font-bold text-slate-900">
+              <p className="text-xs font-bold text-slate-900 dark:text-amber-200">
                 Low Inventory Restock Recommended
               </p>
-              <p className="text-xs text-slate-600">
+              <p className="text-xs text-slate-600 dark:text-amber-300/80">
                 {summary.lowStockParts}{" "}
                 {summary.lowStockParts === 1 ? "part is" : "parts are"} below
                 minimum safety threshold. Review your stock to prevent repair delays.
@@ -760,7 +770,7 @@ export default function DashboardPage() {
           </div>
           <Link
             to="/inventory"
-            className="inline-flex shrink-0 items-center justify-center rounded-xl bg-amber-700 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition hover:bg-amber-800"
+            className="inline-flex shrink-0 items-center justify-center rounded-xl bg-amber-700 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition hover:bg-amber-800 dark:bg-amber-600 dark:hover:bg-amber-500"
           >
             Review Parts
           </Link>
@@ -773,10 +783,10 @@ export default function DashboardPage() {
 function EmptyState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-10 text-center">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-400 mb-2">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-400 mb-2 dark:bg-slate-800 dark:text-slate-500">
         <Package size={20} />
       </div>
-      <p className="text-xs font-medium text-slate-500">{message}</p>
+      <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{message}</p>
     </div>
   );
 }
@@ -786,31 +796,31 @@ function DashboardSkeleton() {
     <div className="animate-pulse space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <div className="h-6 w-48 rounded-lg bg-slate-200" />
-          <div className="mt-2 h-3.5 w-72 rounded-lg bg-slate-200" />
+          <div className="h-6 w-48 rounded-lg bg-slate-200 dark:bg-slate-800" />
+          <div className="mt-2 h-3.5 w-72 rounded-lg bg-slate-200 dark:bg-slate-800" />
         </div>
-        <div className="h-8 w-24 rounded-xl bg-slate-200" />
+        <div className="h-8 w-24 rounded-xl bg-slate-200 dark:bg-slate-800" />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="h-32 rounded-2xl border border-slate-200/80 bg-white p-5"
+            className="h-32 rounded-2xl border border-slate-200/80 bg-white p-5 dark:border-slate-800 dark:bg-slate-900/60"
           >
-            <div className="h-4 w-28 rounded bg-slate-200" />
-            <div className="mt-4 h-8 w-20 rounded bg-slate-200" />
+            <div className="h-4 w-28 rounded bg-slate-200 dark:bg-slate-800" />
+            <div className="mt-4 h-8 w-20 rounded bg-slate-200 dark:bg-slate-800" />
           </div>
         ))}
       </div>
 
-      <div className="h-20 rounded-2xl border border-slate-200/80 bg-white p-4" />
+      <div className="h-20 rounded-2xl border border-slate-200/80 bg-white p-4 dark:border-slate-800 dark:bg-slate-900/60" />
 
       <div className="grid gap-6 xl:grid-cols-2">
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="h-72 rounded-2xl border border-slate-200/80 bg-white"
+            className="h-72 rounded-2xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900/60"
           />
         ))}
       </div>

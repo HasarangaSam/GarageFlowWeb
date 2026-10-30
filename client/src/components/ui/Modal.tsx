@@ -42,23 +42,23 @@ export default function Modal({
         type="button"
         aria-label="Close modal"
         onClick={onClose}
-        className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
+        className="absolute inset-0 bg-slate-950/70 backdrop-blur-xs transition-opacity"
       />
 
       <div
-        className={`relative w-full ${sizeClasses[size]} overflow-hidden rounded-2xl bg-white shadow-2xl border border-slate-200/80 ring-1 ring-black/5`}
+        className={`relative w-full ${sizeClasses[size]} overflow-hidden rounded-2xl bg-white shadow-2xl border border-slate-200/80 ring-1 ring-black/5 dark:bg-slate-900 dark:border-slate-800 dark:shadow-black/70 dark:ring-white/10`}
       >
-        <div className="flex items-start justify-between border-b border-slate-100 px-6 py-5">
+        <div className="flex items-start justify-between border-b border-slate-100 dark:border-slate-800 px-6 py-5">
           <div className="pr-4">
             <h2
               id="modal-title"
-              className="text-base font-bold tracking-tight text-slate-900 sm:text-lg"
+              className="text-base font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-lg"
             >
               {title}
             </h2>
 
             {description && (
-              <p className="mt-1 text-xs text-slate-500">{description}</p>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{description}</p>
             )}
           </div>
 
@@ -66,7 +66,7 @@ export default function Modal({
             type="button"
             onClick={onClose}
             aria-label="Close modal"
-            className="rounded-xl p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="rounded-xl p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 cursor-pointer"
           >
             <X size={18} />
           </button>
@@ -75,7 +75,7 @@ export default function Modal({
         <div className="max-h-[75vh] overflow-y-auto px-6 py-5">{children}</div>
 
         {footer && (
-          <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 bg-slate-50/70 px-6 py-4">
+          <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/90 px-6 py-4">
             {footer}
           </div>
         )}

@@ -60,32 +60,32 @@ export default function InvoicePrintModal({
         <div
           ref={printRef}
           id="printable-invoice"
-          className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8 print:border-none print:p-0 print:shadow-none"
+          className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8 print:border-none print:p-0 print:shadow-none dark:border-slate-800 dark:bg-slate-900/60 print:dark:bg-white"
         >
           {/* Header */}
-          <div className="flex flex-col justify-between gap-4 border-b border-gray-200 pb-6 sm:flex-row sm:items-start">
+          <div className="flex flex-col justify-between gap-4 border-b border-gray-200 pb-6 sm:flex-row sm:items-start dark:border-slate-800">
             <div>
               <div className="flex items-center gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold">
                   GF
                 </div>
-                <h2 className="text-xl font-extrabold text-gray-900">
+                <h2 className="text-xl font-extrabold text-gray-900 dark:text-slate-100">
                   GarageFlow Automotive
                 </h2>
               </div>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-gray-500 dark:text-slate-400">
                 Precision Auto Repairs & Diagnostic Center
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-slate-400">
                 100 Motorway Blvd • (555) 019-2834 • service@garageflow.io
               </p>
             </div>
 
             <div className="text-left sm:text-right">
-              <span className="text-xs uppercase tracking-widest text-gray-400 font-semibold">
+              <span className="text-xs uppercase tracking-widest text-gray-400 font-semibold dark:text-slate-500">
                 INVOICE
               </span>
-              <p className="text-xl font-mono font-extrabold text-gray-900">
+              <p className="text-xl font-mono font-extrabold text-gray-900 dark:text-slate-100">
                 {invoice.invoiceNumber}
               </p>
               <div className="mt-1 flex sm:justify-end">
@@ -95,52 +95,52 @@ export default function InvoicePrintModal({
           </div>
 
           {/* Metadata Grid */}
-          <div className="grid grid-cols-2 gap-6 py-6 border-b border-gray-100 sm:grid-cols-4 text-xs">
+          <div className="grid grid-cols-2 gap-6 py-6 border-b border-gray-100 sm:grid-cols-4 text-xs dark:border-slate-800">
             <div>
-              <span className="font-semibold text-gray-400 uppercase tracking-wider">
+              <span className="font-semibold text-gray-400 uppercase tracking-wider dark:text-slate-500">
                 Billed To
               </span>
-              <p className="mt-1 font-bold text-gray-900 text-sm">
+              <p className="mt-1 font-bold text-gray-900 text-sm dark:text-slate-100">
                 {invoice.customer.firstName} {invoice.customer.lastName}
               </p>
-              <p className="text-gray-500">{invoice.customer.phone}</p>
+              <p className="text-gray-500 dark:text-slate-400">{invoice.customer.phone}</p>
             </div>
 
             <div>
-              <span className="font-semibold text-gray-400 uppercase tracking-wider">
+              <span className="font-semibold text-gray-400 uppercase tracking-wider dark:text-slate-500">
                 Vehicle Details
               </span>
-              <p className="mt-1 font-bold text-gray-900 text-sm">
+              <p className="mt-1 font-bold text-gray-900 text-sm dark:text-slate-100">
                 {invoice.vehicle.make} {invoice.vehicle.model}
               </p>
-              <p className="font-mono text-gray-600">
+              <p className="font-mono text-gray-600 dark:text-slate-300">
                 Reg: {invoice.vehicle.registrationNumber}
               </p>
               {invoice.vehicle.year && (
-                <p className="text-gray-500">Year: {invoice.vehicle.year}</p>
+                <p className="text-gray-500 dark:text-slate-400">Year: {invoice.vehicle.year}</p>
               )}
             </div>
 
             <div>
-              <span className="font-semibold text-gray-400 uppercase tracking-wider">
+              <span className="font-semibold text-gray-400 uppercase tracking-wider dark:text-slate-500">
                 Repair Job Reference
               </span>
-              <p className="mt-1 font-mono font-bold text-gray-900 text-sm">
+              <p className="mt-1 font-mono font-bold text-gray-900 text-sm dark:text-slate-100">
                 {invoice.job?.jobNumber || "—"}
               </p>
-              <p className="text-gray-500">
+              <p className="text-gray-500 dark:text-slate-400">
                 Created: {formatDate(invoice.createdAt)}
               </p>
             </div>
 
             <div>
-              <span className="font-semibold text-gray-400 uppercase tracking-wider">
+              <span className="font-semibold text-gray-400 uppercase tracking-wider dark:text-slate-500">
                 Payment Dates
               </span>
-              <p className="mt-1 text-gray-600">
+              <p className="mt-1 text-gray-600 dark:text-slate-300">
                 Issued: {formatDate(invoice.issuedAt || invoice.createdAt)}
               </p>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-slate-300">
                 Due: {formatDate(invoice.dueDate)}
               </p>
             </div>
@@ -149,7 +149,7 @@ export default function InvoicePrintModal({
           {/* Itemized Table */}
           <div className="py-6">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-gray-200 bg-gray-50/75 text-gray-500 uppercase tracking-wider">
+              <thead className="border-b border-gray-200 bg-gray-50/75 text-gray-500 uppercase tracking-wider dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-400">
                 <tr>
                   <th className="py-2.5 px-3">Type</th>
                   <th className="py-2.5 px-3">Description</th>
@@ -158,10 +158,10 @@ export default function InvoicePrintModal({
                   <th className="py-2.5 px-3 text-right">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
                 {items.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="py-4 text-center text-gray-400">
+                    <td colSpan={5} className="py-4 text-center text-gray-400 dark:text-slate-500">
                       No line items recorded.
                     </td>
                   </tr>
@@ -172,23 +172,23 @@ export default function InvoicePrintModal({
                         <span
                           className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${
                             item.type === "PART"
-                              ? "bg-blue-50 text-blue-700"
-                              : "bg-purple-50 text-purple-700"
+                              ? "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300"
+                              : "bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300"
                           }`}
                         >
                           {item.type}
                         </span>
                       </td>
-                      <td className="py-2.5 px-3 font-medium text-gray-900">
+                      <td className="py-2.5 px-3 font-medium text-gray-900 dark:text-slate-100">
                         {item.description}
                       </td>
-                      <td className="py-2.5 px-3 text-center text-gray-600">
+                      <td className="py-2.5 px-3 text-center text-gray-600 dark:text-slate-300">
                         {item.quantity}
                       </td>
-                      <td className="py-2.5 px-3 text-right text-gray-600">
+                      <td className="py-2.5 px-3 text-right text-gray-600 dark:text-slate-300">
                         {formatCurrency(Number(item.unitPrice))}
                       </td>
-                      <td className="py-2.5 px-3 text-right font-semibold text-gray-900">
+                      <td className="py-2.5 px-3 text-right font-semibold text-gray-900 dark:text-slate-100">
                         {formatCurrency(Number(item.total))}
                       </td>
                     </tr>
@@ -199,9 +199,9 @@ export default function InvoicePrintModal({
           </div>
 
           {/* Financials & Balance */}
-          <div className="flex flex-col justify-end gap-2 border-t border-gray-200 pt-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="max-w-xs text-xs text-gray-500 space-y-1">
-              <p className="font-semibold text-gray-700">Payment Terms</p>
+          <div className="flex flex-col justify-end gap-2 border-t border-gray-200 pt-4 sm:flex-row sm:items-start sm:justify-between dark:border-slate-800">
+            <div className="max-w-xs text-xs text-gray-500 space-y-1 dark:text-slate-400">
+              <p className="font-semibold text-gray-700 dark:text-slate-300">Payment Terms</p>
               <p>
                 Payment is due upon vehicle collection or invoice due date. We
                 accept cash, credit/debit cards, and electronic bank transfers.
@@ -209,35 +209,35 @@ export default function InvoicePrintModal({
             </div>
 
             <div className="w-full sm:w-64 space-y-2 text-xs">
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-gray-600 dark:text-slate-400">
                 <span>Subtotal:</span>
-                <span className="font-medium text-gray-900">
+                <span className="font-medium text-gray-900 dark:text-slate-100">
                   {formatCurrency(subtotal)}
                 </span>
               </div>
               {discount > 0 && (
-                <div className="flex justify-between text-rose-600 font-medium">
+                <div className="flex justify-between text-rose-600 font-medium dark:text-rose-400">
                   <span>Discount:</span>
                   <span>-{formatCurrency(discount)}</span>
                 </div>
               )}
               {tax > 0 && (
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-gray-600 dark:text-slate-400">
                   <span>Tax:</span>
                   <span>+{formatCurrency(tax)}</span>
                 </div>
               )}
-              <div className="flex justify-between pt-2 border-t text-sm font-bold text-gray-900">
+              <div className="flex justify-between pt-2 border-t text-sm font-bold text-gray-900 dark:border-slate-800 dark:text-slate-100">
                 <span>Total Amount:</span>
                 <span>{formatCurrency(total)}</span>
               </div>
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-gray-600 dark:text-slate-400">
                 <span>Total Paid:</span>
-                <span className="font-semibold text-emerald-600">
+                <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                   {formatCurrency(paidAmount)}
                 </span>
               </div>
-              <div className="flex justify-between pt-2 border-t text-sm font-extrabold text-blue-600">
+              <div className="flex justify-between pt-2 border-t text-sm font-extrabold text-blue-600 dark:border-slate-800 dark:text-indigo-400">
                 <span>Balance Due:</span>
                 <span>{formatCurrency(balanceDue)}</span>
               </div>
@@ -246,31 +246,31 @@ export default function InvoicePrintModal({
 
           {/* Payment Receipts History */}
           {payments.length > 0 && (
-            <div className="mt-6 border-t border-gray-100 pt-4 text-xs">
-              <span className="font-semibold uppercase tracking-wider text-gray-500">
+            <div className="mt-6 border-t border-gray-100 pt-4 text-xs dark:border-slate-800">
+              <span className="font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-400">
                 Payment History ({payments.length})
               </span>
-              <div className="mt-2 divide-y divide-gray-100 rounded-lg border border-gray-100 bg-gray-50/50 p-2">
+              <div className="mt-2 divide-y divide-gray-100 rounded-lg border border-gray-100 bg-gray-50/50 p-2 dark:border-slate-800 dark:bg-slate-800/40 dark:divide-slate-800">
                 {payments.map((p) => (
                   <div
                     key={p.id}
                     className="flex items-center justify-between py-1.5 px-2"
                   >
                     <div>
-                      <span className="font-medium text-gray-800">
+                      <span className="font-medium text-gray-800 dark:text-slate-200">
                         {p.method}
                       </span>
                       {p.reference && (
-                        <span className="ml-2 text-gray-400">
+                        <span className="ml-2 text-gray-400 dark:text-slate-500">
                           (Ref: {p.reference})
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-gray-500">
+                      <span className="text-gray-500 dark:text-slate-400">
                         {formatDate(p.paidAt)}
                       </span>
-                      <span className="font-bold text-emerald-600">
+                      <span className="font-bold text-emerald-600 dark:text-emerald-400">
                         {formatCurrency(Number(p.amount))}
                       </span>
                     </div>
@@ -282,7 +282,7 @@ export default function InvoicePrintModal({
         </div>
 
         {/* Modal Actions */}
-        <div className="flex justify-between items-center pt-3 border-t">
+        <div className="flex justify-between items-center pt-3 border-t dark:border-slate-800">
           <Button variant="secondary" onClick={onClose}>
             Close
           </Button>

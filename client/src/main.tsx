@@ -30,6 +30,7 @@ createRoot(document.getElementById("root")!).render(
       position="top-right"
       toastOptions={{
         duration: 3000,
+        className: "dark:!bg-slate-800 dark:!text-slate-100 dark:!border dark:!border-slate-700 shadow-md",
       }}
     />
   </QueryClientProvider>,

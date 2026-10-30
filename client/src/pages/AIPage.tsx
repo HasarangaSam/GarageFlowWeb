@@ -41,7 +41,14 @@ const renderInlineMarkdown = (text: string) => {
     } else if (match[3] || match[4]) {
       parts.push(<em key={key}>{match[3] ?? match[4]}</em>);
     } else {
-      parts.push(<code key={key} className="rounded bg-slate-200/70 px-1 py-0.5 font-mono text-[0.9em]">{match[5]}</code>);
+      parts.push(
+        <code
+          key={key}
+          className="rounded bg-slate-200/70 dark:bg-slate-700/70 dark:text-indigo-300 px-1 py-0.5 font-mono text-[0.9em]"
+        >
+          {match[5]}
+        </code>,
+      );
     }
     lastIndex = tokens.lastIndex;
   }
@@ -103,7 +110,7 @@ const toolCapabilities = [
   {
     id: "businessAnalytics",
     icon: BarChart3,
-    iconColor: "text-blue-600 bg-blue-50 border-blue-200/80",
+    iconColor: "text-blue-600 bg-blue-50 border-blue-200/80 dark:bg-blue-500/15 dark:text-blue-400 dark:border-blue-500/30",
     title: "Business Trends & Comparisons",
     tool: "getBusinessAnalytics",
     description:
@@ -113,7 +120,7 @@ const toolCapabilities = [
   {
     id: "activeJobs",
     icon: BriefcaseBusiness,
-    iconColor: "text-indigo-600 bg-indigo-50 border-indigo-200/80",
+    iconColor: "text-indigo-600 bg-indigo-50 border-indigo-200/80 dark:bg-indigo-500/15 dark:text-indigo-400 dark:border-indigo-500/30",
     title: "Active Workshop Jobs",
     tool: "getActiveJobs",
     description:
@@ -123,7 +130,7 @@ const toolCapabilities = [
   {
     id: "serviceHistory",
     icon: Car,
-    iconColor: "text-sky-600 bg-sky-50 border-sky-200/80",
+    iconColor: "text-sky-600 bg-sky-50 border-sky-200/80 dark:bg-sky-500/15 dark:text-sky-400 dark:border-sky-500/30",
     title: "Vehicle Service History",
     tool: "getVehicleServiceHistory",
     description:
@@ -133,7 +140,7 @@ const toolCapabilities = [
   {
     id: "lowStock",
     icon: Package,
-    iconColor: "text-amber-600 bg-amber-50 border-amber-200/80",
+    iconColor: "text-amber-600 bg-amber-50 border-amber-200/80 dark:bg-amber-500/15 dark:text-amber-400 dark:border-amber-500/30",
     title: "Inventory & Low Stock",
     tool: "getLowStockParts",
     description:
@@ -143,7 +150,7 @@ const toolCapabilities = [
   {
     id: "monthlyRevenue",
     icon: TrendingUp,
-    iconColor: "text-emerald-600 bg-emerald-50 border-emerald-200/80",
+    iconColor: "text-emerald-600 bg-emerald-50 border-emerald-200/80 dark:bg-emerald-500/15 dark:text-emerald-400 dark:border-emerald-500/30",
     title: "Monthly Revenue Analytics",
     tool: "getMonthlyRevenue",
     description:
@@ -153,7 +160,7 @@ const toolCapabilities = [
   {
     id: "outstandingInvoices",
     icon: CircleDollarSign,
-    iconColor: "text-rose-600 bg-rose-50 border-rose-200/80",
+    iconColor: "text-rose-600 bg-rose-50 border-rose-200/80 dark:bg-rose-500/15 dark:text-rose-400 dark:border-rose-500/30",
     title: "Outstanding Invoices",
     tool: "getOutstandingInvoices",
     description:
@@ -163,7 +170,7 @@ const toolCapabilities = [
   {
     id: "mechanicPerformance",
     icon: Users,
-    iconColor: "text-violet-600 bg-violet-50 border-violet-200/80",
+    iconColor: "text-violet-600 bg-violet-50 border-violet-200/80 dark:bg-violet-500/15 dark:text-violet-400 dark:border-violet-500/30",
     title: "Mechanic Performance",
     tool: "getMechanicPerformance",
     description:
@@ -236,10 +243,10 @@ export default function AIPage() {
             <Bot size={20} />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl">
               GarageFlow AI Assistant
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Interactive garage intelligence backed by live database tools.
             </p>
           </div>
@@ -249,7 +256,7 @@ export default function AIPage() {
           <button
             type="button"
             onClick={handleClearChat}
-            className="inline-flex items-center gap-1.5 self-start rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-xs transition hover:bg-slate-50 hover:text-slate-900 sm:self-auto"
+            className="inline-flex items-center gap-1.5 self-start rounded-xl border border-slate-200/80 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-xs transition hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700/70 dark:bg-slate-800/80 dark:text-slate-300 dark:hover:bg-slate-700/80 dark:hover:text-white sm:self-auto cursor-pointer"
           >
             <RotateCcw size={13} />
             <span>New Chat</span>
@@ -258,20 +265,20 @@ export default function AIPage() {
       </div>
 
       {/* Main Container */}
-      <div className="flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs min-h-[600px]">
+      <div className="flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60 min-h-[600px]">
         {/* Chat Area */}
         <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
             <div className="px-6 py-8 sm:px-8">
               {/* Intro Banner */}
               <div className="mx-auto max-w-2xl text-center">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-500/20">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-500/20 dark:bg-indigo-500/15 dark:text-indigo-400 dark:ring-indigo-500/30">
                   <Sparkles size={22} />
                 </div>
-                <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 sm:text-xl">
                   What would you like to know, {user?.name?.split(" ")[0] || "there"}?
                 </h2>
-                <p className="mt-1.5 text-xs text-slate-500 sm:text-sm">
+                <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 sm:text-sm">
                   GarageFlow AI uses real-time tools connected directly to your workshop data. Select any capability below or ask your own question.
                 </p>
               </div>
@@ -279,10 +286,10 @@ export default function AIPage() {
               {/* Defined Tools Grid */}
               <div className="mt-8">
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                     Available AI Capabilities ({toolCapabilities.length})
                   </span>
-                  <span className="text-[11px] text-slate-400">
+                  <span className="text-[11px] text-slate-400 dark:text-slate-500">
                     Click any prompt to ask
                   </span>
                 </div>
@@ -293,7 +300,7 @@ export default function AIPage() {
                     return (
                       <div
                         key={tool.id}
-                        className="group flex flex-col justify-between rounded-xl border border-slate-200/70 bg-slate-50/50 p-4 transition-all hover:border-indigo-300 hover:bg-white hover:shadow-sm"
+                        className="group flex flex-col justify-between rounded-xl border border-slate-200/70 bg-slate-50/50 p-4 transition-all hover:border-indigo-300 hover:bg-white hover:shadow-sm dark:border-slate-800/80 dark:bg-slate-800/30 dark:hover:border-indigo-500/40 dark:hover:bg-slate-800/70"
                       >
                         <div>
                           <div className="flex items-center gap-2.5 mb-2.5">
@@ -303,15 +310,15 @@ export default function AIPage() {
                               <Icon size={16} />
                             </div>
                             <div className="min-w-0">
-                              <p className="font-semibold text-xs text-slate-900 truncate">
+                              <p className="font-semibold text-xs text-slate-900 dark:text-slate-100 truncate">
                                 {tool.title}
                               </p>
-                              <span className="font-mono text-[10px] text-slate-400">
+                              <span className="font-mono text-[10px] text-slate-400 dark:text-slate-500">
                                 {tool.tool}()
                               </span>
                             </div>
                           </div>
-                          <p className="text-xs leading-relaxed text-slate-500">
+                          <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
                             {tool.description}
                           </p>
                         </div>
@@ -320,14 +327,14 @@ export default function AIPage() {
                           type="button"
                           onClick={() => sendMessage(tool.examplePrompt)}
                           disabled={isLoading}
-                          className="mt-3.5 inline-flex items-center justify-between rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-left text-[11px] font-medium text-slate-700 transition group-hover:border-indigo-200 group-hover:text-indigo-700 disabled:opacity-50"
+                          className="mt-3.5 inline-flex items-center justify-between rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-left text-[11px] font-medium text-slate-700 transition group-hover:border-indigo-200 group-hover:text-indigo-700 disabled:opacity-50 dark:border-slate-700/60 dark:bg-slate-800/80 dark:text-slate-300 dark:group-hover:border-indigo-500/40 dark:group-hover:text-indigo-400 cursor-pointer"
                         >
                           <span className="truncate pr-2 italic">
                             "{tool.examplePrompt}"
                           </span>
                           <ArrowRight
                             size={12}
-                            className="shrink-0 text-slate-400 group-hover:text-indigo-600 transition-transform group-hover:translate-x-0.5"
+                            className="shrink-0 text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-transform group-hover:translate-x-0.5"
                           />
                         </button>
                       </div>
@@ -357,21 +364,21 @@ export default function AIPage() {
                     <div
                       className={`max-w-[82%] rounded-2xl px-4 py-3 text-xs leading-relaxed sm:text-sm sm:leading-relaxed ${
                         isUser
-                          ? "bg-slate-900 text-white shadow-xs"
-                          : "border border-slate-200/80 bg-slate-50 text-slate-800"
+                          ? "bg-slate-900 text-white shadow-xs dark:bg-indigo-600"
+                          : "border border-slate-200/80 bg-slate-50 text-slate-800 dark:border-slate-800/80 dark:bg-slate-800/70 dark:text-slate-200"
                       }`}
                     >
                       <div className="flex items-center justify-between gap-3 mb-1">
                         <span
                           className={`text-[10px] font-bold uppercase tracking-wider ${
-                            isUser ? "text-slate-300" : "text-indigo-600"
+                            isUser ? "text-slate-300 dark:text-indigo-200" : "text-indigo-600 dark:text-indigo-400"
                           }`}
                         >
                           {isUser ? "You" : "GarageFlow AI"}
                         </span>
                         <span
                           className={`text-[10px] ${
-                            isUser ? "text-slate-400" : "text-slate-400"
+                            isUser ? "text-slate-400 dark:text-indigo-200/70" : "text-slate-400 dark:text-slate-500"
                           }`}
                         >
                           {message.timestamp}
@@ -385,7 +392,7 @@ export default function AIPage() {
                     </div>
 
                     {isUser && (
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-200 text-slate-700 font-bold text-xs shadow-xs">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 font-bold text-xs shadow-xs">
                         <User size={16} />
                       </div>
                     )}
@@ -398,18 +405,18 @@ export default function AIPage() {
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-xs">
                     <Bot size={16} />
                   </div>
-                  <div className="rounded-2xl border border-slate-200/80 bg-slate-50 px-4 py-3">
+                  <div className="rounded-2xl border border-slate-200/80 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-800/70 px-4 py-3">
                     <div className="flex items-center gap-1.5 py-1">
-                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-indigo-600" />
+                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-indigo-600 dark:bg-indigo-400" />
                       <span
-                        className="h-1.5 w-1.5 animate-bounce rounded-full bg-indigo-600"
+                        className="h-1.5 w-1.5 animate-bounce rounded-full bg-indigo-600 dark:bg-indigo-400"
                         style={{ animationDelay: "150ms" }}
                       />
                       <span
-                        className="h-1.5 w-1.5 animate-bounce rounded-full bg-indigo-600"
+                        className="h-1.5 w-1.5 animate-bounce rounded-full bg-indigo-600 dark:bg-indigo-400"
                         style={{ animationDelay: "300ms" }}
                       />
-                      <span className="ml-2 text-xs text-slate-500 font-medium">
+                      <span className="ml-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
                         Consulting garage database tools...
                       </span>
                     </div>
@@ -421,7 +428,7 @@ export default function AIPage() {
         </div>
 
         {/* Bottom Input Area */}
-        <div className="border-t border-slate-100 bg-white p-4">
+        <div className="border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-4">
           <form onSubmit={handleSubmit} className="flex items-end gap-2.5">
             <div className="relative flex-1">
               <textarea
@@ -436,23 +443,23 @@ export default function AIPage() {
                 placeholder="Ask about active jobs, low stock, revenue, or vehicle history..."
                 rows={2}
                 disabled={isLoading}
-                className="w-full resize-none rounded-xl border border-slate-200/80 bg-slate-50/50 px-4 py-2.5 text-xs text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-50 disabled:bg-slate-100 sm:text-sm"
+                className="w-full resize-none rounded-xl border border-slate-200/80 bg-slate-50/50 px-4 py-2.5 text-xs text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-50 disabled:bg-slate-100 dark:border-slate-700/80 dark:bg-slate-800/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-500 dark:focus:bg-slate-800 dark:focus:ring-indigo-500/20 dark:disabled:bg-slate-800/40 sm:text-sm"
               />
             </div>
 
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-white shadow-xs transition hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
               aria-label="Send message"
             >
               <Send size={16} />
             </button>
           </form>
 
-          <div className="mt-2.5 flex items-center justify-between text-[11px] text-slate-400">
+          <div className="mt-2.5 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500">
             <span className="flex items-center gap-1">
-              <AlertCircle size={12} className="text-slate-400" />
+              <AlertCircle size={12} className="text-slate-400 dark:text-slate-500" />
               Read-only tool operations. Sensitive data restricted to Owner & Manager.
             </span>
             <span className="hidden sm:inline">Press Enter to send</span>

@@ -18,11 +18,11 @@ export default function Loading({
   return (
     <div className={`flex items-center justify-center gap-3 ${className}`}>
       <span
-        className={`animate-spin rounded-full border-gray-200 border-t-gray-900 ${sizeClasses[size]}`}
+        className={`animate-spin rounded-full border-slate-200 border-t-indigo-600 dark:border-slate-800 dark:border-t-indigo-400 ${sizeClasses[size]}`}
         aria-label="Loading"
       />
 
-      {text && <span className="text-sm text-gray-500">{text}</span>}
+      {text && <span className="text-sm text-slate-500 dark:text-slate-400">{text}</span>}
     </div>
   );
 }

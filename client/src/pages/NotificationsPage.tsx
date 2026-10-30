@@ -53,33 +53,33 @@ function typeIcon(type: NotificationType) {
 function typeIconBg(type: NotificationType): string {
   switch (type) {
     case "JOB_ASSIGNED":
-      return "bg-indigo-50";
+      return "bg-indigo-50 dark:bg-indigo-500/15";
     case "JOB_COMPLETED":
     case "JOB_STATUS_CHANGED":
-      return "bg-emerald-50";
+      return "bg-emerald-50 dark:bg-emerald-500/15";
     case "LOW_STOCK":
-      return "bg-amber-50";
+      return "bg-amber-50 dark:bg-amber-500/15";
     case "PAYMENT_RECEIVED":
-      return "bg-emerald-50";
+      return "bg-emerald-50 dark:bg-emerald-500/15";
     default:
-      return "bg-slate-100";
+      return "bg-slate-100 dark:bg-slate-800";
   }
 }
 
 function typeLabel(type: NotificationType): { label: string; cls: string } {
   switch (type) {
     case "JOB_ASSIGNED":
-      return { label: "Job Assigned", cls: "bg-indigo-50 text-indigo-700 ring-indigo-500/20" };
+      return { label: "Job Assigned", cls: "bg-indigo-50 text-indigo-700 ring-indigo-500/20 dark:bg-indigo-500/15 dark:text-indigo-400 dark:ring-indigo-500/30" };
     case "JOB_COMPLETED":
-      return { label: "Job Completed", cls: "bg-emerald-50 text-emerald-700 ring-emerald-500/20" };
+      return { label: "Job Completed", cls: "bg-emerald-50 text-emerald-700 ring-emerald-500/20 dark:bg-emerald-500/15 dark:text-emerald-400 dark:ring-emerald-500/30" };
     case "JOB_STATUS_CHANGED":
-      return { label: "Status Changed", cls: "bg-violet-50 text-violet-700 ring-violet-500/20" };
+      return { label: "Status Changed", cls: "bg-violet-50 text-violet-700 ring-violet-500/20 dark:bg-violet-500/15 dark:text-violet-400 dark:ring-violet-500/30" };
     case "LOW_STOCK":
-      return { label: "Low Stock", cls: "bg-amber-50 text-amber-700 ring-amber-500/20" };
+      return { label: "Low Stock", cls: "bg-amber-50 text-amber-700 ring-amber-500/20 dark:bg-amber-500/15 dark:text-amber-400 dark:ring-amber-500/30" };
     case "PAYMENT_RECEIVED":
-      return { label: "Payment", cls: "bg-emerald-50 text-emerald-700 ring-emerald-500/20" };
+      return { label: "Payment", cls: "bg-emerald-50 text-emerald-700 ring-emerald-500/20 dark:bg-emerald-500/15 dark:text-emerald-400 dark:ring-emerald-500/30" };
     default:
-      return { label: type.replace(/_/g, " "), cls: "bg-slate-100 text-slate-600 ring-slate-200" };
+      return { label: type.replace(/_/g, " "), cls: "bg-slate-100 text-slate-600 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700" };
   }
 }
 
@@ -191,10 +191,10 @@ export default function NotificationsPage() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100">
             Notifications
           </h1>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             {unreadCount > 0
               ? `${unreadCount} unread notification${unreadCount !== 1 ? "s" : ""}`
               : "All caught up!"}
@@ -206,7 +206,7 @@ export default function NotificationsPage() {
             type="button"
             onClick={() => markAllMutation.mutate()}
             disabled={markAllMutation.isPending}
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs transition hover:bg-slate-50 hover:text-slate-900 disabled:opacity-50"
+            className="cursor-pointer inline-flex items-center gap-2 rounded-xl border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-xs transition hover:bg-slate-50 hover:text-slate-900 disabled:opacity-50 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-slate-100"
           >
             <CheckCheck size={15} />
             Mark all as read
@@ -229,10 +229,10 @@ export default function NotificationsPage() {
               key={tab.key}
               type="button"
               onClick={() => setActiveFilter(tab.key)}
-              className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition ${
+              className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-xs font-medium transition ${
                 activeFilter === tab.key
                   ? "border-indigo-600 bg-indigo-600 text-white shadow-sm shadow-indigo-500/20"
-                  : "border-slate-200/80 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900"
+                  : "border-slate-200/80 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400 dark:hover:border-slate-700 dark:hover:text-slate-200"
               }`}
             >
               {tab.label}
@@ -241,7 +241,7 @@ export default function NotificationsPage() {
                   className={`ml-1.5 rounded-full px-1.5 py-px text-[10px] font-bold ${
                     activeFilter === tab.key
                       ? "bg-white/20 text-white"
-                      : "bg-slate-100 text-slate-500"
+                      : "bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-300"
                   }`}
                 >
                   {count}
@@ -253,19 +253,19 @@ export default function NotificationsPage() {
       </div>
 
       {/* Notification list */}
-      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
+      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
-              <Bell size={26} className="text-slate-400" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
+              <Bell size={26} className="text-slate-400 dark:text-slate-500" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-700">
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
                 {activeFilter === "unread"
                   ? "No unread notifications"
                   : "No notifications here"}
               </p>
-              <p className="mt-1 text-xs text-slate-400">
+              <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
                 {activeFilter === "unread"
                   ? "You're all caught up!"
                   : "Try a different filter"}
@@ -273,7 +273,7 @@ export default function NotificationsPage() {
             </div>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
             {filtered.map((notification: Notification) => {
               const badge = typeLabel(notification.type);
               return (
@@ -284,8 +284,8 @@ export default function NotificationsPage() {
                   }
                   className={`flex items-start gap-4 px-5 py-4 transition cursor-pointer ${
                     !notification.read
-                      ? "bg-indigo-50/30 hover:bg-indigo-50/60"
-                      : "hover:bg-slate-50"
+                      ? "bg-indigo-50/30 hover:bg-indigo-50/60 dark:bg-indigo-500/10 dark:hover:bg-indigo-500/15"
+                      : "hover:bg-slate-50 dark:hover:bg-slate-800/40"
                   }`}
                 >
                   {/* Icon */}
@@ -301,14 +301,14 @@ export default function NotificationsPage() {
                       <p
                         className={`text-sm leading-snug ${
                           notification.read
-                            ? "font-normal text-slate-700"
-                            : "font-semibold text-slate-900"
+                            ? "font-normal text-slate-700 dark:text-slate-300"
+                            : "font-semibold text-slate-900 dark:text-slate-100"
                         }`}
                       >
                         {notification.title}
                       </p>
                       <div className="flex shrink-0 items-center gap-2">
-                        <span className="text-xs text-slate-400">
+                        <span className="text-xs text-slate-400 dark:text-slate-500">
                           {relativeTime(notification.createdAt)}
                         </span>
                         {!notification.read && (
@@ -316,7 +316,7 @@ export default function NotificationsPage() {
                         )}
                       </div>
                     </div>
-                    <p className="mt-0.5 text-xs text-slate-500">
+                    <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                       {formatNotificationMessage(notification.message)}
                     </p>
                     <span
@@ -333,12 +333,12 @@ export default function NotificationsPage() {
 
         {/* Load more */}
         {hasMore && activeFilter === "all" && (
-          <div className="border-t border-slate-100 px-5 py-3 text-center">
+          <div className="border-t border-slate-100 px-5 py-3 text-center dark:border-slate-800">
             <button
               type="button"
               onClick={handleLoadMore}
               disabled={isLoadingMore}
-              className="text-xs font-medium text-indigo-600 transition hover:text-indigo-700 disabled:opacity-50"
+              className="cursor-pointer text-xs font-medium text-indigo-600 transition hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 disabled:opacity-50"
             >
               {isLoadingMore ? "Loading…" : "Load more notifications"}
             </button>

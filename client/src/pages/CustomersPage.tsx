@@ -162,10 +162,10 @@ export default function CustomersPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100">
             Customers
           </h1>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             Manage your garage customer directory, vehicles, and contact profiles.
           </p>
         </div>
@@ -178,7 +178,7 @@ export default function CustomersPage() {
         )}
       </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs">
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
         <div className="flex flex-col gap-3 sm:flex-row">
           <div className="flex-1">
             <Input
@@ -210,19 +210,19 @@ export default function CustomersPage() {
       </div>
 
       {isLoading ? (
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-12 shadow-xs">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-12 shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
           <Loading size="lg" text="Loading customers..." />
         </div>
       ) : isError ? (
-        <div className="rounded-2xl border border-rose-200/80 bg-rose-50 p-8 text-center shadow-xs">
-          <p className="text-sm font-medium text-rose-700">
+        <div className="rounded-2xl border border-rose-200/80 bg-rose-50 p-8 text-center shadow-xs dark:border-rose-900/50 dark:bg-rose-950/20">
+          <p className="text-sm font-medium text-rose-700 dark:text-rose-400">
             Unable to load customers.
           </p>
-          <p className="mt-1 text-sm text-rose-600">Please try again.</p>
+          <p className="mt-1 text-sm text-rose-600 dark:text-rose-300">Please try again.</p>
         </div>
       ) : (
         <>
-          <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
+          <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
             {isFetching && (
               <div className="absolute right-4 top-4 z-10">
                 <Loading size="sm" />
@@ -248,11 +248,11 @@ export default function CustomersPage() {
                       {...({ colSpan: 6 } as { colSpan: number })}
                       className="py-16 text-center"
                     >
-                      <Users className="mx-auto mb-3 text-slate-300" size={32} />
-                      <p className="font-medium text-slate-900">
+                      <Users className="mx-auto mb-3 text-slate-300 dark:text-slate-600" size={32} />
+                      <p className="font-medium text-slate-900 dark:text-slate-100">
                         No customers found
                       </p>
-                      <p className="mt-1 text-sm text-slate-500">
+                      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                         {search
                           ? "Try a different search."
                           : "Add your first customer to get started."}
@@ -264,7 +264,7 @@ export default function CustomersPage() {
                     <TableRow key={customer.id}>
                       <TableCell>
                         <div>
-                          <p className="font-medium text-slate-900">
+                          <p className="font-medium text-slate-900 dark:text-slate-100">
                             {customer.firstName} {customer.lastName}
                           </p>
                           <p className="text-xs text-slate-400 font-mono">
@@ -273,11 +273,11 @@ export default function CustomersPage() {
                         </div>
                       </TableCell>
 
-                      <TableCell className="text-slate-700">{customer.phone}</TableCell>
+                      <TableCell className="text-slate-700 dark:text-slate-300">{customer.phone}</TableCell>
 
                       <TableCell>
                         {customer.email ? (
-                          <span className="text-slate-700">{customer.email}</span>
+                          <span className="text-slate-700 dark:text-slate-300">{customer.email}</span>
                         ) : (
                           <span className="text-slate-400">—</span>
                         )}
@@ -295,7 +295,7 @@ export default function CustomersPage() {
                         </Badge>
                       </TableCell>
 
-                      <TableCell className="text-slate-600 text-xs">
+                      <TableCell className="text-slate-600 text-xs dark:text-slate-400">
                         {new Date(customer.createdAt).toLocaleDateString("en-LK", {
                           day: "numeric",
                           month: "short",
@@ -309,7 +309,7 @@ export default function CustomersPage() {
                             type="button"
                             onClick={() => handleDetails(customer.id)}
                             title="View customer"
-                            className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                            className="cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                           >
                             <Eye size={17} />
                           </button>
@@ -319,7 +319,7 @@ export default function CustomersPage() {
                               type="button"
                               onClick={() => handleEdit(customer)}
                               title="Edit customer"
-                              className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                              className="cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
                             >
                               <Pencil size={17} />
                             </button>
@@ -330,7 +330,7 @@ export default function CustomersPage() {
                               type="button"
                               onClick={() => handleDeleteClick(customer)}
                               title="Delete customer"
-                              className="rounded-lg p-2 text-slate-500 transition hover:bg-rose-50 hover:text-rose-600"
+                              className="cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-rose-50 hover:text-rose-600 dark:text-rose-400 dark:hover:bg-rose-950/40 dark:hover:text-rose-300"
                             >
                               <Trash2 size={17} />
                             </button>
@@ -346,7 +346,7 @@ export default function CustomersPage() {
 
           {pagination && pagination.totalPages > 0 && (
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Showing{" "}
                 {customers.length === 0
                   ? 0
@@ -368,7 +368,7 @@ export default function CustomersPage() {
                   Previous
                 </Button>
 
-                <span className="px-2 text-xs text-slate-600">
+                <span className="px-2 text-xs text-slate-600 dark:text-slate-400">
                   Page {pagination.page} of {pagination.totalPages}
                 </span>
 
@@ -435,7 +435,7 @@ export default function CustomersPage() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                   Name
                 </p>
-                <p className="mt-1 text-sm font-medium text-slate-900">
+                <p className="mt-1 text-sm font-medium text-slate-900 dark:text-slate-100">
                   {customerDetails.firstName} {customerDetails.lastName}
                 </p>
               </div>
@@ -444,7 +444,7 @@ export default function CustomersPage() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                   Phone
                 </p>
-                <p className="mt-1 text-sm text-slate-900">
+                <p className="mt-1 text-sm text-slate-900 dark:text-slate-100">
                   {customerDetails.phone}
                 </p>
               </div>
@@ -453,7 +453,7 @@ export default function CustomersPage() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                   Email
                 </p>
-                <p className="mt-1 text-sm text-slate-900">
+                <p className="mt-1 text-sm text-slate-900 dark:text-slate-100">
                   {customerDetails.email || <span className="text-slate-400">No email</span>}
                 </p>
               </div>
@@ -462,48 +462,48 @@ export default function CustomersPage() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                   Address
                 </p>
-                <p className="mt-1 text-sm text-slate-900">
+                <p className="mt-1 text-sm text-slate-900 dark:text-slate-100">
                   {customerDetails.address || <span className="text-slate-400">No address</span>}
                 </p>
               </div>
             </div>
 
             <div>
-              <p className="mb-3 text-sm font-semibold text-slate-900">
+              <p className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-100">
                 Vehicles
               </p>
 
               {customerDetails.vehicles.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-slate-200 p-5 text-center">
-                  <p className="text-sm text-slate-500">
+                <div className="rounded-xl border border-dashed border-slate-200 p-5 text-center dark:border-slate-800">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     No vehicles registered.
                   </p>
                 </div>
               ) : (
-                <div className="overflow-hidden rounded-xl border border-slate-200/80">
-                  <div className="divide-y divide-slate-100">
+                <div className="overflow-hidden rounded-xl border border-slate-200/80 dark:border-slate-800">
+                  <div className="divide-y divide-slate-100 dark:divide-slate-800">
                     {customerDetails.vehicles.map((vehicle) => (
                       <div
                         key={vehicle.id}
-                        className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-slate-50 transition"
+                        className="flex items-center justify-between gap-4 px-4 py-3 hover:bg-slate-50 transition dark:hover:bg-slate-800/50"
                       >
                         <div>
-                          <p className="text-sm font-medium text-slate-900">
+                          <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
                             {vehicle.make} {vehicle.model}
                           </p>
-                          <p className="text-xs text-slate-500 font-mono">
+                          <p className="text-xs text-slate-500 font-mono dark:text-slate-400">
                             {vehicle.registrationNumber}
                           </p>
                         </div>
 
                         <div className="text-right">
                           {vehicle.year && (
-                            <p className="text-sm text-slate-700">
+                            <p className="text-sm text-slate-700 dark:text-slate-300">
                               {vehicle.year}
                             </p>
                           )}
                           {vehicle.color && (
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
                               {vehicle.color}
                             </p>
                           )}
@@ -520,7 +520,7 @@ export default function CustomersPage() {
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                   Notes
                 </p>
-                <p className="mt-1 whitespace-pre-wrap text-sm text-slate-700">
+                <p className="mt-1 whitespace-pre-wrap text-sm text-slate-700 dark:text-slate-300">
                   {customerDetails.notes}
                 </p>
               </div>

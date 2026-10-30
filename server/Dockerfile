@@ -44,6 +44,7 @@ RUN chown -R node:node /app
 # Copy production artifacts from builder stage
 COPY --chown=node:node package*.json ./
 COPY --chown=node:node prisma ./prisma/
+COPY --chown=node:node prisma.config.ts ./
 COPY --chown=node:node --from=builder /app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /app/dist ./dist
 

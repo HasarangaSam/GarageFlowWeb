@@ -43,7 +43,6 @@ export const getInvoicesController = async (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     data: result,
-    ...result,
   });
 };
 
@@ -58,7 +57,6 @@ export const getInvoiceSummaryController = async (
     data: {
       summary,
     },
-    summary,
   });
 };
 
@@ -73,7 +71,6 @@ export const getInvoiceController = async (
     data: {
       invoice,
     },
-    invoice,
   });
 };
 
@@ -92,7 +89,6 @@ export const createInvoiceController = async (req: Request, res: Response) => {
     data: {
       invoice,
     },
-    invoice,
   });
 };
 
@@ -114,7 +110,6 @@ export const updateInvoiceController = async (
     data: {
       invoice,
     },
-    invoice,
   });
 };
 
