@@ -43,10 +43,11 @@ export const usePart = (partId: string | null) => {
   });
 };
 
-export const useInventorySummary = () => {
+export const useInventorySummary = (enabled = true) => {
   return useQuery({
     queryKey: partKeys.summary(),
     queryFn: getInventorySummary,
+    enabled,
   });
 };
 

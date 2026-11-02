@@ -28,6 +28,9 @@ import { useNotifications } from "../hooks/useNotifications";
 import { useNotificationStore } from "../stores/notificationStore";
 import { useUIStore } from "../stores/uiStore";
 import NotificationDropdown from "../components/layout/NotificationDropdown";
+import { useJobs, useMyJobs } from "../hooks/useJobs";
+import { useInventorySummary } from "../hooks/useParts";
+import { useInvoiceSummary } from "../hooks/useInvoices";
 
 const navigation = [
   {
@@ -113,6 +116,13 @@ export default function DashboardLayout() {
   const { markAsRead, markAllAsRead, isMarkingAll } = useNotifications(socket);
   const unreadCount = useNotificationStore((s) => s.unreadCount);
   const queryClient = useQueryClient();
+  const isFrontOffice = user?.role === "OWNER" || user?.role === "MANAGER";
+  const receivedJobs = useJobs({ page: 1, limit: 1, status: "RECEIVED" }, isFrontOffice);
+  const completedJobs = useJobs({ page: 1, limit: 1, status: "COMPLETED" }, isFrontOffice);
+  const pickupJobs = useJobs({ page: 1, limit: 1, status: "READY_FOR_PICKUP" }, isFrontOffice);
+  const myAssignedJobs = useMyJobs({ page: 1, limit: 1 }, user?.role === "MECHANIC");
+  const inventorySummary = useInventorySummary(isFrontOffice);
+  const invoiceSummary = useInvoiceSummary(isFrontOffice);
 
   useEffect(() => {
     if (!socket) {
@@ -206,6 +216,13 @@ export default function DashboardLayout() {
             {visibleNavigation.map((item) => {
               const Icon = item.icon;
               const isNotif = item.path === "/notifications";
+              const relatedCount = item.path === "/jobs"
+                ? isFrontOffice
+                  ? (receivedJobs.data?.pagination.total ?? 0) + (completedJobs.data?.pagination.total ?? 0) + (pickupJobs.data?.pagination.total ?? 0)
+                  : (myAssignedJobs.data?.pagination.total ?? 0)
+                : item.path === "/inventory" ? inventorySummary.data?.lowStockCount ?? 0
+                : item.path === "/invoices" ? (invoiceSummary.data?.draftCount ?? 0) + (invoiceSummary.data?.issuedCount ?? 0) + (invoiceSummary.data?.partiallyPaidCount ?? 0)
+                : 0;
 
               return (
                 <NavLink
@@ -246,6 +263,11 @@ export default function DashboardLayout() {
                       {isNotif && unreadCount > 0 && (
                         <span className="rounded-full bg-indigo-600/10 px-2 py-0.5 text-[10px] font-bold text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400">
                           {unreadCount > 99 ? "99+" : unreadCount}
+                        </span>
+                      )}
+                      {!isNotif && relatedCount > 0 && (
+                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-500/20 dark:text-amber-300">
+                          {relatedCount > 99 ? "99+" : relatedCount}
                         </span>
                       )}
                     </>

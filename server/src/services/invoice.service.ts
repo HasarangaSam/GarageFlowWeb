@@ -68,7 +68,9 @@ export const getInvoices = async ({
   const where: Prisma.InvoiceWhereInput = {};
 
   if (status) {
-    where.status = status as Prisma.EnumInvoiceStatusFilter;
+    where.status = status === "attention"
+      ? { in: ["DRAFT", "ISSUED", "PARTIALLY_PAID"] }
+      : status as Prisma.EnumInvoiceStatusFilter;
   }
 
   if (search) {

@@ -46,10 +46,11 @@ export const jobKeys = {
   parts: (jobId: string) => [...jobKeys.all, "parts", jobId] as const,
 };
 
-export const useJobs = (params: JobListParams = {}) => {
+export const useJobs = (params: JobListParams = {}, enabled = true) => {
   return useQuery({
     queryKey: jobKeys.list(params),
     queryFn: () => getJobs(params),
+    enabled,
   });
 };
 
@@ -68,10 +69,12 @@ export const useMyJobs = (
     JobListParams,
     "page" | "limit" | "search" | "status" | "priority"
   > = {},
+  enabled = true,
 ) => {
   return useQuery({
     queryKey: jobKeys.myJobList(params),
     queryFn: () => getMyJobs(params),
+    enabled,
   });
 };
 

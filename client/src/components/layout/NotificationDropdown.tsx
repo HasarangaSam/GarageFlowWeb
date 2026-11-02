@@ -12,6 +12,7 @@ import {
 import { useNotificationStore } from "../../stores/notificationStore";
 import type { Notification, NotificationType } from "../../types/notification";
 import { formatNotificationMessage } from "../../utils/notificationMessage";
+import { useAuth } from "../../hooks/useAuth";
 
 interface NotificationDropdownProps {
   onClose: () => void;
@@ -54,15 +55,15 @@ function relativeTime(dateStr: string): string {
 
 function NotificationRow({
   notification,
-  onMarkRead,
+  onOpen,
 }: {
   notification: Notification;
-  onMarkRead: (id: string) => void;
+  onOpen: (notification: Notification) => void;
 }) {
   return (
     <button
       type="button"
-      onClick={() => !notification.read && onMarkRead(notification.id)}
+      onClick={() => onOpen(notification)}
       className={`w-full text-left flex items-start gap-3 px-4 py-3 transition hover:bg-slate-50 dark:hover:bg-slate-800/60 ${
         !notification.read
           ? "bg-indigo-50/40 dark:bg-indigo-500/10"
@@ -113,6 +114,7 @@ export default function NotificationDropdown({
 }: NotificationDropdownProps) {
   const { notifications, unreadCount } = useNotificationStore();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const ref = useRef<HTMLDivElement>(null);
 
   // Close on outside click
@@ -127,6 +129,15 @@ export default function NotificationDropdown({
   }, [onClose]);
 
   const recent = notifications.slice(0, 10);
+  const openNotification = (notification: Notification) => {
+    if (!notification.read) onMarkRead(notification.id);
+    const path = notification.type === "LOW_STOCK" ? "/inventory"
+      : notification.type === "PAYMENT_RECEIVED" ? "/invoices"
+      : notification.type.startsWith("JOB_") ? (user?.role === "MECHANIC" ? "/my-jobs" : "/jobs")
+      : "/notifications";
+    navigate(path);
+    onClose();
+  };
 
   return (
     <div
@@ -191,7 +202,7 @@ export default function NotificationDropdown({
             <NotificationRow
               key={n.id}
               notification={n}
-              onMarkRead={onMarkRead}
+              onOpen={openNotification}
             />
           ))
         )}

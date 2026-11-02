@@ -33,7 +33,7 @@ export default function InvoicesPage() {
   const canManage = user?.role === "OWNER" || user?.role === "MANAGER";
 
   // Filter state
-  const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [activeFilter, setActiveFilter] = useState<string>("attention");
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
 
@@ -143,6 +143,12 @@ export default function InvoicesPage() {
         </div>
       </div>
 
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50/70 p-3 text-xs dark:border-amber-500/20 dark:bg-amber-500/5">
+        <span className="font-semibold text-amber-900 dark:text-amber-200">Needs attention</span>
+        <span className="text-amber-800/80 dark:text-amber-200/70">Drafts to issue and invoices with a balance to collect.</span>
+        <button type="button" onClick={() => { setActiveFilter("attention"); setPage(1); }} className="ml-auto rounded-lg border border-amber-300 bg-white px-3 py-1.5 font-semibold text-amber-800 hover:bg-amber-100 dark:border-amber-500/30 dark:bg-slate-900 dark:text-amber-200">Show queue ({(summaryData?.draftCount ?? 0) + (summaryData?.issuedCount ?? 0) + (summaryData?.partiallyPaidCount ?? 0)})</button>
+      </div>
+
       {/* Metrics Cards */}
       <InvoiceMetrics
         summary={summaryData}
@@ -176,6 +182,11 @@ export default function InvoicesPage() {
 
         {/* Status Filter Tabs */}
         <div className="flex items-center gap-1 overflow-x-auto rounded-xl border border-slate-200/80 bg-slate-50 p-1 dark:border-slate-800/80 dark:bg-slate-800/50">
+          <button
+            type="button"
+            onClick={() => { setActiveFilter("attention"); setPage(1); }}
+            className={`cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium transition ${activeFilter === "attention" ? "bg-white text-amber-800 shadow-sm dark:bg-slate-800 dark:text-amber-200" : "text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-200"}`}
+          >Needs attention</button>
           <button
             type="button"
             onClick={() => {
@@ -337,6 +348,7 @@ export default function InvoicesPage() {
                     0,
                   );
                   const balance = Math.max(0, total - paid);
+                  const overdue = Boolean(inv.dueDate && new Date(inv.dueDate).getTime() < new Date().setHours(0, 0, 0, 0) && balance > 0);
 
                   const isDraft = inv.status === "DRAFT";
                   const isIssued = inv.status === "ISSUED";
@@ -395,6 +407,8 @@ export default function InvoicesPage() {
                         >
                           {balance === 0 ? "Paid in full" : formatCurrency(balance)}
                         </span>
+                        {overdue && <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wide text-rose-600 dark:text-rose-400">Overdue · due {new Date(inv.dueDate!).toLocaleDateString("en-LK", { day: "numeric", month: "short" })}</span>}
+                        {!overdue && inv.dueDate && balance > 0 && <span className="mt-1 block text-[10px] text-slate-500 dark:text-slate-400">Due {new Date(inv.dueDate).toLocaleDateString("en-LK", { day: "numeric", month: "short" })}</span>}
                       </td>
 
                       {/* Actions */}

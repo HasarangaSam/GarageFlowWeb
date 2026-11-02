@@ -138,9 +138,6 @@ export default function JobDetails({
             {job.customer.firstName} {job.customer.lastName}
           </p>
           <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">{job.customer.phone}</p>
-          {job.customer.email && (
-            <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">{job.customer.email}</p>
-          )}
         </div>
 
         {/* Vehicle */}
@@ -442,6 +439,17 @@ export default function JobDetails({
       ) : null}
 
       {/* Next Status */}
+      {job.status === "READY_FOR_PICKUP" && canManage && (
+        <div className={`rounded-xl border p-4 ${job.invoice?.status === "PAID" ? "border-emerald-200 bg-emerald-50/70 dark:border-emerald-500/20 dark:bg-emerald-500/5" : "border-amber-200 bg-amber-50/70 dark:border-amber-500/20 dark:bg-amber-500/5"}`}>
+          <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Vehicle handover checklist</p>
+          <div className="mt-2 grid gap-2 text-xs sm:grid-cols-3">
+            <p className={job.invoice ? "text-emerald-700 dark:text-emerald-300" : "text-amber-800 dark:text-amber-200"}>{job.invoice ? "✓ Invoice created" : "• Create an invoice"}</p>
+            <p className={job.invoice?.status === "PAID" ? "text-emerald-700 dark:text-emerald-300" : "text-amber-800 dark:text-amber-200"}>{job.invoice?.status === "PAID" ? "✓ Invoice paid" : "• Collect remaining payment"}</p>
+            <p className={job.mileageOut ? "text-emerald-700 dark:text-emerald-300" : "text-slate-600 dark:text-slate-300"}>{job.mileageOut ? `✓ Mileage out: ${job.mileageOut.toLocaleString()} km` : "• Record mileage out before delivery"}</p>
+          </div>
+          {job.invoice?.status !== "PAID" && <p className="mt-2 text-[11px] text-amber-800 dark:text-amber-200">Delivery remains locked until the invoice is fully paid.</p>}
+        </div>
+      )}
       {availableStatuses.length > 0 && (
         <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-slate-800 dark:bg-slate-900/60">
           <p className="text-sm font-medium text-gray-700 dark:text-slate-300">

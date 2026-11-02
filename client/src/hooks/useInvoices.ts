@@ -45,10 +45,11 @@ export const useInvoice = (invoiceId: string | null) => {
   });
 };
 
-export const useInvoiceSummary = () => {
+export const useInvoiceSummary = (enabled = true) => {
   return useQuery({
     queryKey: invoiceKeys.summary(),
     queryFn: getInvoiceSummary,
+    enabled,
   });
 };
 

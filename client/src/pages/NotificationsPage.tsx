@@ -16,6 +16,8 @@ import {
   markNotificationAsRead,
 } from "../services/notificationService";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import type { Notification, NotificationType } from "../types/notification";
 import { formatNotificationMessage } from "../utils/notificationMessage";
@@ -102,6 +104,8 @@ function relativeTime(dateStr: string): string {
 // ── Main component ─────────────────────────────────────────────────────────
 
 export default function NotificationsPage() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const {
     notifications,
     unreadCount,
@@ -279,9 +283,25 @@ export default function NotificationsPage() {
               return (
                 <div
                   key={notification.id}
-                  onClick={() =>
-                    !notification.read && markReadMutation.mutate(notification.id)
-                  }
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => {
+                    if (!notification.read) markReadMutation.mutate(notification.id);
+                    const path = notification.type === "LOW_STOCK" ? "/inventory"
+                      : notification.type === "PAYMENT_RECEIVED" ? "/invoices"
+                      : notification.type.startsWith("JOB_") ? (user?.role === "MECHANIC" ? "/my-jobs" : "/jobs") : null;
+                    if (path) navigate(path);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      if (!notification.read) markReadMutation.mutate(notification.id);
+                      const path = notification.type === "LOW_STOCK" ? "/inventory"
+                        : notification.type === "PAYMENT_RECEIVED" ? "/invoices"
+                        : notification.type.startsWith("JOB_") ? (user?.role === "MECHANIC" ? "/my-jobs" : "/jobs") : null;
+                      if (path) navigate(path);
+                    }
+                  }}
                   className={`flex items-start gap-4 px-5 py-4 transition cursor-pointer ${
                     !notification.read
                       ? "bg-indigo-50/30 hover:bg-indigo-50/60 dark:bg-indigo-500/10 dark:hover:bg-indigo-500/15"

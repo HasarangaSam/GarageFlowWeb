@@ -133,6 +133,11 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
   const canDelete = user?.role === "OWNER";
 
   const jobs = data?.jobs ?? [];
+  const displayedJobs = isMyJobs
+    ? [...jobs].sort((a, b) => {
+        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+      })
+    : jobs;
   const pagination = data?.pagination;
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -277,6 +282,25 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
         )}
       </div>
 
+      {!isMyJobs && (
+        <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200/80 bg-white p-3 shadow-xs dark:border-slate-800/80 dark:bg-slate-900/60">
+          <span className="mr-1 text-xs font-semibold text-slate-500 dark:text-slate-400">Quick views</span>
+          {([
+            ["", "All jobs"],
+            ["RECEIVED", "New / received"],
+            ["WAITING_FOR_PARTS", "Waiting for parts"],
+            ["COMPLETED", "Ready to invoice"],
+            ["READY_FOR_PICKUP", "Ready for pickup"],
+          ] as const).map(([status, label]) => (
+            <button
+              key={status || "all"}
+              type="button"
+              onClick={() => { setStatusFilter(status); setPage(1); }}
+              className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${statusFilter === status ? "border-indigo-600 bg-indigo-600 text-white" : "border-slate-200 text-slate-600 hover:border-indigo-300 dark:border-slate-700 dark:text-slate-300"}`}
+            >{label}</button>
+          ))}
+        </div>
+      )}
       {/* Job filters */}
       <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-xs md:flex-row md:items-center dark:border-slate-800/80 dark:bg-slate-900/60">
         <div className="relative flex-1">
@@ -399,7 +423,7 @@ export default function JobsPage({ isMyJobs = false }: JobsPageProps) {
                 </TableHeader>
 
                 <TableBody>
-                  {jobs.map((job) => (
+                  {displayedJobs.map((job) => (
                     <TableRow key={job.id}>
                       <TableCell className="font-semibold text-slate-900 dark:text-slate-100">
                         {job.jobNumber}

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import type { Socket } from "socket.io-client";
 
@@ -10,17 +11,15 @@ import {
   markNotificationAsRead,
 } from "../services/notificationService";
 import type { Notification } from "../types/notification";
+import { useAuth } from "./useAuth";
 
-/**
- * Hydrates the notification store from the REST API on mount and wires up
- * Socket.IO real-time events. Must be called once inside DashboardLayout
- * alongside useSocket().
- */
 export function useNotifications(socket: Socket | null) {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const { setNotifications, addNotification, markRead, markAllRead } =
     useNotificationStore();
 
-  // ── Initial REST fetch ──────────────────────────────────────────────────
+  // Initial REST fetch
   useEffect(() => {
     let cancelled = false;
 
@@ -43,7 +42,7 @@ export function useNotifications(socket: Socket | null) {
     };
   }, [setNotifications]);
 
-  // ── Real-time Socket.IO listeners ───────────────────────────────────────
+  // Real-time Socket.IO listeners
   useEffect(() => {
     if (!socket) return;
 
@@ -67,7 +66,14 @@ export function useNotifications(socket: Socket | null) {
           React.createElement(
             "div",
             {
-              onClick: () => toast.dismiss(t.id),
+              onClick: () => {
+                toast.dismiss(t.id);
+                const path = notification.type === "LOW_STOCK" ? "/inventory"
+                  : notification.type === "PAYMENT_RECEIVED" ? "/invoices"
+                  : notification.type.startsWith("JOB_") ? (user?.role === "MECHANIC" ? "/my-jobs" : "/jobs")
+                  : "/notifications";
+                navigate(path);
+              },
               className: "cursor-pointer",
             },
             React.createElement(
@@ -101,18 +107,18 @@ export function useNotifications(socket: Socket | null) {
       socket.off("notification:new", handleNew);
       socket.off("inventory:low", handleLowStock);
     };
-  }, [socket, addNotification]);
+  }, [socket, addNotification, navigate, user?.role]);
 
-  // ── Mutations ───────────────────────────────────────────────────────────
+  // ── Mutations
   const markReadMutation = useMutation({
     mutationFn: (id: string) => markNotificationAsRead(id),
-    onMutate: (id) => markRead(id), // optimistic
+    onMutate: (id) => markRead(id),
     onError: () => toast.error("Failed to mark notification as read"),
   });
 
   const markAllReadMutation = useMutation({
     mutationFn: markAllNotificationsAsRead,
-    onMutate: () => markAllRead(), // optimistic
+    onMutate: () => markAllRead(),
     onError: () => toast.error("Failed to mark all as read"),
   });
 
