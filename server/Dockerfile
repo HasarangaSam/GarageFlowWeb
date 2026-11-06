@@ -5,6 +5,9 @@ WORKDIR /app
 # Prisma needs OpenSSL at build and runtime.
 RUN apk add --no-cache openssl libc6-compat
 
+# Update the npm bundled with the Node image to a release with patched dependencies.
+RUN npm install --global npm@12.2.2
+
 ENV PORT=5000
 
 COPY package*.json ./
