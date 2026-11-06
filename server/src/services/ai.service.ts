@@ -227,6 +227,47 @@ type InteractionResponse = Extract<
 >;
 type InteractionStep = InteractionResponse["steps"][number];
 
+const createInteraction = async (input: InteractionStep[]) => {
+  const request = {
+    store: false,
+    input,
+    system_instruction: systemInstruction,
+    tools,
+    generation_config: {
+      thinking_level: "low" as const,
+      max_output_tokens: 512,
+    },
+  };
+
+  const models = [
+    "gemini-3.8-flash",
+    "gemini-3.5-flash-lite",
+    "gemini-2.5-flash-lite",
+  ] as const;
+
+  for (const [index, model] of models.entries()) {
+    try {
+      return await gemini!.interactions.create({ ...request, model });
+    } catch (error) {
+      const providerError = error as {
+        status?: unknown;
+        statusCode?: unknown;
+      };
+      const status = providerError.statusCode ?? providerError.status;
+      if (status !== 429 && status !== 503) throw error;
+      if (index === models.length - 1) {
+        throw new AppError(
+          "GarageFlow AI models are temporarily busy. Please try again shortly.",
+          503,
+        );
+      }
+      // Retry transient capacity errors on the next, lighter model immediately.
+    }
+  }
+
+  throw new AppError("GarageFlow AI is unavailable", 503);
+};
+
 export const chatWithGarageFlowAI = async (message: string, role: UserRole) => {
   if (!gemini) {
     throw new AppError("GarageFlow AI is not configured", 503);
@@ -245,17 +286,7 @@ export const chatWithGarageFlowAI = async (message: string, role: UserRole) => {
   ];
 
   for (let attempt = 0; attempt < 3; attempt++) {
-    const interaction = await gemini.interactions.create({
-      model: "gemini-3.8-flash",
-
-      store: false,
-
-      input: history,
-
-      system_instruction: systemInstruction,
-
-      tools,
-    });
+    const interaction = await createInteraction(history);
 
     const functionCalls = interaction.steps.filter(
       (step) => step.type === "function_call",
@@ -267,13 +298,18 @@ export const chatWithGarageFlowAI = async (message: string, role: UserRole) => {
 
     history.push(...interaction.steps);
 
-    for (const functionCall of functionCalls) {
-      const result = await executeTool(
-        functionCall.name,
-        functionCall.arguments ?? {},
-        role,
-      );
+    const functionResults = await Promise.all(
+      functionCalls.map(async (functionCall) => ({
+        functionCall,
+        result: await executeTool(
+          functionCall.name,
+          functionCall.arguments ?? {},
+          role,
+        ),
+      })),
+    );
 
+    for (const { functionCall, result } of functionResults) {
       history.push({
         type: "function_result",
         name: functionCall.name,

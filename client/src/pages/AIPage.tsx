@@ -10,7 +10,6 @@ import {
   RotateCcw,
   Send,
   Sparkles,
-  TrendingUp,
   User,
   Users,
 } from "lucide-react";
@@ -19,6 +18,7 @@ import toast from "react-hot-toast";
 
 import { chatWithGarageFlowAI } from "../services/aiService";
 import { useAuth } from "../hooks/useAuth";
+import { getErrorMessage } from "../utils/errorMessage";
 
 interface ChatMessage {
   id: string;
@@ -114,8 +114,8 @@ const toolCapabilities = [
     title: "Business Trends & Comparisons",
     tool: "getBusinessAnalytics",
     description:
-      "Compare jobs and collections across periods, with trends by month or breakdowns by mechanic, status, and vehicle make.",
-    examplePrompt: "For the last 90 days, how many jobs were created each month, and how does that compare with the previous 90 days?",
+      "Compare jobs and payments across time periods, with breakdowns by month, mechanic, status, or vehicle make.",
+    examplePrompt: "Compare jobs created and payments collected in the last 90 days with the previous 90 days.",
   },
   {
     id: "activeJobs",
@@ -135,7 +135,7 @@ const toolCapabilities = [
     tool: "getVehicleServiceHistory",
     description:
       "Retrieve full repair history, prior diagnoses, and invoice totals for any vehicle registration number.",
-    examplePrompt: "Show service history for vehicle WP CA-4812",
+    examplePrompt: "Show service history for vehicle CAX-8123",
   },
   {
     id: "lowStock",
@@ -146,16 +146,6 @@ const toolCapabilities = [
     description:
       "Identify spare parts at or below minimum threshold that need urgent restocking.",
     examplePrompt: "Which parts are currently low in stock?",
-  },
-  {
-    id: "monthlyRevenue",
-    icon: TrendingUp,
-    iconColor: "text-emerald-600 bg-emerald-50 border-emerald-200/80 dark:bg-emerald-500/15 dark:text-emerald-400 dark:border-emerald-500/30",
-    title: "Monthly Revenue Analytics",
-    tool: "getMonthlyRevenue",
-    description:
-      "Calculate total earnings and payments collected during the current calendar month.",
-    examplePrompt: "How much revenue have we collected this month?",
   },
   {
     id: "outstandingInvoices",
@@ -217,8 +207,8 @@ export default function AIPage() {
       };
 
       setMessages((current) => [...current, assistantMessage]);
-    } catch {
-      toast.error("Unable to get a response from GarageFlow AI.");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Unable to get a response from GarageFlow AI."));
     } finally {
       setIsLoading(false);
     }
