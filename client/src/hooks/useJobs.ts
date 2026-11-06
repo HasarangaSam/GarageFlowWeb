@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 import {
   addJobPart,
@@ -22,6 +23,7 @@ import type {
   MechanicUpdateRepairJobInput,
   UpdateRepairJobInput,
 } from "../types/job";
+import { getErrorMessage } from "../utils/errorMessage";
 
 export const jobKeys = {
   all: ["jobs"] as const,
@@ -218,6 +220,9 @@ export const useAddJobParts = () => {
       queryClient.invalidateQueries({
         queryKey: jobKeys.parts(variables.jobId),
       });
+    },
+    onError: (error: unknown) => {
+      toast.error(getErrorMessage(error, "Failed to add parts to the job"));
     },
   });
 };

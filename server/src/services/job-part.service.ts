@@ -207,7 +207,7 @@ export const addJobParts = async (
       jobParts.push(await addJobPartInTransaction(tx, jobId, input, user));
     }
     return jobParts;
-  });
+  }, { maxWait: 10_000, timeout: 30_000 });
 
   await invalidateDashboardCache();
 

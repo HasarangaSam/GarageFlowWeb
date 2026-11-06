@@ -12,5 +12,12 @@ const adapter = new PrismaPg({
   connectionString,
 });
 
-export const prisma = new PrismaClient({ adapter });
+export const prisma = new PrismaClient({
+  adapter,
+  transactionOptions: {
+    // Leave room for brief connection-pool contention and slower hosted DBs.
+    maxWait: 10_000,
+    timeout: 15_000,
+  },
+});
 

@@ -8,6 +8,18 @@ export const invoiceStatusSchema = z.enum([
   "VOID",
 ]);
 
+// Date inputs submit YYYY-MM-DD, while API callers may send full ISO datetimes.
+const invoiceDueDateSchema = z
+  .string()
+  .refine(
+    (value) =>
+      /^\d{4}-\d{2}-\d{2}$/.test(value)
+        ? !Number.isNaN(Date.parse(`${value}T00:00:00.000Z`)) &&
+          new Date(`${value}T00:00:00.000Z`).toISOString().slice(0, 10) === value
+        : z.iso.datetime().safeParse(value).success,
+    "Invalid due date",
+  );
+
 export const createInvoiceItemSchema = z.object({
   description: z
     .string()
@@ -32,7 +44,7 @@ export const createInvoiceSchema = z.object({
 
   tax: z.number().min(0, "Tax cannot be negative").default(0),
 
-  dueDate: z.string().datetime("Invalid due date").optional(),
+  dueDate: invoiceDueDateSchema.optional(),
 });
 
 export const updateInvoiceSchema = z.object({
@@ -40,7 +52,7 @@ export const updateInvoiceSchema = z.object({
 
   tax: z.number().min(0, "Tax cannot be negative").optional(),
 
-  dueDate: z.string().datetime("Invalid due date").optional(),
+  dueDate: invoiceDueDateSchema.optional(),
 
   status: invoiceStatusSchema.optional(),
 });
